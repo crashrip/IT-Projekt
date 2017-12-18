@@ -20,19 +20,13 @@ namespace OLAP_WindowsForms.App
             InitializeComponent();
 
             // fill combobox with data preview from cube
-            getComboboxContent(comboBox1, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             //getListBoxContent(listBox1, "DW_DERIVED_BASE_MEASURE", "DBMSR_EXPR", "DBMSR_NAME"); 
             //getListBoxContent(listBox2, "DW_DERIVED_AGGREGATE_MEASURE", "DAMSR_EXPR", "DAMSR_NAME");
 
-            // instantiate dimension qualifications
-            // DL
-            fillComboboxDimension(CDW_TIME, 6); //time
 
-            // DN
-            // SC
-            // GL
-            fillComboboxDimension(CDW_TIME_GL, 6); //time
-
+           
+            
         }
 
         // get data value and description from cube for certain table, 2 columns and a combobox
@@ -59,72 +53,149 @@ namespace OLAP_WindowsForms.App
             listbox.SelectionMode = SelectionMode.MultiExtended;
         }
 
-
-
         // test labels
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            label4.Text = comboBox1.SelectedValue.ToString();
+            label4.Text = ComboBoxCube.SelectedValue.ToString();
 
             
 
-            if (!(comboBox1.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+            if (!(ComboBoxCube.SelectedValue.ToString().Equals("System.Data.DataRowView")))
             {
-                listBox1_Instantiate();
-                listBox2_Instantiate();
+                disable_dimensions();
+
+                LDW_BMSR_Instantiate();
+                LDW_MEASURES_Instantiate();
+                ldw_filter_Instantiate();
+
+                dimension_enable_disable();
             }
         }
+
+        private void disable_dimensions()
+        {
+            CDW_DOCTOR.Enabled = false;
+            CDW_INSURANT.Enabled = false;
+            CDW_DRUG.Enabled = false;
+            CDW_MEDSERVICE.Enabled = false;
+            CDW_HOSPITAL.Enabled = false;
+            CDW_TIME.Enabled = false;
+        }
+
+        private void dimension_enable_disable()
+        {
+            DataTable dt = DBContext.Service().GetData(
+               "SELECT DIM_SID " +
+               "FROM DW_CUBE_DIMENSION " +
+               "WHERE CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
+                );
+            DataTable dt2 = dt.Copy();
+            DataRow[] dr = dt2.Select();
+
+            for (int i = 0; i < dr.Length; i++) {
+                String dim_sid = dr[i].ItemArray[0].ToString();
+
+                if (dim_sid.Equals("1")){
+                    CDW_DOCTOR.Enabled = true;
+                    fillComboboxDimension(CDW_DOCTOR, 1); //doctor
+                }
+                if (dim_sid.Equals("2"))
+                {
+                    CDW_INSURANT.Enabled = true;
+                    fillComboboxDimension(CDW_INSURANT, 2); //insurant
+                }
+                if (dim_sid.Equals("3"))
+                {
+                    CDW_DRUG.Enabled = true;
+                    fillComboboxDimension(CDW_DRUG, 3); //drug
+                }
+                if (dim_sid.Equals("4"))
+                {
+                    CDW_MEDSERVICE.Enabled = true;
+                    fillComboboxDimension(CDW_MEDSERVICE, 4); //medservice
+                }
+                if (dim_sid.Equals("5"))
+                {
+                    CDW_HOSPITAL.Enabled = true;
+                    fillComboboxDimension(CDW_HOSPITAL, 5); //hospital
+                }
+                if (dim_sid.Equals("6"))
+                {
+                    CDW_TIME.Enabled = true;
+                    fillComboboxDimension(CDW_TIME, 6); //time
+                }
+            }
+        }
+
         // Fill Derived Base Measures considering selected Cube
-        private void listBox1_Instantiate()
+        private void LDW_BMSR_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
-            listBox1.SelectionMode = SelectionMode.None;
+            LDW_BMSR.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt = DBContext.Service().GetData(
                "SELECT DBMSR_NAME, DBMSR_EXPR " +
                "FROM (DW_CUBE NATURAL JOIN DW_CUBE_DERIVED_BASE_MEASURE) NATURAL JOIN DW_DERIVED_BASE_MEASURE " +
-               "WHERE DW_CUBE.CUBE_SID = " + comboBox1.SelectedValue.ToString()
+               "WHERE DW_CUBE.CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
                 );
             DataTable dt2 = dt.Copy();
             // set DataSourc
-            listBox1.DataSource = dt2;
-            listBox1.DisplayMember = "DBMSR_NAME";
-            listBox1.ValueMember = "DBMSR_EXPR";
-            listBox1.SelectionMode = SelectionMode.MultiExtended;
+            LDW_BMSR.DataSource = dt2;
+            LDW_BMSR.DisplayMember = "DBMSR_NAME";
+            LDW_BMSR.ValueMember = "DBMSR_EXPR";
+            LDW_BMSR.SelectionMode = SelectionMode.MultiExtended;
         }
 
         //Fill Measures considering selected Cube
-        private void listBox2_Instantiate()
+        private void LDW_MEASURES_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
-            listBox2.SelectionMode = SelectionMode.None;
+            LDW_MEASURES.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt3 = DBContext.Service().GetData(
                "SELECT DAMSR_NAME, DAMSR_EXPR " +
                "FROM (DW_CUBE NATURAL JOIN DW_CUBE_DERIVED_AGGREGATE_MEASURE) NATURAL JOIN DW_DERIVED_AGGREGATE_MEASURE " +
-               "WHERE DW_CUBE.CUBE_SID = " + comboBox1.SelectedValue.ToString()
+               "WHERE DW_CUBE.CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
                 );
             DataTable dt4 = dt3.Copy();
             // set DataSourc
-            listBox2.DataSource = dt4;
-            listBox2.DisplayMember = "DAMSR_NAME";
-            listBox2.ValueMember = "DAMSR_EXPR";
-            listBox2.SelectionMode = SelectionMode.MultiExtended;
+            LDW_MEASURES.DataSource = dt4;
+            LDW_MEASURES.DisplayMember = "DAMSR_NAME";
+            LDW_MEASURES.ValueMember = "DAMSR_EXPR";
+            LDW_MEASURES.SelectionMode = SelectionMode.MultiExtended;
 
+        }
+
+        // Fill DW_BMSR_PREDICATE considering selected Cube
+        private void ldw_filter_Instantiate()
+        {
+            // Disable Selection Mode while instanciating DataSource
+            LDW_FILTER.SelectionMode = SelectionMode.None;
+            // SQL Query 
+            DataTable dt = DBContext.Service().GetData(
+               "SELECT BMSR_PRED_SID, BMSR_PRED_NAME " +
+               "FROM DW_BMSR_PREDICATE " +
+               "WHERE CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
+                );
+            DataTable dt2 = dt.Copy();
+            // set DataSourc
+            LDW_FILTER.DataSource = dt2;
+            LDW_FILTER.DisplayMember = "BMSR_PRED_NAME";
+            LDW_FILTER.ValueMember = "BMSR_PRED_SID";
+            LDW_FILTER.SelectionMode = SelectionMode.MultiExtended;
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             
                 label6.Text = "";
-                foreach (Object sel in listBox1.SelectedItems)
+                foreach (Object sel in LDW_BMSR.SelectedItems)
                 {
                     label6.Text += (sel as DataRowView)["DBMSR_EXPR"].ToString();
                     label6.Text += " ";
                 }
             
         }
-
 
         private void UserInput_Load(object sender, EventArgs e)
         {
@@ -134,7 +205,7 @@ namespace OLAP_WindowsForms.App
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             label7.Text = "";
-            foreach (Object sel in listBox2.SelectedItems)
+            foreach (Object sel in LDW_MEASURES.SelectedItems)
             {
                 label7.Text += (sel as DataRowView)["DAMSR_EXPR"].ToString();
                 label7.Text += " ";
@@ -208,34 +279,110 @@ namespace OLAP_WindowsForms.App
             lBox.SelectionMode = SelectionMode.MultiExtended;
         }
 
-        private String getID(String table, String idColumn, String id, String targetColumn)
-        {
-            DataTable dt = DBContext.Service().GetData(
-              "SELECT " + targetColumn+
-              "FROM " + table +
-              "WHERE "+idColumn+" = " + id
-               );
-
-            return string.Join(", ",dt.Rows.OfType<DataRow>().Select(r => r[0].ToString()));
-
-        }
-
-
+        // FILL DW GL AND SC
         private void CDW_TIME_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // fill GL
-            //fillComboboxDimensionGroupedBy(CDW_TIME_GL,6,CDW_TIME.SelectedValue.ToString());
-            // changes Listbox SC only if something is selected
-            if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+            if (CDW_TIME.SelectedIndex != -1)
             {
-                fillListBoxDimension(LDW_TIME, CDW_TIME.SelectedValue.ToString());
+                // fill GL
+                if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    //fillComboboxDimensionGroupedBy(CDW_TIME_GL, 6, CDW_TIME.SelectedValue.ToString());
+                    fillGL(CDW_TIME, 6, CDW_TIME_GL);
+                }
+                // changes Listbox SC only if something is selected
+                if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillListBoxDimension(LDW_TIME, CDW_TIME.SelectedValue.ToString());
+                }
             }
-            
+        }
+        private void CDW_INSURANT_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(CDW_INSURANT.SelectedIndex != -1){
+                // fill GL
+                if (!(CDW_INSURANT.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillGL(CDW_INSURANT, 2, CDW_INSURANT_GL);
+                }
+                // changes Listbox SC only if something is selected
+                if (!(CDW_INSURANT.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillListBoxDimension(LDW_INSURANT, CDW_INSURANT.SelectedValue.ToString());
+                }
+            }
+        }
+
+        private void CDW_MEDSERVICE_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CDW_MEDSERVICE.SelectedIndex != -1)
+            {
+                // fill GL
+                if (!(CDW_MEDSERVICE.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillGL(CDW_MEDSERVICE, 4, CDW_MEDSERVICE_GL);
+                }
+                // changes Listbox SC only if something is selected
+                if (!(CDW_MEDSERVICE.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillListBoxDimension(LDW_MEDSERVICE, CDW_MEDSERVICE.SelectedValue.ToString());
+                }
+            }
+        }
+
+        private void CDW_DRUG_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CDW_DRUG.SelectedIndex != -1)
+            {
+                // fill GL
+                if (!(CDW_DRUG.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillGL(CDW_DRUG, 3, CDW_DRUG_GL);
+                }
+                // changes Listbox SC only if something is selected
+                if (!(CDW_DRUG.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillListBoxDimension(LDW_DRUG, CDW_DRUG.SelectedValue.ToString());
+                }
+            }
+        }
+        private void CDW_DOCTOR_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CDW_DOCTOR.SelectedIndex != -1)
+            {
+                // fill GL
+                if (!(CDW_DOCTOR.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillGL(CDW_DOCTOR, 1, CDW_DOCTOR_GL);
+                }
+                // changes Listbox SC only if something is selected
+                if (!(CDW_DOCTOR.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillListBoxDimension(LDW_DOCTOR, CDW_DOCTOR.SelectedValue.ToString());
+                }
+            }
+        }
+
+        private void CDW_HOSPITAL_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CDW_HOSPITAL.SelectedIndex != -1)
+            {
+                // fill GL
+                if (!(CDW_HOSPITAL.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillGL(CDW_HOSPITAL, 5, CDW_HOSPITAL_GL);
+                }
+                // changes Listbox SC only if something is selected
+                if (!(CDW_HOSPITAL.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+                {
+                    fillListBoxDimension(LDW_HOSPITAL, CDW_HOSPITAL.SelectedValue.ToString());
+                }
+            }
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            label13.Text = TDW_TIME.Text;
+
         }
         // check that input is numbers only
         private void TDW_TIME_KeyPress(object sender, KeyPressEventArgs e)
@@ -256,14 +403,38 @@ namespace OLAP_WindowsForms.App
 
         }
 
-        private void label13_Click(object sender, EventArgs e)
+        private void fillGL(ComboBox readFromCB,int dim_sid,ComboBox changeThisCB)
         {
-            if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
-            {
-                label13.Text = getID("DW_LEVEL", "LVL_SID", "26", "LVL_POSITION");
-            }
-            
+            DataTable dt = DBContext.Service().GetData(
+                "SELECT *" +
+               "FROM DW_LEVEL " +
+               "WHERE LVL_SID <=" + readFromCB.SelectedValue + " AND DIM_SID ="+dim_sid+
+               "ORDER BY LVL_SID DESC"
+               );
+            DataTable dt2 = dt.Copy();
+            changeThisCB.DataSource = dt2;
+            changeThisCB.DisplayMember = "LVL_NAME";
+            changeThisCB.ValueMember = "LVL_SID";
+
         }
+
+        private void deselect(object sender, KeyPressEventArgs e)
+        {
+            Console.WriteLine(e.KeyChar);
+            if (e.KeyChar == ' ')
+            {
+                if (sender.GetType().ToString().Equals("System.Windows.Forms.ListBox"))
+                {
+                    (sender as ListBox).ClearSelected();
+                }
+                if (sender.GetType().ToString().Equals("System.Windows.Forms.ComboBox"))
+                {
+                    (sender as ComboBox).SelectedIndex = 0;
+                    (sender as ComboBox).SelectedIndex = -1;
+                }
+            }
+        }
+        
 
         
     }
