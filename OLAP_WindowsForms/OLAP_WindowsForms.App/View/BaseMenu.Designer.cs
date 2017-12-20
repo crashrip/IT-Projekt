@@ -33,8 +33,8 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(236, 42);
-            this.button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.button1.Location = new System.Drawing.Point(70, 44);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(169, 28);
             this.button1.TabIndex = 0;
@@ -46,9 +46,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(643, 475);
+            this.ClientSize = new System.Drawing.Size(301, 187);
             this.Controls.Add(this.button1);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "BaseMenu";
             this.Text = "Menu";
             this.ResumeLayout(false);

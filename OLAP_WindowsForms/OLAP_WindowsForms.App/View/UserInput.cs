@@ -24,6 +24,14 @@ namespace OLAP_WindowsForms.App
             //getListBoxContent(listBox1, "DW_DERIVED_BASE_MEASURE", "DBMSR_EXPR", "DBMSR_NAME"); 
             //getListBoxContent(listBox2, "DW_DERIVED_AGGREGATE_MEASURE", "DAMSR_EXPR", "DAMSR_NAME");
         }
+
+        public void SelectComboBoxCube(string selection) // TODO not yet working
+        {
+            Console.WriteLine(selection);
+            System.Threading.Thread.Sleep(5000);
+            //ComboBoxCube.SelectedIndex = ComboBoxCube.Items.IndexOf(selection);
+            ComboBoxCube.SelectedItem = selection;
+        }
         
         // test labels
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -406,8 +414,8 @@ namespace OLAP_WindowsForms.App
 
         private void button_cancel_Click(object sender, EventArgs e)
         {
-            // Display a MsgBox asking the user to save changes or abort.
-            if (MessageBox.Show("Are you sure you want to close the window?", "OLAP",
+            // Display a MsgBox asking the user to cancel or abort.
+            if (MessageBox.Show("Are you sure you want to close the window?", "New Schema",
                MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 Close();
@@ -416,7 +424,7 @@ namespace OLAP_WindowsForms.App
 
         private void button_select_navigation_operator_Click(object sender, EventArgs e)
         {
-            SelectNavigationOperator sno = new SelectNavigationOperator() { TopMost = true };
+            SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
             sno.ShowDialog(this);
         }
     }

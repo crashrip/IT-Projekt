@@ -14,7 +14,16 @@ namespace OLAP_WindowsForms.App
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             DBContext.Initialize();
-            Application.Run(new BaseMenu());
+
+            try
+            {
+                Application.Run(new BaseMenu());
+            }
+            catch (Exception e)
+            {
+                // wrong login data
+                Console.WriteLine("Wrong login data: " + e.Data);
+            }
         }
     }
 }

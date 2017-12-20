@@ -18,7 +18,7 @@ namespace OLAP_WindowsForms.App
 
         private DataSet ds = new DataSet(); // current data set
         private DataTable dt = new DataTable(); // copy of data table
-        
+
         public void LogIn(string hostname, string port, string username, string password, string dbName)
         {
             DBHostname = hostname;
@@ -28,12 +28,12 @@ namespace OLAP_WindowsForms.App
             DBName = dbName;
         }
 
-        
+
 
 
         public DataTable GetAllDataFromTable(string table)
         {
-            
+
             try
             {
                 string connectionString =
@@ -70,7 +70,7 @@ namespace OLAP_WindowsForms.App
                     DBHostname, DBPort, DBUsername, DBPassword, DBName);
 
                 NpgsqlConnection connection = new NpgsqlConnection(connectionString);
-                string sqlStmt = "SELECT "+column1+","+column2+" FROM " + table;
+                string sqlStmt = "SELECT " + column1 + "," + column2 + " FROM " + table;
                 NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(sqlStmt, connection); // adapter for select statements
 
                 // refresh data set
@@ -88,6 +88,36 @@ namespace OLAP_WindowsForms.App
                 return null;
             }
         }
+
+        public DataTable GetData(string table, String column)
+        {
+
+            try
+            {
+                string connectionString =
+                    String.Format("Server={0}; Port={1}; User Id={2}; Password={3}; Database={4};",
+                    DBHostname, DBPort, DBUsername, DBPassword, DBName);
+
+                NpgsqlConnection connection = new NpgsqlConnection(connectionString);
+                string sqlStmt = "SELECT " + column + " FROM " + table;
+                NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(sqlStmt, connection); // adapter for select statements
+
+                // refresh data set
+                ds.Reset();
+                dataAdapter.Fill(ds);
+
+                // refresh data table
+                dt = ds.Tables[0];
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: '{0}'", ex);
+                Environment.Exit(0);
+                return null;
+            }
+        }
+
         public DataTable GetData(String sqlStmt)
         {
 
@@ -98,7 +128,7 @@ namespace OLAP_WindowsForms.App
                     DBHostname, DBPort, DBUsername, DBPassword, DBName);
 
                 NpgsqlConnection connection = new NpgsqlConnection(connectionString);
-                
+
                 NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(sqlStmt, connection); // adapter for select statements
 
                 // refresh data set
@@ -118,5 +148,5 @@ namespace OLAP_WindowsForms.App
                 return null;
             }
         }
-        }
+    }
 }

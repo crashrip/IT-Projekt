@@ -19,13 +19,13 @@ namespace OLAP_WindowsForms.App
             Text = text;
         }
 
-        public String toString()
+        public string toString()
         {
             return this.ID + " " + this.Text;
         }
 
         // get data value and description from cube for certain table, 2 columns and a combobox
-        public static void GetComboboxContent(ComboBox combobox, String table, String column1, String column2)
+        public static void GetComboboxContent(ComboBox combobox, string table, string column1, string column2)
         {
             DataTable dt = DBContext.Service().GetData(table, column1, column2);
             DataTable dt2 = dt.Copy();
@@ -36,7 +36,18 @@ namespace OLAP_WindowsForms.App
         }
 
         // get data value and description from cube for certain table, 2 columns and a combobox
-        public static void getListBoxContent(ListBox listbox, String table, String column1, String column2)
+        public static void GetComboboxContent(ComboBox combobox, string table, string column)
+        {
+            DataTable dt = DBContext.Service().GetData(table, column);
+            DataTable dt2 = dt.Copy();
+
+            combobox.DataSource = dt2;
+            combobox.DisplayMember = column;
+            combobox.ValueMember = column;
+        }
+
+        // get data value and description from cube for certain table, 2 columns and a combobox
+        public static void getListBoxContent(ListBox listbox, string table, string column1, string column2)
         {
             DataTable dt = DBContext.Service().GetData(table, column1, column2);
             DataTable dt2 = dt.Copy();
@@ -46,6 +57,13 @@ namespace OLAP_WindowsForms.App
             listbox.ValueMember = column1;
 
             listbox.SelectionMode = SelectionMode.MultiExtended;
+        }
+
+        public static string getStringContent(ComboBox combobox, string table, string column)
+        {
+            DataTable dt = DBContext.Service().GetData(table, column);
+            
+            return column.ToString();
         }
     }
 }

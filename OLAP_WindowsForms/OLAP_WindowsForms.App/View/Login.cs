@@ -13,6 +13,8 @@ namespace OLAP_WindowsForms.App
 {
     public partial class Login : Form
     {
+        public static bool loginSuccessful;
+
         public Login()
         {
             InitializeComponent();
@@ -43,11 +45,14 @@ namespace OLAP_WindowsForms.App
                     hostname, port, username, password, dbName);
                 NpgsqlConnection connection = new NpgsqlConnection(connectionString);
                 connection.Open();
+                loginSuccessful = true;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Wrong login data. The program will be closed.", "Connection failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                loginSuccessful = false;
+                MessageBox.Show("Wrong login data. The program will be closed.\n\n" + ex.Data, "Connection failed!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
         }
     }

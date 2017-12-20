@@ -14,12 +14,18 @@ namespace OLAP_WindowsForms.App
     {
         public BaseMenu()
         {
-            InitializeComponent();
-
             // show login dialog
             Login login = new Login() { TopMost = true };
             login.ShowDialog(this);
 
+            if (Login.loginSuccessful)
+            {
+                InitializeComponent();
+            }
+            else
+            {
+                Close();
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
