@@ -20,35 +20,11 @@ namespace OLAP_WindowsForms.App
             InitializeComponent();
 
             // fill combobox with data preview from cube
-            getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             //getListBoxContent(listBox1, "DW_DERIVED_BASE_MEASURE", "DBMSR_EXPR", "DBMSR_NAME"); 
             //getListBoxContent(listBox2, "DW_DERIVED_AGGREGATE_MEASURE", "DAMSR_EXPR", "DAMSR_NAME");
         }
-
-        // get data value and description from cube for certain table, 2 columns and a combobox
-        public void getComboboxContent(ComboBox combobox, String table, String column1, String column2)
-        {
-            DataTable dt = DBContext.Service().GetData(table, column1, column2);
-            DataTable dt2 = dt.Copy();
-
-            combobox.DataSource = dt2;
-            combobox.DisplayMember = column2;
-            combobox.ValueMember = column1;
-        }
-
-        // get data value and description from cube for certain table, 2 columns and a combobox
-        public void getListBoxContent(ListBox listbox, String table, String column1, String column2)
-        {
-            DataTable dt = DBContext.Service().GetData(table, column1, column2);
-            DataTable dt2 = dt.Copy();
-
-            listbox.DataSource = dt2;
-            listbox.DisplayMember = column2;
-            listbox.ValueMember = column1;
-
-            listbox.SelectionMode = SelectionMode.MultiExtended;
-        }
-
+        
         // test labels
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {

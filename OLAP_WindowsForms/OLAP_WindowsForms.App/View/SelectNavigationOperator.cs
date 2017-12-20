@@ -16,5 +16,10 @@ namespace OLAP_WindowsForms.App.View
         {
             InitializeComponent();
         }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           
+        }
     }
 }
