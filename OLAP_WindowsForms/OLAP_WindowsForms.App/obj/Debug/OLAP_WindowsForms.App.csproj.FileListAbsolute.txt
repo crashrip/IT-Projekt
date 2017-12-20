@@ -80,3 +80,4 @@ C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.csproj.GenerateResource.Cache
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.exe
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.pdb
+C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectNavigationOperator.resources

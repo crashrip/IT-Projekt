@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Configuration;
-
+using OLAP_WindowsForms.App.View;
 
 namespace OLAP_WindowsForms.App
 {
@@ -19,22 +19,13 @@ namespace OLAP_WindowsForms.App
         {
             InitializeComponent();
 
-            // fill Cube Combobox with data
-            getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            // fill combobox with data preview from cube
+            ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            //getListBoxContent(listBox1, "DW_DERIVED_BASE_MEASURE", "DBMSR_EXPR", "DBMSR_NAME"); 
+            //getListBoxContent(listBox2, "DW_DERIVED_AGGREGATE_MEASURE", "DAMSR_EXPR", "DAMSR_NAME");
         }
         
-        // get data value and description from cube for certain table, 2 columns and a combobox
-        public void getComboboxContent(ComboBox combobox,String table, String column1, String column2)
-        {
-            DataTable dt = DBContext.Service().GetData(table,column1,column2);
-            DataTable dt2 = dt.Copy();
-
-            combobox.DataSource = dt2;
-            combobox.DisplayMember = column2;
-            combobox.ValueMember = column1;
-        }
-        
-        // initializes BMSR-Filter, Measures, Filter, and enables or disables assoziated Dimension Qualification
+        // test labels
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             label4.Text = ComboBoxCube.SelectedValue.ToString(); // test field
@@ -72,10 +63,12 @@ namespace OLAP_WindowsForms.App
             DataTable dt2 = dt.Copy();
             DataRow[] dr = dt2.Select();
 
-            for (int i = 0; i < dr.Length; i++) {
+            for (int i = 0; i < dr.Length; i++)
+            {
                 String dim_sid = dr[i].ItemArray[0].ToString();
 
-                if (dim_sid.Equals("1")){
+                if (dim_sid.Equals("1"))
+                {
                     CDW_DOCTOR.Enabled = true;
                     fillComboboxDimension(CDW_DOCTOR, 1); //doctor
                 }
@@ -118,7 +111,7 @@ namespace OLAP_WindowsForms.App
                "WHERE DW_CUBE.CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
                 );
             DataTable dt2 = dt.Copy();
-            // set DataSourc
+            // set DataSource
             LDW_BMSR.DataSource = dt2;
             LDW_BMSR.DisplayMember = "DBMSR_NAME";
             LDW_BMSR.ValueMember = "DBMSR_EXPR";
@@ -136,7 +129,7 @@ namespace OLAP_WindowsForms.App
                "WHERE DW_CUBE.CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
                 );
             DataTable dt4 = dt3.Copy();
-            // set DataSourc
+            // set DataSource
             LDW_MEASURES.DataSource = dt4;
             LDW_MEASURES.DisplayMember = "DAMSR_NAME";
             LDW_MEASURES.ValueMember = "DAMSR_EXPR";
@@ -154,7 +147,7 @@ namespace OLAP_WindowsForms.App
                "WHERE CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
                 );
             DataTable dt2 = dt.Copy();
-            // set DataSourc
+            // set DataSource
             LDW_FILTER.DataSource = dt2;
             LDW_FILTER.DisplayMember = "BMSR_PRED_NAME";
             LDW_FILTER.ValueMember = "BMSR_PRED_SID";
@@ -193,8 +186,8 @@ namespace OLAP_WindowsForms.App
             DBContext.DataView().Text = table;
             DBContext.DataView().LoadData(DBContext.Service().GetData(
                "SELECT LVL_POSITION " +
-               "FROM DW_LEVEL "+ 
-               "WHERE LVL_SID = 4" 
+               "FROM DW_LEVEL " +
+               "WHERE LVL_SID = 4"
 ));
             /*
             "SELECT " + targetColumn +
@@ -211,7 +204,7 @@ namespace OLAP_WindowsForms.App
             DataTable dt = DBContext.Service().GetData(
               "SELECT LVL_SID, LVL_NAME " +
               "FROM DW_LEVEL " +
-              "WHERE DIM_SID = "+dim_sid+
+              "WHERE DIM_SID = " + dim_sid +
               "ORDER BY LVL_SID DESC"
                );
             DataTable dt2 = dt.Copy();
@@ -227,7 +220,7 @@ namespace OLAP_WindowsForms.App
             DataTable dt = DBContext.Service().GetData(
               "SELECT DIM_PRED_NAME, DIM_PRED_EXPR " +
               "FROM DW_DIM_PREDICATE " +
-              "WHERE LVL_SID = " + lvl_sid 
+              "WHERE LVL_SID = " + lvl_sid
                );
             DataTable dt2 = dt.Copy();
             lBox.DataSource = dt2;
@@ -378,6 +371,22 @@ namespace OLAP_WindowsForms.App
                     (sender as ComboBox).SelectedIndex = -1;
                 }
             }
+        }
+
+        private void button_cancel_Click(object sender, EventArgs e)
+        {
+            // Display a MsgBox asking the user to save changes or abort.
+            if (MessageBox.Show("Are you sure you want to close the window?", "OLAP",
+               MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                Close();
+            }
+        }
+
+        private void button_select_navigation_operator_Click(object sender, EventArgs e)
+        {
+            SelectNavigationOperator sno = new SelectNavigationOperator() { TopMost = true };
+            sno.ShowDialog(this);
         }
     }
 }
