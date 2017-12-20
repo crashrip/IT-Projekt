@@ -337,7 +337,6 @@ namespace OLAP_WindowsForms.App
             this.LDW_TIME.Name = "LDW_TIME";
             this.LDW_TIME.Size = new System.Drawing.Size(169, 116);
             this.LDW_TIME.TabIndex = 30;
-            this.LDW_TIME.SelectedIndexChanged += new System.EventHandler(this.LDW_TIME_SelectedIndexChanged);
             this.LDW_TIME.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
             // 
             // CDW_TIME_GL
@@ -349,7 +348,6 @@ namespace OLAP_WindowsForms.App
             this.CDW_TIME_GL.Name = "CDW_TIME_GL";
             this.CDW_TIME_GL.Size = new System.Drawing.Size(167, 24);
             this.CDW_TIME_GL.TabIndex = 31;
-            this.CDW_TIME_GL.SelectedIndexChanged += new System.EventHandler(this.CDW_TIME_GL_SelectedIndexChanged);
             this.CDW_TIME_GL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
             // 
             // TDW_TIME
@@ -359,7 +357,6 @@ namespace OLAP_WindowsForms.App
             this.TDW_TIME.Name = "TDW_TIME";
             this.TDW_TIME.Size = new System.Drawing.Size(169, 22);
             this.TDW_TIME.TabIndex = 33;
-            this.TDW_TIME.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             this.TDW_TIME.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TDW_TIME_KeyPress);
             // 
             // label14
