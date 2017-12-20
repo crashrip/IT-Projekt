@@ -19,16 +19,10 @@ namespace OLAP_WindowsForms.App
         {
             InitializeComponent();
 
-            // fill combobox with data preview from cube
+            // fill Cube Combobox with data
             getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
-            //getListBoxContent(listBox1, "DW_DERIVED_BASE_MEASURE", "DBMSR_EXPR", "DBMSR_NAME"); 
-            //getListBoxContent(listBox2, "DW_DERIVED_AGGREGATE_MEASURE", "DAMSR_EXPR", "DAMSR_NAME");
-
-
-           
-            
         }
-
+        
         // get data value and description from cube for certain table, 2 columns and a combobox
         public void getComboboxContent(ComboBox combobox,String table, String column1, String column2)
         {
@@ -39,39 +33,24 @@ namespace OLAP_WindowsForms.App
             combobox.DisplayMember = column2;
             combobox.ValueMember = column1;
         }
-
-        // get data value and description from cube for certain table, 2 columns and a combobox
-        public void getListBoxContent(ListBox listbox, String table, String column1, String column2)
-        {
-            DataTable dt = DBContext.Service().GetData(table, column1, column2);
-            DataTable dt2 = dt.Copy();
-            
-            listbox.DataSource = dt2;
-            listbox.DisplayMember = column2;
-            listbox.ValueMember = column1;
-            
-            listbox.SelectionMode = SelectionMode.MultiExtended;
-        }
-
-        // test labels
+        
+        // initializes BMSR-Filter, Measures, Filter, and enables or disables assoziated Dimension Qualification
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            label4.Text = ComboBoxCube.SelectedValue.ToString();
+            label4.Text = ComboBoxCube.SelectedValue.ToString(); // test field
 
-            
-
+            // only if user selects data in the combobox
             if (!(ComboBoxCube.SelectedValue.ToString().Equals("System.Data.DataRowView")))
             {
-                disable_dimensions();
-
-                LDW_BMSR_Instantiate();
-                LDW_MEASURES_Instantiate();
-                ldw_filter_Instantiate();
-
+                disable_dimensions(); 
+                bMSR_Instantiate();
+                measures_Instantiate();
+                filter_Instantiate();
                 dimension_enable_disable();
             }
         }
 
+        // disables all Dimension Qualifications
         private void disable_dimensions()
         {
             CDW_DOCTOR.Enabled = false;
@@ -82,6 +61,7 @@ namespace OLAP_WindowsForms.App
             CDW_TIME.Enabled = false;
         }
 
+        // enables Dimension Qualifications assoziated with cube_sid
         private void dimension_enable_disable()
         {
             DataTable dt = DBContext.Service().GetData(
@@ -127,10 +107,9 @@ namespace OLAP_WindowsForms.App
             }
         }
 
-        // Fill Derived Base Measures considering selected Cube
-        private void LDW_BMSR_Instantiate()
+        // Fill BMSR-Filter considering selected Cube
+        private void bMSR_Instantiate()
         {
-            // Disable Selection Mode while instanciating DataSource
             LDW_BMSR.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt = DBContext.Service().GetData(
@@ -147,9 +126,8 @@ namespace OLAP_WindowsForms.App
         }
 
         //Fill Measures considering selected Cube
-        private void LDW_MEASURES_Instantiate()
+        private void measures_Instantiate()
         {
-            // Disable Selection Mode while instanciating DataSource
             LDW_MEASURES.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt3 = DBContext.Service().GetData(
@@ -163,13 +141,11 @@ namespace OLAP_WindowsForms.App
             LDW_MEASURES.DisplayMember = "DAMSR_NAME";
             LDW_MEASURES.ValueMember = "DAMSR_EXPR";
             LDW_MEASURES.SelectionMode = SelectionMode.MultiExtended;
-
         }
 
-        // Fill DW_BMSR_PREDICATE considering selected Cube
-        private void ldw_filter_Instantiate()
+        // Fill Filter considering selected Cube
+        private void filter_Instantiate()
         {
-            // Disable Selection Mode while instanciating DataSource
             LDW_FILTER.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt = DBContext.Service().GetData(
@@ -185,23 +161,20 @@ namespace OLAP_WindowsForms.App
             LDW_FILTER.SelectionMode = SelectionMode.MultiExtended;
         }
 
+        // controle field - will be deleted
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            
                 label6.Text = "";
                 foreach (Object sel in LDW_BMSR.SelectedItems)
                 {
                     label6.Text += (sel as DataRowView)["DBMSR_EXPR"].ToString();
                     label6.Text += " ";
                 }
-            
         }
 
-        private void UserInput_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        private void UserInput_Load(object sender, EventArgs e){}
+        
+        // controle field - will be deleted
         private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
         {
             label7.Text = "";
@@ -212,6 +185,7 @@ namespace OLAP_WindowsForms.App
             }
         }
 
+        // controle field - will be deleted
         private void button1_Click(object sender, EventArgs e)
         {
             string table = "DW_LEVEL";
@@ -228,10 +202,10 @@ namespace OLAP_WindowsForms.App
               "WHERE " + idColumn + " = " + id
             */
             DBContext.DataView().Show();
-
-            
         }
 
+        // Filler Functions for Dimension Qualifications
+        // fills Dimension Qualification DL for ComboBox
         private void fillComboboxDimension(ComboBox cBox, int dim_sid)
         {
             DataTable dt = DBContext.Service().GetData(
@@ -241,28 +215,12 @@ namespace OLAP_WindowsForms.App
               "ORDER BY LVL_SID DESC"
                );
             DataTable dt2 = dt.Copy();
-
             cBox.DataSource = dt2;
             cBox.DisplayMember = "LVL_NAME";
             cBox.ValueMember = "LVL_SID";
         }
 
-        private void fillComboboxDimensionGroupedBy(ComboBox cBox, int dim_sid, string lvl_pos)
-        {
-            DataTable dt = DBContext.Service().GetData(
-              "SELECT LVL_SID, LVL_NAME " +
-              "FROM DW_LEVEL " +
-              "WHERE DIM_SID = " + dim_sid +
-              "AND LVL_POSITION < "+lvl_pos+
-              "ORDER BY LVL_SID DESC"
-               );
-            DataTable dt2 = dt.Copy();
-
-            cBox.DataSource = dt2;
-            cBox.DisplayMember = "LVL_NAME";
-            cBox.ValueMember = "LVL_SID";
-        }
-
+        // fills Dimension Qualification SC for ListBox
         private void fillListBoxDimension(ListBox lBox, string lvl_sid)
         {
             lBox.SelectionMode = SelectionMode.None;
@@ -272,24 +230,38 @@ namespace OLAP_WindowsForms.App
               "WHERE LVL_SID = " + lvl_sid 
                );
             DataTable dt2 = dt.Copy();
-
             lBox.DataSource = dt2;
             lBox.DisplayMember = "DIM_PRED_NAME";
             lBox.ValueMember = "DIM_PRED_EXPR";
             lBox.SelectionMode = SelectionMode.MultiExtended;
         }
 
-        // FILL DW GL AND SC
+        // fills Dimension Qualification GL for ComboBox
+        private void fillGL(ComboBox readFromCB, int dim_sid, ComboBox changeThisCB)
+        {
+            DataTable dt = DBContext.Service().GetData(
+                "SELECT *" +
+               "FROM DW_LEVEL " +
+               "WHERE LVL_SID <=" + readFromCB.SelectedValue + " AND DIM_SID =" + dim_sid +
+               "ORDER BY LVL_SID DESC"
+               );
+            DataTable dt2 = dt.Copy();
+            changeThisCB.DataSource = dt2;
+            changeThisCB.DisplayMember = "LVL_NAME";
+            changeThisCB.ValueMember = "LVL_SID";
+        }
+
+        // FILL DW GL AND SC of Dimension Qualifications
+
         private void CDW_TIME_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CDW_TIME.SelectedIndex != -1)
+            if (CDW_TIME.SelectedIndex != -1) // check if something is selected
             {
-                // fill GL
-                if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
+               // fill GL
+               if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
-                    //fillComboboxDimensionGroupedBy(CDW_TIME_GL, 6, CDW_TIME.SelectedValue.ToString());
                     fillGL(CDW_TIME, 6, CDW_TIME_GL);
-                }
+               }
                 // changes Listbox SC only if something is selected
                 if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
@@ -299,7 +271,8 @@ namespace OLAP_WindowsForms.App
         }
         private void CDW_INSURANT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(CDW_INSURANT.SelectedIndex != -1){
+            if(CDW_INSURANT.SelectedIndex != -1)// check if something is selected
+            {
                 // fill GL
                 if (!(CDW_INSURANT.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
@@ -315,7 +288,7 @@ namespace OLAP_WindowsForms.App
 
         private void CDW_MEDSERVICE_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CDW_MEDSERVICE.SelectedIndex != -1)
+            if (CDW_MEDSERVICE.SelectedIndex != -1)// check if something is selected
             {
                 // fill GL
                 if (!(CDW_MEDSERVICE.SelectedValue.ToString().Equals("System.Data.DataRowView")))
@@ -332,7 +305,7 @@ namespace OLAP_WindowsForms.App
 
         private void CDW_DRUG_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CDW_DRUG.SelectedIndex != -1)
+            if (CDW_DRUG.SelectedIndex != -1)// check if something is selected
             {
                 // fill GL
                 if (!(CDW_DRUG.SelectedValue.ToString().Equals("System.Data.DataRowView")))
@@ -348,7 +321,7 @@ namespace OLAP_WindowsForms.App
         }
         private void CDW_DOCTOR_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CDW_DOCTOR.SelectedIndex != -1)
+            if (CDW_DOCTOR.SelectedIndex != -1)// check if something is selected
             {
                 // fill GL
                 if (!(CDW_DOCTOR.SelectedValue.ToString().Equals("System.Data.DataRowView")))
@@ -365,7 +338,7 @@ namespace OLAP_WindowsForms.App
 
         private void CDW_HOSPITAL_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (CDW_HOSPITAL.SelectedIndex != -1)
+            if (CDW_HOSPITAL.SelectedIndex != -1)// check if something is selected
             {
                 // fill GL
                 if (!(CDW_HOSPITAL.SelectedValue.ToString().Equals("System.Data.DataRowView")))
@@ -380,11 +353,7 @@ namespace OLAP_WindowsForms.App
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-        // check that input is numbers only
+        // check that input of Time variable field is only a number
         private void TDW_TIME_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != 8 && e.KeyChar != 46)
@@ -392,32 +361,8 @@ namespace OLAP_WindowsForms.App
                 e.Handled = true;
             }
         }
-
-        private void LDW_TIME_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void CDW_TIME_GL_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void fillGL(ComboBox readFromCB,int dim_sid,ComboBox changeThisCB)
-        {
-            DataTable dt = DBContext.Service().GetData(
-                "SELECT *" +
-               "FROM DW_LEVEL " +
-               "WHERE LVL_SID <=" + readFromCB.SelectedValue + " AND DIM_SID ="+dim_sid+
-               "ORDER BY LVL_SID DESC"
-               );
-            DataTable dt2 = dt.Copy();
-            changeThisCB.DataSource = dt2;
-            changeThisCB.DisplayMember = "LVL_NAME";
-            changeThisCB.ValueMember = "LVL_SID";
-
-        }
-
+       
+        // deselects everything with pressing space except cube
         private void deselect(object sender, KeyPressEventArgs e)
         {
             Console.WriteLine(e.KeyChar);
@@ -434,8 +379,5 @@ namespace OLAP_WindowsForms.App
                 }
             }
         }
-        
-
-        
     }
 }
