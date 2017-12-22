@@ -42,9 +42,9 @@ namespace OLAP_WindowsForms.App
             {
                 disable_dimensions();
 
-                LDW_BMSR_Instantiate();
-                LDW_MEASURES_Instantiate();
-                ldw_filter_Instantiate();
+                bmsr_Instantiate();
+                measures_Instantiate();
+                filter_Instantiate();
 
                 dimension_enable_disable();
             }
@@ -108,7 +108,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // Fill Derived Base Measures considering selected Cube
-        private void LDW_BMSR_Instantiate()
+        private void bmsr_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
             LDW_BMSR.SelectionMode = SelectionMode.None;
@@ -127,7 +127,7 @@ namespace OLAP_WindowsForms.App
         }
 
         //Fill Measures considering selected Cube
-        private void LDW_MEASURES_Instantiate()
+        private void measures_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
             LDW_MEASURES.SelectionMode = SelectionMode.None;
@@ -147,7 +147,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // Fill DW_BMSR_PREDICATE considering selected Cube
-        private void ldw_filter_Instantiate()
+        private void filter_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
             LDW_FILTER.SelectionMode = SelectionMode.None;
@@ -189,9 +189,38 @@ namespace OLAP_WindowsForms.App
                 label7.Text += " ";
             }
         }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            DataTable dt = DBContext.Service().GetData(
+             "SELECT MAX(AGS_SID) FROM AGS_ANALYSIS_GRAPH_SCHEMA");
 
+            DataTable dt2 = dt.Copy();
+            DataRow[] dr = dt2.Select();
+
+            String id = dr[0].ItemArray[0].ToString();
+
+            DBContext.Service().delete("ags_analysis_graph_schema", "ags_sid", id);
+        }
         private void button1_Click(object sender, EventArgs e)
         {
+            DataTable dt = DBContext.Service().GetData(
+              "SELECT MAX(NASS_DQ_SID) FROM AGS_NASS_DIM_QUAL");
+
+            DataTable dt2 = dt.Copy();
+            DataRow[] dr = dt2.Select();
+
+            String id = dr[0].ItemArray[0].ToString();
+            int ID = Int32.Parse(id)+1;
+
+            String[] column = { "AGS_NAME", "AGS_DESCRIPTION" };
+            String[] input = new string[2];
+            input[0] = "test";
+            input[1] = "this is a test";
+
+
+            DBContext.Service().insertInto("AGS_ANALYSIS_GRAPH_SCHEMA","AGS_SID",column,input);
+            
+            /*
             string table = "DW_LEVEL";
             DBContext._dataView = new DataView();
             DBContext.DataView().Text = table;
@@ -205,7 +234,7 @@ namespace OLAP_WindowsForms.App
               "FROM " + table +
               "WHERE " + idColumn + " = " + id
             */
-            DBContext.DataView().Show();
+            //DBContext.DataView().Show();
         }
 
         private void fillComboboxDimension(ComboBox cBox, int dim_sid)
@@ -427,5 +456,7 @@ namespace OLAP_WindowsForms.App
             SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
             sno.ShowDialog(this);
         }
+
+        
     }
 }
