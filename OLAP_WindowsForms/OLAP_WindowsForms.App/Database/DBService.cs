@@ -5,6 +5,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OLAP_WindowsForms.App.View;
+using System.Windows.Forms;
 
 namespace OLAP_WindowsForms.App
 {
@@ -197,6 +199,155 @@ namespace OLAP_WindowsForms.App
             }
         }
 
+
+        //insert into table new
+        public void insinto( String table, String columnPK, LinkedList<Insert_item> list)
+        {
+            try
+            {
+                // get new ID
+                DataTable dt = DBContext.Service().GetData(
+              "SELECT MAX(" + columnPK + ") FROM " + table);
+
+                DataTable dt2 = dt.Copy();
+                DataRow[] dr = dt2.Select();
+
+                String id = dr[0].ItemArray[0].ToString();
+                int ID = Int32.Parse(id) + 1;
+                Console.WriteLine(ID);
+
+                // insert
+                // build command string
+                StringBuilder cmds = new StringBuilder();
+                StringBuilder cmds2 = new StringBuilder();
+
+                cmds.Append("INSERT INTO " + table + " (" + columnPK);
+                cmds2.Append(") VALUES(:pk");
+
+                int cnt = 1;
+
+                foreach (Insert_item i in list)
+                {
+                    cmds.Append(", "+i.getColumnName());
+                    cmds2.Append(", :c" + cnt);
+                    cnt++;
+                }
+
+                cmds.Append(cmds2);
+                cmds.Append(")");
+
+                Console.WriteLine(cmds.ToString());
+
+                NpgsqlConnection conn = getConnection();
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(cmds.ToString(), conn);
+
+                // add primary key
+                cmd.Parameters.Add(new NpgsqlParameter(":pk", ID));
+
+                // add rest string
+                cnt = 1;
+                foreach (Insert_item i in list)
+                {
+                    if (i.isNull())
+                    {
+                        cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
+                    }
+                    else
+                    {
+                        if (i.intValue())
+                        {
+                            Console.WriteLine(":c" + cnt + i.getIValue());
+                            cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
+                        }
+                        else
+                        {
+                            Console.WriteLine(":c" + cnt + i.getSValue());
+                            cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
+                        }
+                        
+                    }
+                    cnt++;
+                }
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                conn.Close();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace.ToString());
+            }
+        }
+
+        //insert into table -> PK provided in list
+        public void insertWithoutPK(String table, LinkedList<Insert_item> list)
+        {
+            try
+            {
+                // build command string
+                StringBuilder cmds = new StringBuilder();
+                StringBuilder cmds2 = new StringBuilder();
+
+                cmds.Append("INSERT INTO " + table + " (");
+                cmds2.Append(") VALUES(");
+
+                int cnt = 1;
+
+                foreach (Insert_item i in list)
+                {
+                    cmds.Append(i.getColumnName()+" ,");
+                    cmds2.Append(":c" + cnt+" ,");
+                    cnt++;
+                }
+
+                cmds.Remove(cmds.Length - 1, 1);
+                cmds2.Remove(cmds2.Length - 1, 1);
+
+                cmds.Append(cmds2);
+                cmds.Append(")");
+
+                Console.WriteLine(cmds.ToString());
+
+                NpgsqlConnection conn = getConnection();
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(cmds.ToString(), conn);
+
+                // add rest string
+                cnt = 1;
+                foreach (Insert_item i in list)
+                {
+                    if (i.isNull())
+                    {
+                        cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
+                    }
+                    else
+                    {
+                        if (i.intValue())
+                        {
+                            Console.WriteLine("Int :c" + cnt + i.getIValue());
+                            cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
+                        }
+                        else
+                        {
+                            Console.WriteLine("String :c" + cnt + i.getSValue());
+                            cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
+                        }
+                        
+                    }
+                    cnt++;
+                }
+                cmd.CommandType = CommandType.Text;
+                cmd.ExecuteNonQuery();
+                conn.Close();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.StackTrace.ToString());
+            }
+        }
+
         public void delete(String table, String pk_column, String pk_sid)
         {
             try
@@ -216,6 +367,84 @@ namespace OLAP_WindowsForms.App
         {
             return new NpgsqlConnection(String.Format("Server={0}; Port={1}; User Id={2}; Password={3}; Database={4};",
                         DBHostname, DBPort, DBUsername, DBPassword, DBName));
+        }
+
+        // insert into ags_nass_dim_qual and ags_nass_dim_qual_slice from schema
+        public void insertDimQual(ComboBox cdw, ComboBox cdw_gl, TextBox tdw, ListBox ldw, int ass_sid, int dim_sid, CheckBox dl, CheckBox dn, CheckBox sc, CheckBox gl)
+        {
+            // get max id (nass_dq_sid)
+            DataTable dt = DBContext.Service().GetData(
+              "SELECT MAX(NASS_DQ_SID) FROM AGS_NASS_DIM_QUAL");
+
+            DataTable dt2 = dt.Copy();
+            DataRow[] dr = dt2.Select();
+            String index = dr[0].ItemArray[0].ToString();
+            int nass_dq_sid = Int32.Parse(index)+1;
+            Console.WriteLine("nass_dq_sid: "+nass_dq_sid);
+
+            LinkedList<Insert_item> list = new LinkedList<Insert_item>();
+            list.AddFirst(new Insert_item("Nass_DQ_SID", nass_dq_sid));
+            list.AddLast(new Insert_item("ASS_SID_NASS", ass_sid));
+            list.AddLast(new Insert_item("DIM_SID", dim_sid));
+
+            if (dl.Checked)
+            {
+                list.AddLast(new Insert_item("LVL_SID_DICELVL", 0));
+            }
+            else if (cdw.SelectedValue != null)
+            {
+                list.AddLast(new Insert_item("LVL_SID_DICELVL", Int32.Parse(cdw.SelectedValue.ToString())));
+            }
+            else
+            {
+                list.AddLast(new Insert_item("LVL_SID_DICELVL", null));
+            }
+
+            if (dn.Checked)
+            {
+                list.AddLast(new Insert_item("NASS_DQ_DICE_NODE", ""));
+            }
+            else if (tdw.Text.Length > 0)
+            {
+                list.AddLast(new Insert_item("NASS_DQ_DICE_NODE", tdw.Text));
+            }
+            else
+            {
+                list.AddLast(new Insert_item("NASS_DQ_DICE_NODE", null));
+            }
+
+            if (gl.Checked)
+            {
+                list.AddLast(new Insert_item("LVL_SID_GRANLVL", 0));
+            }
+            else if (cdw_gl.SelectedValue != null)
+            {
+                list.AddLast(new Insert_item("LVL_SID_GRANLVL", Int32.Parse(cdw_gl.SelectedValue.ToString())));
+            }
+            else
+            {
+                list.AddLast(new Insert_item("LVL_SID_GRANLVL", null));
+            }
+
+            DBContext.Service().insertWithoutPK("AGS_NASS_DIM_QUAL", list);
+
+            // insert slice cond -> ags_nass_dim_qual_slice
+            list.Clear();
+
+            if (ldw.SelectedValue != null)
+            {
+                Console.WriteLine("entered slice: ");
+                Console.WriteLine(ldw.SelectedValue.ToString());
+
+                foreach (Object sel in ldw.SelectedItems)
+                {
+                    Console.WriteLine((sel as DataRowView)["DIM_PRED_SID"]);
+                    list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
+                    list.AddLast(new Insert_item("DIM_PRED_SID", Int32.Parse((sel as DataRowView)["DIM_PRED_SID"].ToString())));
+                    DBContext.Service().insinto("AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
+                    list.Clear();
+                }
+            }
         }
     }  
     }

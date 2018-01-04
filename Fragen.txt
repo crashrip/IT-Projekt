@@ -1,0 +1,1 @@
+- AGS_NASS_DIM_QUAL_SLICE_COND -> was reinschreiben bei variable ? 

@@ -60,6 +60,7 @@
     <Compile Include="View\DataView.Designer.cs">
       <DependentUpon>DataView.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Insert_item.cs" />
     <Compile Include="View\Login.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,6 +72,12 @@
     </Compile>
     <Compile Include="View\BaseMenu.Designer.cs">
       <DependentUpon>BaseMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Save.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Save.Designer.cs">
+      <DependentUpon>Save.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SelectNavigationOperator.cs">
       <SubType>Form</SubType>
@@ -94,6 +101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\BaseMenu.resx">
       <DependentUpon>BaseMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\save.resx">
+      <DependentUpon>Save.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\SelectNavigationOperator.resx">
       <DependentUpon>SelectNavigationOperator.cs</DependentUpon>

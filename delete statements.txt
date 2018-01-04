@@ -1,0 +1,4 @@
+Delete from ags_analysis_situation_schema where ass_sid > 23;
+Delete from ags_non_cmp_ass where ass_sid_nass > 23;
+Delete from ags_nass_dim_qual where nass_dq_sid > 16;
+Delete from ags_nass_dim_qual_slice_cond where nass_sc_sid > 16;

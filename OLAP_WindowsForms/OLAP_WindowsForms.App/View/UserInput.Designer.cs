@@ -35,11 +35,11 @@ namespace OLAP_WindowsForms.App
             this.label4 = new System.Windows.Forms.Label();
             this.ComboBoxCube = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.measure_variable = new System.Windows.Forms.CheckBox();
             this.LDW_BMSR = new System.Windows.Forms.ListBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.bmsr_variable = new System.Windows.Forms.CheckBox();
             this.LDW_MEASURES = new System.Windows.Forms.ListBox();
             this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
@@ -79,36 +79,36 @@ namespace OLAP_WindowsForms.App
             this.label27 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.CDW_DOCTOR = new System.Windows.Forms.ComboBox();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
-            this.checkBox8 = new System.Windows.Forms.CheckBox();
-            this.checkBox9 = new System.Windows.Forms.CheckBox();
-            this.checkBox10 = new System.Windows.Forms.CheckBox();
-            this.checkBox11 = new System.Windows.Forms.CheckBox();
-            this.checkBox12 = new System.Windows.Forms.CheckBox();
-            this.checkBox13 = new System.Windows.Forms.CheckBox();
-            this.checkBox14 = new System.Windows.Forms.CheckBox();
-            this.checkBox15 = new System.Windows.Forms.CheckBox();
-            this.checkBox16 = new System.Windows.Forms.CheckBox();
-            this.checkBox17 = new System.Windows.Forms.CheckBox();
-            this.checkBox18 = new System.Windows.Forms.CheckBox();
-            this.checkBox19 = new System.Windows.Forms.CheckBox();
+            this.time_DL = new System.Windows.Forms.CheckBox();
+            this.time_DN = new System.Windows.Forms.CheckBox();
+            this.time_SC = new System.Windows.Forms.CheckBox();
+            this.time_GL = new System.Windows.Forms.CheckBox();
+            this.insurant_GL = new System.Windows.Forms.CheckBox();
+            this.insurant_SC = new System.Windows.Forms.CheckBox();
+            this.insurant_DN = new System.Windows.Forms.CheckBox();
+            this.insurant_DL = new System.Windows.Forms.CheckBox();
+            this.drug_GL = new System.Windows.Forms.CheckBox();
+            this.drug_SC = new System.Windows.Forms.CheckBox();
+            this.drug_DN = new System.Windows.Forms.CheckBox();
+            this.drug_DL = new System.Windows.Forms.CheckBox();
+            this.doctor_GL = new System.Windows.Forms.CheckBox();
+            this.doctor_SC = new System.Windows.Forms.CheckBox();
+            this.doctor_DN = new System.Windows.Forms.CheckBox();
+            this.doctor_DL = new System.Windows.Forms.CheckBox();
             this.label29 = new System.Windows.Forms.Label();
             this.LDW_FILTER = new System.Windows.Forms.ListBox();
-            this.checkBox20 = new System.Windows.Forms.CheckBox();
+            this.filter_variable = new System.Windows.Forms.CheckBox();
             this.button_save = new System.Windows.Forms.Button();
             this.button_cancel = new System.Windows.Forms.Button();
             this.button_select_navigation_operator = new System.Windows.Forms.Button();
-            this.checkBox21 = new System.Windows.Forms.CheckBox();
-            this.checkBox22 = new System.Windows.Forms.CheckBox();
-            this.checkBox23 = new System.Windows.Forms.CheckBox();
-            this.checkBox24 = new System.Windows.Forms.CheckBox();
-            this.checkBox25 = new System.Windows.Forms.CheckBox();
-            this.checkBox26 = new System.Windows.Forms.CheckBox();
-            this.checkBox27 = new System.Windows.Forms.CheckBox();
-            this.checkBox28 = new System.Windows.Forms.CheckBox();
+            this.hospital_GL = new System.Windows.Forms.CheckBox();
+            this.hospital_SC = new System.Windows.Forms.CheckBox();
+            this.hospital_DN = new System.Windows.Forms.CheckBox();
+            this.hospital_DL = new System.Windows.Forms.CheckBox();
+            this.meds_GL = new System.Windows.Forms.CheckBox();
+            this.meds_SC = new System.Windows.Forms.CheckBox();
+            this.meds_DN = new System.Windows.Forms.CheckBox();
+            this.meds_DL = new System.Windows.Forms.CheckBox();
             this.CDW_HOSPITAL_GL = new System.Windows.Forms.ComboBox();
             this.LDW_HOSPITAL = new System.Windows.Forms.ListBox();
             this.TDW_HOSPITAL = new System.Windows.Forms.TextBox();
@@ -177,15 +177,15 @@ namespace OLAP_WindowsForms.App
             this.label5.TabIndex = 9;
             this.label5.Text = "Mesures:";
             // 
-            // checkBox3
+            // measure_variable
             // 
-            this.checkBox3.AutoSize = true;
-            this.checkBox3.Location = new System.Drawing.Point(483, 93);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(63, 17);
-            this.checkBox3.TabIndex = 13;
-            this.checkBox3.Text = "variable";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.measure_variable.AutoSize = true;
+            this.measure_variable.Location = new System.Drawing.Point(483, 93);
+            this.measure_variable.Name = "measure_variable";
+            this.measure_variable.Size = new System.Drawing.Size(63, 17);
+            this.measure_variable.TabIndex = 13;
+            this.measure_variable.Text = "variable";
+            this.measure_variable.UseVisualStyleBackColor = true;
             // 
             // LDW_BMSR
             // 
@@ -215,15 +215,15 @@ namespace OLAP_WindowsForms.App
             this.label7.TabIndex = 18;
             this.label7.Text = "label7";
             // 
-            // checkBox4
+            // bmsr_variable
             // 
-            this.checkBox4.AutoSize = true;
-            this.checkBox4.Location = new System.Drawing.Point(216, 93);
-            this.checkBox4.Name = "checkBox4";
-            this.checkBox4.Size = new System.Drawing.Size(63, 17);
-            this.checkBox4.TabIndex = 19;
-            this.checkBox4.Text = "variable";
-            this.checkBox4.UseVisualStyleBackColor = true;
+            this.bmsr_variable.AutoSize = true;
+            this.bmsr_variable.Location = new System.Drawing.Point(216, 93);
+            this.bmsr_variable.Name = "bmsr_variable";
+            this.bmsr_variable.Size = new System.Drawing.Size(63, 17);
+            this.bmsr_variable.TabIndex = 19;
+            this.bmsr_variable.Text = "variable";
+            this.bmsr_variable.UseVisualStyleBackColor = true;
             // 
             // LDW_MEASURES
             // 
@@ -583,165 +583,165 @@ namespace OLAP_WindowsForms.App
             this.CDW_DOCTOR.SelectedIndexChanged += new System.EventHandler(this.CDW_DOCTOR_SelectedIndexChanged);
             this.CDW_DOCTOR.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
             // 
-            // checkBox2
+            // time_DL
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(193, 237);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(63, 17);
-            this.checkBox2.TabIndex = 61;
-            this.checkBox2.Text = "variable";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.time_DL.AutoSize = true;
+            this.time_DL.Location = new System.Drawing.Point(193, 237);
+            this.time_DL.Name = "time_DL";
+            this.time_DL.Size = new System.Drawing.Size(63, 17);
+            this.time_DL.TabIndex = 61;
+            this.time_DL.Text = "variable";
+            this.time_DL.UseVisualStyleBackColor = true;
             // 
-            // checkBox5
+            // time_DN
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(193, 260);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(63, 17);
-            this.checkBox5.TabIndex = 62;
-            this.checkBox5.Text = "variable";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.time_DN.AutoSize = true;
+            this.time_DN.Location = new System.Drawing.Point(193, 260);
+            this.time_DN.Name = "time_DN";
+            this.time_DN.Size = new System.Drawing.Size(63, 17);
+            this.time_DN.TabIndex = 62;
+            this.time_DN.Text = "variable";
+            this.time_DN.UseVisualStyleBackColor = true;
             // 
-            // checkBox6
+            // time_SC
             // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.Location = new System.Drawing.Point(193, 285);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(63, 17);
-            this.checkBox6.TabIndex = 63;
-            this.checkBox6.Text = "variable";
-            this.checkBox6.UseVisualStyleBackColor = true;
+            this.time_SC.AutoSize = true;
+            this.time_SC.Location = new System.Drawing.Point(193, 285);
+            this.time_SC.Name = "time_SC";
+            this.time_SC.Size = new System.Drawing.Size(63, 17);
+            this.time_SC.TabIndex = 63;
+            this.time_SC.Text = "variable";
+            this.time_SC.UseVisualStyleBackColor = true;
             // 
-            // checkBox7
+            // time_GL
             // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(193, 388);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(63, 17);
-            this.checkBox7.TabIndex = 64;
-            this.checkBox7.Text = "variable";
-            this.checkBox7.UseVisualStyleBackColor = true;
+            this.time_GL.AutoSize = true;
+            this.time_GL.Location = new System.Drawing.Point(193, 388);
+            this.time_GL.Name = "time_GL";
+            this.time_GL.Size = new System.Drawing.Size(63, 17);
+            this.time_GL.TabIndex = 64;
+            this.time_GL.Text = "variable";
+            this.time_GL.UseVisualStyleBackColor = true;
             // 
-            // checkBox8
+            // insurant_GL
             // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.Location = new System.Drawing.Point(459, 388);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(63, 17);
-            this.checkBox8.TabIndex = 68;
-            this.checkBox8.Text = "variable";
-            this.checkBox8.UseVisualStyleBackColor = true;
+            this.insurant_GL.AutoSize = true;
+            this.insurant_GL.Location = new System.Drawing.Point(459, 388);
+            this.insurant_GL.Name = "insurant_GL";
+            this.insurant_GL.Size = new System.Drawing.Size(63, 17);
+            this.insurant_GL.TabIndex = 68;
+            this.insurant_GL.Text = "variable";
+            this.insurant_GL.UseVisualStyleBackColor = true;
             // 
-            // checkBox9
+            // insurant_SC
             // 
-            this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(459, 284);
-            this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(63, 17);
-            this.checkBox9.TabIndex = 67;
-            this.checkBox9.Text = "variable";
-            this.checkBox9.UseVisualStyleBackColor = true;
+            this.insurant_SC.AutoSize = true;
+            this.insurant_SC.Location = new System.Drawing.Point(459, 284);
+            this.insurant_SC.Name = "insurant_SC";
+            this.insurant_SC.Size = new System.Drawing.Size(63, 17);
+            this.insurant_SC.TabIndex = 67;
+            this.insurant_SC.Text = "variable";
+            this.insurant_SC.UseVisualStyleBackColor = true;
             // 
-            // checkBox10
+            // insurant_DN
             // 
-            this.checkBox10.AutoSize = true;
-            this.checkBox10.Location = new System.Drawing.Point(459, 259);
-            this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(63, 17);
-            this.checkBox10.TabIndex = 66;
-            this.checkBox10.Text = "variable";
-            this.checkBox10.UseVisualStyleBackColor = true;
+            this.insurant_DN.AutoSize = true;
+            this.insurant_DN.Location = new System.Drawing.Point(459, 259);
+            this.insurant_DN.Name = "insurant_DN";
+            this.insurant_DN.Size = new System.Drawing.Size(63, 17);
+            this.insurant_DN.TabIndex = 66;
+            this.insurant_DN.Text = "variable";
+            this.insurant_DN.UseVisualStyleBackColor = true;
             // 
-            // checkBox11
+            // insurant_DL
             // 
-            this.checkBox11.AutoSize = true;
-            this.checkBox11.Location = new System.Drawing.Point(459, 236);
-            this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(63, 17);
-            this.checkBox11.TabIndex = 65;
-            this.checkBox11.Text = "variable";
-            this.checkBox11.UseVisualStyleBackColor = true;
+            this.insurant_DL.AutoSize = true;
+            this.insurant_DL.Location = new System.Drawing.Point(459, 236);
+            this.insurant_DL.Name = "insurant_DL";
+            this.insurant_DL.Size = new System.Drawing.Size(63, 17);
+            this.insurant_DL.TabIndex = 65;
+            this.insurant_DL.Text = "variable";
+            this.insurant_DL.UseVisualStyleBackColor = true;
             // 
-            // checkBox12
+            // drug_GL
             // 
-            this.checkBox12.AutoSize = true;
-            this.checkBox12.Location = new System.Drawing.Point(193, 629);
-            this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(63, 17);
-            this.checkBox12.TabIndex = 72;
-            this.checkBox12.Text = "variable";
-            this.checkBox12.UseVisualStyleBackColor = true;
+            this.drug_GL.AutoSize = true;
+            this.drug_GL.Location = new System.Drawing.Point(193, 629);
+            this.drug_GL.Name = "drug_GL";
+            this.drug_GL.Size = new System.Drawing.Size(63, 17);
+            this.drug_GL.TabIndex = 72;
+            this.drug_GL.Text = "variable";
+            this.drug_GL.UseVisualStyleBackColor = true;
             // 
-            // checkBox13
+            // drug_SC
             // 
-            this.checkBox13.AutoSize = true;
-            this.checkBox13.Location = new System.Drawing.Point(193, 528);
-            this.checkBox13.Name = "checkBox13";
-            this.checkBox13.Size = new System.Drawing.Size(63, 17);
-            this.checkBox13.TabIndex = 71;
-            this.checkBox13.Text = "variable";
-            this.checkBox13.UseVisualStyleBackColor = true;
+            this.drug_SC.AutoSize = true;
+            this.drug_SC.Location = new System.Drawing.Point(193, 528);
+            this.drug_SC.Name = "drug_SC";
+            this.drug_SC.Size = new System.Drawing.Size(63, 17);
+            this.drug_SC.TabIndex = 71;
+            this.drug_SC.Text = "variable";
+            this.drug_SC.UseVisualStyleBackColor = true;
             // 
-            // checkBox14
+            // drug_DN
             // 
-            this.checkBox14.AutoSize = true;
-            this.checkBox14.Location = new System.Drawing.Point(193, 498);
-            this.checkBox14.Name = "checkBox14";
-            this.checkBox14.Size = new System.Drawing.Size(63, 17);
-            this.checkBox14.TabIndex = 70;
-            this.checkBox14.Text = "variable";
-            this.checkBox14.UseVisualStyleBackColor = true;
+            this.drug_DN.AutoSize = true;
+            this.drug_DN.Location = new System.Drawing.Point(193, 498);
+            this.drug_DN.Name = "drug_DN";
+            this.drug_DN.Size = new System.Drawing.Size(63, 17);
+            this.drug_DN.TabIndex = 70;
+            this.drug_DN.Text = "variable";
+            this.drug_DN.UseVisualStyleBackColor = true;
             // 
-            // checkBox15
+            // drug_DL
             // 
-            this.checkBox15.AutoSize = true;
-            this.checkBox15.Location = new System.Drawing.Point(193, 476);
-            this.checkBox15.Name = "checkBox15";
-            this.checkBox15.Size = new System.Drawing.Size(63, 17);
-            this.checkBox15.TabIndex = 69;
-            this.checkBox15.Text = "variable";
-            this.checkBox15.UseVisualStyleBackColor = true;
+            this.drug_DL.AutoSize = true;
+            this.drug_DL.Location = new System.Drawing.Point(193, 476);
+            this.drug_DL.Name = "drug_DL";
+            this.drug_DL.Size = new System.Drawing.Size(63, 17);
+            this.drug_DL.TabIndex = 69;
+            this.drug_DL.Text = "variable";
+            this.drug_DL.UseVisualStyleBackColor = true;
             // 
-            // checkBox16
+            // doctor_GL
             // 
-            this.checkBox16.AutoSize = true;
-            this.checkBox16.Location = new System.Drawing.Point(459, 629);
-            this.checkBox16.Name = "checkBox16";
-            this.checkBox16.Size = new System.Drawing.Size(63, 17);
-            this.checkBox16.TabIndex = 76;
-            this.checkBox16.Text = "variable";
-            this.checkBox16.UseVisualStyleBackColor = true;
+            this.doctor_GL.AutoSize = true;
+            this.doctor_GL.Location = new System.Drawing.Point(459, 629);
+            this.doctor_GL.Name = "doctor_GL";
+            this.doctor_GL.Size = new System.Drawing.Size(63, 17);
+            this.doctor_GL.TabIndex = 76;
+            this.doctor_GL.Text = "variable";
+            this.doctor_GL.UseVisualStyleBackColor = true;
             // 
-            // checkBox17
+            // doctor_SC
             // 
-            this.checkBox17.AutoSize = true;
-            this.checkBox17.Location = new System.Drawing.Point(459, 527);
-            this.checkBox17.Name = "checkBox17";
-            this.checkBox17.Size = new System.Drawing.Size(63, 17);
-            this.checkBox17.TabIndex = 75;
-            this.checkBox17.Text = "variable";
-            this.checkBox17.UseVisualStyleBackColor = true;
+            this.doctor_SC.AutoSize = true;
+            this.doctor_SC.Location = new System.Drawing.Point(459, 527);
+            this.doctor_SC.Name = "doctor_SC";
+            this.doctor_SC.Size = new System.Drawing.Size(63, 17);
+            this.doctor_SC.TabIndex = 75;
+            this.doctor_SC.Text = "variable";
+            this.doctor_SC.UseVisualStyleBackColor = true;
             // 
-            // checkBox18
+            // doctor_DN
             // 
-            this.checkBox18.AutoSize = true;
-            this.checkBox18.Location = new System.Drawing.Point(459, 497);
-            this.checkBox18.Name = "checkBox18";
-            this.checkBox18.Size = new System.Drawing.Size(63, 17);
-            this.checkBox18.TabIndex = 74;
-            this.checkBox18.Text = "variable";
-            this.checkBox18.UseVisualStyleBackColor = true;
+            this.doctor_DN.AutoSize = true;
+            this.doctor_DN.Location = new System.Drawing.Point(459, 497);
+            this.doctor_DN.Name = "doctor_DN";
+            this.doctor_DN.Size = new System.Drawing.Size(63, 17);
+            this.doctor_DN.TabIndex = 74;
+            this.doctor_DN.Text = "variable";
+            this.doctor_DN.UseVisualStyleBackColor = true;
             // 
-            // checkBox19
+            // doctor_DL
             // 
-            this.checkBox19.AutoSize = true;
-            this.checkBox19.Location = new System.Drawing.Point(459, 476);
-            this.checkBox19.Name = "checkBox19";
-            this.checkBox19.Size = new System.Drawing.Size(63, 17);
-            this.checkBox19.TabIndex = 73;
-            this.checkBox19.Text = "variable";
-            this.checkBox19.UseVisualStyleBackColor = true;
+            this.doctor_DL.AutoSize = true;
+            this.doctor_DL.Location = new System.Drawing.Point(459, 476);
+            this.doctor_DL.Name = "doctor_DL";
+            this.doctor_DL.Size = new System.Drawing.Size(63, 17);
+            this.doctor_DL.TabIndex = 73;
+            this.doctor_DL.Text = "variable";
+            this.doctor_DL.UseVisualStyleBackColor = true;
             // 
             // label29
             // 
@@ -761,15 +761,15 @@ namespace OLAP_WindowsForms.App
             this.LDW_FILTER.TabIndex = 78;
             this.LDW_FILTER.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
             // 
-            // checkBox20
+            // filter_variable
             // 
-            this.checkBox20.AutoSize = true;
-            this.checkBox20.Location = new System.Drawing.Point(766, 93);
-            this.checkBox20.Name = "checkBox20";
-            this.checkBox20.Size = new System.Drawing.Size(63, 17);
-            this.checkBox20.TabIndex = 79;
-            this.checkBox20.Text = "variable";
-            this.checkBox20.UseVisualStyleBackColor = true;
+            this.filter_variable.AutoSize = true;
+            this.filter_variable.Location = new System.Drawing.Point(766, 93);
+            this.filter_variable.Name = "filter_variable";
+            this.filter_variable.Size = new System.Drawing.Size(63, 17);
+            this.filter_variable.TabIndex = 79;
+            this.filter_variable.Text = "variable";
+            this.filter_variable.UseVisualStyleBackColor = true;
             // 
             // button_save
             // 
@@ -779,6 +779,7 @@ namespace OLAP_WindowsForms.App
             this.button_save.TabIndex = 80;
             this.button_save.Text = "Save";
             this.button_save.UseVisualStyleBackColor = true;
+            this.button_save.Click += new System.EventHandler(this.button_save_Click);
             // 
             // button_cancel
             // 
@@ -800,85 +801,85 @@ namespace OLAP_WindowsForms.App
             this.button_select_navigation_operator.UseVisualStyleBackColor = true;
             this.button_select_navigation_operator.Click += new System.EventHandler(this.button_select_navigation_operator_Click);
             // 
-            // checkBox21
+            // hospital_GL
             // 
-            this.checkBox21.AutoSize = true;
-            this.checkBox21.Location = new System.Drawing.Point(726, 629);
-            this.checkBox21.Name = "checkBox21";
-            this.checkBox21.Size = new System.Drawing.Size(63, 17);
-            this.checkBox21.TabIndex = 108;
-            this.checkBox21.Text = "variable";
-            this.checkBox21.UseVisualStyleBackColor = true;
+            this.hospital_GL.AutoSize = true;
+            this.hospital_GL.Location = new System.Drawing.Point(726, 629);
+            this.hospital_GL.Name = "hospital_GL";
+            this.hospital_GL.Size = new System.Drawing.Size(63, 17);
+            this.hospital_GL.TabIndex = 108;
+            this.hospital_GL.Text = "variable";
+            this.hospital_GL.UseVisualStyleBackColor = true;
             // 
-            // checkBox22
+            // hospital_SC
             // 
-            this.checkBox22.AutoSize = true;
-            this.checkBox22.Location = new System.Drawing.Point(726, 527);
-            this.checkBox22.Name = "checkBox22";
-            this.checkBox22.Size = new System.Drawing.Size(63, 17);
-            this.checkBox22.TabIndex = 107;
-            this.checkBox22.Text = "variable";
-            this.checkBox22.UseVisualStyleBackColor = true;
+            this.hospital_SC.AutoSize = true;
+            this.hospital_SC.Location = new System.Drawing.Point(726, 527);
+            this.hospital_SC.Name = "hospital_SC";
+            this.hospital_SC.Size = new System.Drawing.Size(63, 17);
+            this.hospital_SC.TabIndex = 107;
+            this.hospital_SC.Text = "variable";
+            this.hospital_SC.UseVisualStyleBackColor = true;
             // 
-            // checkBox23
+            // hospital_DN
             // 
-            this.checkBox23.AutoSize = true;
-            this.checkBox23.Location = new System.Drawing.Point(726, 497);
-            this.checkBox23.Name = "checkBox23";
-            this.checkBox23.Size = new System.Drawing.Size(63, 17);
-            this.checkBox23.TabIndex = 106;
-            this.checkBox23.Text = "variable";
-            this.checkBox23.UseVisualStyleBackColor = true;
+            this.hospital_DN.AutoSize = true;
+            this.hospital_DN.Location = new System.Drawing.Point(726, 497);
+            this.hospital_DN.Name = "hospital_DN";
+            this.hospital_DN.Size = new System.Drawing.Size(63, 17);
+            this.hospital_DN.TabIndex = 106;
+            this.hospital_DN.Text = "variable";
+            this.hospital_DN.UseVisualStyleBackColor = true;
             // 
-            // checkBox24
+            // hospital_DL
             // 
-            this.checkBox24.AutoSize = true;
-            this.checkBox24.Location = new System.Drawing.Point(726, 476);
-            this.checkBox24.Name = "checkBox24";
-            this.checkBox24.Size = new System.Drawing.Size(63, 17);
-            this.checkBox24.TabIndex = 105;
-            this.checkBox24.Text = "variable";
-            this.checkBox24.UseVisualStyleBackColor = true;
+            this.hospital_DL.AutoSize = true;
+            this.hospital_DL.Location = new System.Drawing.Point(726, 476);
+            this.hospital_DL.Name = "hospital_DL";
+            this.hospital_DL.Size = new System.Drawing.Size(63, 17);
+            this.hospital_DL.TabIndex = 105;
+            this.hospital_DL.Text = "variable";
+            this.hospital_DL.UseVisualStyleBackColor = true;
             // 
-            // checkBox25
+            // meds_GL
             // 
-            this.checkBox25.AutoSize = true;
-            this.checkBox25.Location = new System.Drawing.Point(726, 388);
-            this.checkBox25.Name = "checkBox25";
-            this.checkBox25.Size = new System.Drawing.Size(63, 17);
-            this.checkBox25.TabIndex = 104;
-            this.checkBox25.Text = "variable";
-            this.checkBox25.UseVisualStyleBackColor = true;
+            this.meds_GL.AutoSize = true;
+            this.meds_GL.Location = new System.Drawing.Point(726, 388);
+            this.meds_GL.Name = "meds_GL";
+            this.meds_GL.Size = new System.Drawing.Size(63, 17);
+            this.meds_GL.TabIndex = 104;
+            this.meds_GL.Text = "variable";
+            this.meds_GL.UseVisualStyleBackColor = true;
             // 
-            // checkBox26
+            // meds_SC
             // 
-            this.checkBox26.AutoSize = true;
-            this.checkBox26.Location = new System.Drawing.Point(726, 284);
-            this.checkBox26.Name = "checkBox26";
-            this.checkBox26.Size = new System.Drawing.Size(63, 17);
-            this.checkBox26.TabIndex = 103;
-            this.checkBox26.Text = "variable";
-            this.checkBox26.UseVisualStyleBackColor = true;
+            this.meds_SC.AutoSize = true;
+            this.meds_SC.Location = new System.Drawing.Point(726, 284);
+            this.meds_SC.Name = "meds_SC";
+            this.meds_SC.Size = new System.Drawing.Size(63, 17);
+            this.meds_SC.TabIndex = 103;
+            this.meds_SC.Text = "variable";
+            this.meds_SC.UseVisualStyleBackColor = true;
             // 
-            // checkBox27
+            // meds_DN
             // 
-            this.checkBox27.AutoSize = true;
-            this.checkBox27.Location = new System.Drawing.Point(726, 259);
-            this.checkBox27.Name = "checkBox27";
-            this.checkBox27.Size = new System.Drawing.Size(63, 17);
-            this.checkBox27.TabIndex = 102;
-            this.checkBox27.Text = "variable";
-            this.checkBox27.UseVisualStyleBackColor = true;
+            this.meds_DN.AutoSize = true;
+            this.meds_DN.Location = new System.Drawing.Point(726, 259);
+            this.meds_DN.Name = "meds_DN";
+            this.meds_DN.Size = new System.Drawing.Size(63, 17);
+            this.meds_DN.TabIndex = 102;
+            this.meds_DN.Text = "variable";
+            this.meds_DN.UseVisualStyleBackColor = true;
             // 
-            // checkBox28
+            // meds_DL
             // 
-            this.checkBox28.AutoSize = true;
-            this.checkBox28.Location = new System.Drawing.Point(726, 236);
-            this.checkBox28.Name = "checkBox28";
-            this.checkBox28.Size = new System.Drawing.Size(63, 17);
-            this.checkBox28.TabIndex = 101;
-            this.checkBox28.Text = "variable";
-            this.checkBox28.UseVisualStyleBackColor = true;
+            this.meds_DL.AutoSize = true;
+            this.meds_DL.Location = new System.Drawing.Point(726, 236);
+            this.meds_DL.Name = "meds_DL";
+            this.meds_DL.Size = new System.Drawing.Size(63, 17);
+            this.meds_DL.TabIndex = 101;
+            this.meds_DL.Text = "variable";
+            this.meds_DL.UseVisualStyleBackColor = true;
             // 
             // CDW_HOSPITAL_GL
             // 
@@ -1060,14 +1061,14 @@ namespace OLAP_WindowsForms.App
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(826, 751);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.checkBox21);
-            this.Controls.Add(this.checkBox22);
-            this.Controls.Add(this.checkBox23);
-            this.Controls.Add(this.checkBox24);
-            this.Controls.Add(this.checkBox25);
-            this.Controls.Add(this.checkBox26);
-            this.Controls.Add(this.checkBox27);
-            this.Controls.Add(this.checkBox28);
+            this.Controls.Add(this.hospital_GL);
+            this.Controls.Add(this.hospital_SC);
+            this.Controls.Add(this.hospital_DN);
+            this.Controls.Add(this.hospital_DL);
+            this.Controls.Add(this.meds_GL);
+            this.Controls.Add(this.meds_SC);
+            this.Controls.Add(this.meds_DN);
+            this.Controls.Add(this.meds_DL);
             this.Controls.Add(this.CDW_HOSPITAL_GL);
             this.Controls.Add(this.LDW_HOSPITAL);
             this.Controls.Add(this.TDW_HOSPITAL);
@@ -1089,25 +1090,25 @@ namespace OLAP_WindowsForms.App
             this.Controls.Add(this.button_select_navigation_operator);
             this.Controls.Add(this.button_cancel);
             this.Controls.Add(this.button_save);
-            this.Controls.Add(this.checkBox20);
+            this.Controls.Add(this.filter_variable);
             this.Controls.Add(this.LDW_FILTER);
             this.Controls.Add(this.label29);
-            this.Controls.Add(this.checkBox16);
-            this.Controls.Add(this.checkBox17);
-            this.Controls.Add(this.checkBox18);
-            this.Controls.Add(this.checkBox19);
-            this.Controls.Add(this.checkBox12);
-            this.Controls.Add(this.checkBox13);
-            this.Controls.Add(this.checkBox14);
-            this.Controls.Add(this.checkBox15);
-            this.Controls.Add(this.checkBox8);
-            this.Controls.Add(this.checkBox9);
-            this.Controls.Add(this.checkBox10);
-            this.Controls.Add(this.checkBox11);
-            this.Controls.Add(this.checkBox7);
-            this.Controls.Add(this.checkBox6);
-            this.Controls.Add(this.checkBox5);
-            this.Controls.Add(this.checkBox2);
+            this.Controls.Add(this.doctor_GL);
+            this.Controls.Add(this.doctor_SC);
+            this.Controls.Add(this.doctor_DN);
+            this.Controls.Add(this.doctor_DL);
+            this.Controls.Add(this.drug_GL);
+            this.Controls.Add(this.drug_SC);
+            this.Controls.Add(this.drug_DN);
+            this.Controls.Add(this.drug_DL);
+            this.Controls.Add(this.insurant_GL);
+            this.Controls.Add(this.insurant_SC);
+            this.Controls.Add(this.insurant_DN);
+            this.Controls.Add(this.insurant_DL);
+            this.Controls.Add(this.time_GL);
+            this.Controls.Add(this.time_SC);
+            this.Controls.Add(this.time_DN);
+            this.Controls.Add(this.time_DL);
             this.Controls.Add(this.CDW_DOCTOR_GL);
             this.Controls.Add(this.LDW_DOCTOR);
             this.Controls.Add(this.TDW_DOCTOR);
@@ -1147,17 +1148,17 @@ namespace OLAP_WindowsForms.App
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.LDW_MEASURES);
-            this.Controls.Add(this.checkBox4);
+            this.Controls.Add(this.bmsr_variable);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.LDW_BMSR);
-            this.Controls.Add(this.checkBox3);
+            this.Controls.Add(this.measure_variable);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.ComboBoxCube);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserInput";
             this.Text = "New Schema";
             this.Load += new System.EventHandler(this.UserInput_Load);
@@ -1174,11 +1175,11 @@ namespace OLAP_WindowsForms.App
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox ComboBoxCube;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox measure_variable;
         private System.Windows.Forms.ListBox LDW_BMSR;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox bmsr_variable;
         private System.Windows.Forms.ListBox LDW_MEASURES;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;
@@ -1218,36 +1219,36 @@ namespace OLAP_WindowsForms.App
         private System.Windows.Forms.Label label27;
         private System.Windows.Forms.Label label28;
         private System.Windows.Forms.ComboBox CDW_DOCTOR;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox5;
-        private System.Windows.Forms.CheckBox checkBox6;
-        private System.Windows.Forms.CheckBox checkBox7;
-        private System.Windows.Forms.CheckBox checkBox8;
-        private System.Windows.Forms.CheckBox checkBox9;
-        private System.Windows.Forms.CheckBox checkBox10;
-        private System.Windows.Forms.CheckBox checkBox11;
-        private System.Windows.Forms.CheckBox checkBox12;
-        private System.Windows.Forms.CheckBox checkBox13;
-        private System.Windows.Forms.CheckBox checkBox14;
-        private System.Windows.Forms.CheckBox checkBox15;
-        private System.Windows.Forms.CheckBox checkBox16;
-        private System.Windows.Forms.CheckBox checkBox17;
-        private System.Windows.Forms.CheckBox checkBox18;
-        private System.Windows.Forms.CheckBox checkBox19;
+        private System.Windows.Forms.CheckBox time_DL;
+        private System.Windows.Forms.CheckBox time_DN;
+        private System.Windows.Forms.CheckBox time_SC;
+        private System.Windows.Forms.CheckBox time_GL;
+        private System.Windows.Forms.CheckBox insurant_GL;
+        private System.Windows.Forms.CheckBox insurant_SC;
+        private System.Windows.Forms.CheckBox insurant_DN;
+        private System.Windows.Forms.CheckBox insurant_DL;
+        private System.Windows.Forms.CheckBox drug_GL;
+        private System.Windows.Forms.CheckBox drug_SC;
+        private System.Windows.Forms.CheckBox drug_DN;
+        private System.Windows.Forms.CheckBox drug_DL;
+        private System.Windows.Forms.CheckBox doctor_GL;
+        private System.Windows.Forms.CheckBox doctor_SC;
+        private System.Windows.Forms.CheckBox doctor_DN;
+        private System.Windows.Forms.CheckBox doctor_DL;
         private System.Windows.Forms.Label label29;
         private System.Windows.Forms.ListBox LDW_FILTER;
-        private System.Windows.Forms.CheckBox checkBox20;
+        private System.Windows.Forms.CheckBox filter_variable;
         private System.Windows.Forms.Button button_save;
         private System.Windows.Forms.Button button_cancel;
         private System.Windows.Forms.Button button_select_navigation_operator;
-        private System.Windows.Forms.CheckBox checkBox21;
-        private System.Windows.Forms.CheckBox checkBox22;
-        private System.Windows.Forms.CheckBox checkBox23;
-        private System.Windows.Forms.CheckBox checkBox24;
-        private System.Windows.Forms.CheckBox checkBox25;
-        private System.Windows.Forms.CheckBox checkBox26;
-        private System.Windows.Forms.CheckBox checkBox27;
-        private System.Windows.Forms.CheckBox checkBox28;
+        private System.Windows.Forms.CheckBox hospital_GL;
+        private System.Windows.Forms.CheckBox hospital_SC;
+        private System.Windows.Forms.CheckBox hospital_DN;
+        private System.Windows.Forms.CheckBox hospital_DL;
+        private System.Windows.Forms.CheckBox meds_GL;
+        private System.Windows.Forms.CheckBox meds_SC;
+        private System.Windows.Forms.CheckBox meds_DN;
+        private System.Windows.Forms.CheckBox meds_DL;
         private System.Windows.Forms.ComboBox CDW_HOSPITAL_GL;
         private System.Windows.Forms.ListBox LDW_HOSPITAL;
         private System.Windows.Forms.TextBox TDW_HOSPITAL;
