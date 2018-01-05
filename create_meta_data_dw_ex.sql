@@ -10,6 +10,12 @@
 
 INSERT INTO DW_LEVEL
 	(LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) values
+   (-1, 'doctorVar',		1,	'VARCHAR(100)',	0),
+   (-2, 'insurantVar',		2,	'VARCHAR(100)',	0),
+   (-3, 'drugVar',			3,	'VARCHAR(100)',	0),
+   (-4, 'medServiceVar',	4,	'VARCHAR(100)',	0),
+   (-5, 'hospitalVar',		5,	'VARCHAR(100)',	0),
+   (-6, 'timeVar',			6,	'VARCHAR(100)',	0),
 	(1, 'doctor',			1,	'VARCHAR(100)', 1),
 	(2, 'docDistrict',		1,	'VARCHAR(100)', 2),
 	(3, 'docProvince',		1,	'VARCHAR(100)', 3),

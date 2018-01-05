@@ -532,12 +532,12 @@ namespace OLAP_WindowsForms.App
             }
 
             // DIM Qualification -> AGS_NASS_DIM_QUAL
-            if (dim_doctor) { DBContext.Service().insertDimQual(CDW_DOCTOR, CDW_DOCTOR_GL, TDW_DOCTOR,LDW_DOCTOR, id, 1, doctor_DL, doctor_DN,doctor_SC, doctor_GL); }
-            if (dim_insurance) { DBContext.Service().insertDimQual(CDW_INSURANT, CDW_INSURANT_GL, TDW_INSURANT,LDW_INSURANT, id, 2, insurant_DL, insurant_DN,insurant_SC, insurant_GL); }
-            if (dim_drug) { DBContext.Service().insertDimQual(CDW_DRUG, CDW_DRUG_GL, TDW_DRUG,LDW_DRUG, id, 3, drug_DL, drug_DN,drug_SC, drug_GL); }
-            if (dim_medservice) { DBContext.Service().insertDimQual(CDW_MEDSERVICE, CDW_MEDSERVICE_GL, TDW_MEDSERVICE,LDW_MEDSERVICE, id, 4, meds_DL, meds_DN,meds_SC, meds_GL); }
-            if (dim_hospital) { DBContext.Service().insertDimQual(CDW_HOSPITAL, CDW_HOSPITAL_GL, TDW_HOSPITAL,LDW_HOSPITAL, id, 5, hospital_DL, hospital_DN, hospital_SC,hospital_GL); }
-            if (dim_time) { DBContext.Service().insertDimQual(CDW_TIME, CDW_TIME_GL, TDW_TIME,LDW_TIME, id, 6, time_DL, time_DN,time_SC, time_GL); }
+            if (dim_doctor) { DBContext.Service().insertDimQual(CDW_DOCTOR, CDW_DOCTOR_GL, TDW_DOCTOR,LDW_DOCTOR, id, 1,"trueDoctor", doctor_DL, doctor_DN,doctor_SC, doctor_GL); }
+            if (dim_insurance) { DBContext.Service().insertDimQual(CDW_INSURANT, CDW_INSURANT_GL, TDW_INSURANT,LDW_INSURANT, id, 2,"trueInsurant", insurant_DL, insurant_DN,insurant_SC, insurant_GL); }
+            if (dim_drug) { DBContext.Service().insertDimQual(CDW_DRUG, CDW_DRUG_GL, TDW_DRUG,LDW_DRUG, id, 3,"trueDrug", drug_DL, drug_DN,drug_SC, drug_GL); }
+            if (dim_medservice) { DBContext.Service().insertDimQual(CDW_MEDSERVICE, CDW_MEDSERVICE_GL, TDW_MEDSERVICE,LDW_MEDSERVICE, id, 4,"trueMeds", meds_DL, meds_DN,meds_SC, meds_GL); }
+            if (dim_hospital) { DBContext.Service().insertDimQual(CDW_HOSPITAL, CDW_HOSPITAL_GL, TDW_HOSPITAL, LDW_HOSPITAL, id, 5, "trueHos", hospital_DL, hospital_DN, hospital_SC,hospital_GL); }
+            if (dim_time) { DBContext.Service().insertDimQual(CDW_TIME, CDW_TIME_GL, TDW_TIME,LDW_TIME, id, 6,"trueTime", time_DL, time_DN,time_SC, time_GL); }
 
 
 
@@ -548,16 +548,7 @@ namespace OLAP_WindowsForms.App
 
             // Filter ->
             
-            /*
-            // AGS_NASS_DIM_QUAL
-            list.Clear();
-            list.AddFirst(new Insert_item("ASS_SID_NASS", ));
-            list.AddLast(new Insert_item("DIM_SID", ));
-            list.AddLast(new Insert_item("LVL_SID_DICELVL", ));
-            list.AddLast(new Insert_item("NASS_DQ_DICE_NODE", ));
-            list.AddLast(new Insert_item("LVL_SID_GRANLVL", ));
-            DBContext.Service().insinto("AGS_NASS_DIM_QUAL", "NASS_DQ_SID", list);
-            */
+            
         }
 
         

@@ -251,7 +251,9 @@ namespace OLAP_WindowsForms.App
                 {
                     if (i.isNull())
                     {
+                        Console.WriteLine("null value recognized");
                         cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
+                        Console.WriteLine("null value inserted");
                     }
                     else
                     {
@@ -319,7 +321,9 @@ namespace OLAP_WindowsForms.App
                 {
                     if (i.isNull())
                     {
+                        Console.WriteLine("null value recognized");
                         cmd.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
+                        Console.WriteLine("null value inserted");
                     }
                     else
                     {
@@ -370,7 +374,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // insert into ags_nass_dim_qual and ags_nass_dim_qual_slice from schema
-        public void insertDimQual(ComboBox cdw, ComboBox cdw_gl, TextBox tdw, ListBox ldw, int ass_sid, int dim_sid, CheckBox dl, CheckBox dn, CheckBox sc, CheckBox gl)
+        public void insertDimQual(ComboBox cdw, ComboBox cdw_gl, TextBox tdw, ListBox ldw, int ass_sid, int dim_sid, String defSC, CheckBox dl, CheckBox dn, CheckBox sc, CheckBox gl)
         {
             // get max id (nass_dq_sid)
             DataTable dt = DBContext.Service().GetData(
@@ -430,8 +434,15 @@ namespace OLAP_WindowsForms.App
 
             // insert slice cond -> ags_nass_dim_qual_slice
             list.Clear();
+            if (sc.Checked)
+            {
+                Console.WriteLine("entered_sc_variable -> null");
+                list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
+                list.AddLast(new Insert_item("DIM_PRED_SID", null));
+                DBContext.Service().insinto("AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
 
-            if (ldw.SelectedValue != null)
+            }
+            else if (ldw.SelectedValue != null)
             {
                 Console.WriteLine("entered slice: ");
                 Console.WriteLine(ldw.SelectedValue.ToString());
@@ -444,6 +455,28 @@ namespace OLAP_WindowsForms.App
                     DBContext.Service().insinto("AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
                     list.Clear();
                 }
+            } else
+            {
+                Console.WriteLine("entered slice empty --- def: "+defSC);
+
+                DataTable sdt = DBContext.Service().GetData(
+              "select dim_pred_sid from dw_dim_predicate where dim_pred_name like '%"+defSC+"%'");
+
+                Console.WriteLine("query sucess");
+                DataTable sdt2 = sdt.Copy();
+                DataRow[] sdr = sdt2.Select();
+                String pred = sdr[0].ItemArray[0].ToString();
+                Console.WriteLine("query sucess: -> " + pred);
+                int dim_pred = Int32.Parse(pred);
+
+
+                Console.WriteLine("dim_pred_empty: " + dim_pred);
+                
+                // insert
+                list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
+                list.AddLast(new Insert_item("DIM_PRED_SID", dim_pred));
+                DBContext.Service().insinto("AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
+                
             }
         }
     }  
