@@ -16,7 +16,9 @@ namespace OLAP_WindowsForms.App
 {
     public partial class UserInput : Form
     {
-        private int ags_sid;
+        private int loaded_ags_sid;
+        private int loaded_ass_sid;
+        public Boolean overrideSchema = false; // true = override existing schema | false = create new schema based on selection
         public String name = "userinput";
         public String description = "";
         // true = element enabled | false = element disabled
@@ -28,17 +30,17 @@ namespace OLAP_WindowsForms.App
         private Boolean dim_time = false;
         private Boolean newForm; // true = new Form | false = load old form
 
-        public UserInput(int ags_sid, Boolean newForm)
+        public UserInput(int ags_sid, Boolean newForm, int ass_sid = 0)
         {
             if (newForm)
             {
-                this.ags_sid = ags_sid;
+                this.loaded_ags_sid = ags_sid;
                 InitializeComponent();
                 // fill combobox with data preview from cube
                 ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             } else
             {
-                this.load(ags_sid);
+                this.load(ags_sid,ass_sid);
             }
         }
 
@@ -541,9 +543,33 @@ namespace OLAP_WindowsForms.App
         }
         // END ------------------- Buttons ------------------------------------------
 
-        public void load(int ags_sid)
+        public void load(int ags_sid, int ass_sid)
         {
             InitializeComponent();
+            this.loaded_ags_sid = ags_sid;
+            this.loaded_ass_sid = ass_sid;
+            this.overrideSchema = true;
+            Console.WriteLine("AGS_SID: " + loaded_ags_sid + " ASS_SID: " + loaded_ass_sid);
+            // load cube_sid
+            int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
+            // initialize combobox
+            ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            if (cube_sid > 0)
+            {
+
+                ComboBoxCube.SelectedIndex = cube_sid;
+
+                // set Dimension Qualifications
+                DataTable dt_dim_qual = DBContext.Service().GetData(
+                    "SELECT DIM_SID, LVL_SID_DICELVL, NASS_DQ_DICE_NODE, LVL_SID_GRANLVL " +
+                    "FROM AGS_NASS_DIM_QUAL " +
+                    "WHERE ASS_SID_NASS = " + ass_sid);
+
+
+            } else
+            {
+                return;
+            }
         }
 
         public void insert()
@@ -560,7 +586,7 @@ namespace OLAP_WindowsForms.App
                 // AGS_ANALYSIS_SITUATION SCHEMA
                 list.AddFirst(new Insert_item("ASS_NAME", this.name));
                 list.AddLast(new Insert_item("ASS_DESCRIPTION", this.description));
-                list.AddLast(new Insert_item("AGS_SID", ags_sid)); //  Variable aus ags_analysis_graph_schema
+                list.AddLast(new Insert_item("AGS_SID", loaded_ags_sid)); //  Variable aus ags_analysis_graph_schema
                 list.AddLast(new Insert_item("ASS_POS_X", 0));
                 list.AddLast(new Insert_item("ASS_POS_Y", 0));
                 DBContext.Service().insinto(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", list);
@@ -686,6 +712,11 @@ namespace OLAP_WindowsForms.App
                 " was encountered while inserting the data.");
                 Console.WriteLine("Nothing was written to database.");
             }
+        }
+        // TODO
+        public void updateDB()
+        {
+
         }
 
         // START-------------------- disable GL if DL is variable -----------------------------

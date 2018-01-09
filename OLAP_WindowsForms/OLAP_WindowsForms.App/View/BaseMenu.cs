@@ -50,9 +50,9 @@ namespace OLAP_WindowsForms.App
                 DataRow[] dr = dt2.Select();
                 String index = dr[0].ItemArray[0].ToString();
                 int ags_sid = Int32.Parse(index);
-                Console.WriteLine("bearbeiten " + cell.Value.ToString()+" AGS_SID; "+ags_sid);
-                UserInput userinput = new UserInput(ags_sid,false);
-                userinput.ShowDialog();
+                Console.WriteLine("bearbeiten " + cell.Value.ToString()+" AGS_SID: "+ags_sid);
+                LoadForm load = new LoadForm(ags_sid);
+                load.ShowDialog();
             }
         }
 

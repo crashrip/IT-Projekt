@@ -30,6 +30,18 @@ namespace OLAP_WindowsForms.App.View
                 Console.WriteLine("worked");
                 ui.name = schema_name.Text;
                 ui.description = description_text.Text;
+                if (ui.overrideSchema)
+                {
+                    // Display a MsgBox asking the user to override or save as new schema
+                    if (MessageBox.Show("Do you want to override your Schema with your new selection?\nYes = override\nNo = create new Schema", "Override Schema?",
+                       MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        
+                        ui.updateDB();
+                        this.Close();
+                        return;
+                    } 
+                }
                 ui.insert();
                 this.Close();
             }

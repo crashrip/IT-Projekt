@@ -153,6 +153,29 @@ namespace OLAP_WindowsForms.App
             String index = dr[0].ItemArray[0].ToString();
             return Int32.Parse(index);
         }
+        // Start ------------------------------ LOAD -----------------------------------------------------------------
+        public int getKeyfromTable(String table, int keyValue, String keyColumn, String targetColum)
+        {
+            try
+            {
+                DataTable dt = DBContext.Service().GetData(
+                  "SELECT " + targetColum +
+                  " FROM " + table +
+                  " WHERE " + keyColumn + " = " + keyValue);
+
+                DataTable dt2 = dt.Copy();
+                DataRow[] dr = dt2.Select();
+
+                String index = dr[0].ItemArray[0].ToString();
+                return Int32.Parse(index);
+            }catch (Exception e)
+            {
+                MessageBox.Show("The loaded Analysis-Schema is empty. A new one will be loaded", "Empty Schema!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return -1;
+            }
+        }
+
+        // END ------------------------------- LOAD -----------------------------------------------------------------
 
         public NpgsqlConnection getConnection()
         {
