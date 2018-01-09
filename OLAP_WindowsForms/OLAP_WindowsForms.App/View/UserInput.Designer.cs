@@ -32,16 +32,11 @@ namespace OLAP_WindowsForms.App
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.ComboBoxCube = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.measure_variable = new System.Windows.Forms.CheckBox();
             this.LDW_BMSR = new System.Windows.Forms.ListBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.bmsr_variable = new System.Windows.Forms.CheckBox();
             this.LDW_MEASURES = new System.Windows.Forms.ListBox();
-            this.button1 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -127,7 +122,6 @@ namespace OLAP_WindowsForms.App
             this.CDW_MEDSERVICE = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -149,15 +143,6 @@ namespace OLAP_WindowsForms.App
             this.label2.TabIndex = 4;
             this.label2.Text = "BMsr-Filter";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(224, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(35, 13);
-            this.label4.TabIndex = 7;
-            this.label4.Text = "label4";
-            // 
             // ComboBoxCube
             // 
             this.ComboBoxCube.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -166,7 +151,7 @@ namespace OLAP_WindowsForms.App
             this.ComboBoxCube.Name = "ComboBoxCube";
             this.ComboBoxCube.Size = new System.Drawing.Size(193, 21);
             this.ComboBoxCube.TabIndex = 8;
-            this.ComboBoxCube.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.ComboBoxCube.SelectedIndexChanged += new System.EventHandler(this.comboBoxCube_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -177,16 +162,6 @@ namespace OLAP_WindowsForms.App
             this.label5.TabIndex = 9;
             this.label5.Text = "Mesures:";
             // 
-            // measure_variable
-            // 
-            this.measure_variable.AutoSize = true;
-            this.measure_variable.Location = new System.Drawing.Point(483, 93);
-            this.measure_variable.Name = "measure_variable";
-            this.measure_variable.Size = new System.Drawing.Size(63, 17);
-            this.measure_variable.TabIndex = 13;
-            this.measure_variable.Text = "variable";
-            this.measure_variable.UseVisualStyleBackColor = true;
-            // 
             // LDW_BMSR
             // 
             this.LDW_BMSR.FormattingEnabled = true;
@@ -194,26 +169,7 @@ namespace OLAP_WindowsForms.App
             this.LDW_BMSR.Name = "LDW_BMSR";
             this.LDW_BMSR.Size = new System.Drawing.Size(193, 95);
             this.LDW_BMSR.TabIndex = 15;
-            this.LDW_BMSR.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.LDW_BMSR.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(224, 146);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(35, 13);
-            this.label6.TabIndex = 17;
-            this.label6.Text = "label6";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(491, 146);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(35, 13);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "label7";
             // 
             // bmsr_variable
             // 
@@ -232,18 +188,7 @@ namespace OLAP_WindowsForms.App
             this.LDW_MEASURES.Name = "LDW_MEASURES";
             this.LDW_MEASURES.Size = new System.Drawing.Size(193, 95);
             this.LDW_MEASURES.TabIndex = 20;
-            this.LDW_MEASURES.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             this.LDW_MEASURES.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(425, 28);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 21;
-            this.button1.Text = "test";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label3
             // 
@@ -1051,22 +996,11 @@ namespace OLAP_WindowsForms.App
             this.label39.TabIndex = 83;
             this.label39.Text = "MedService";
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(561, 31);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 109;
-            this.button2.Text = "delete";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // UserInput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(826, 751);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.hospital_GL);
             this.Controls.Add(this.hospital_SC);
             this.Controls.Add(this.hospital_DN);
@@ -1152,22 +1086,16 @@ namespace OLAP_WindowsForms.App
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.LDW_MEASURES);
             this.Controls.Add(this.bmsr_variable);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
             this.Controls.Add(this.LDW_BMSR);
-            this.Controls.Add(this.measure_variable);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.ComboBoxCube);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserInput";
             this.Text = "New Schema";
-            this.Load += new System.EventHandler(this.UserInput_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1178,16 +1106,11 @@ namespace OLAP_WindowsForms.App
         #endregion
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox ComboBoxCube;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox measure_variable;
         private System.Windows.Forms.ListBox LDW_BMSR;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox bmsr_variable;
         private System.Windows.Forms.ListBox LDW_MEASURES;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
@@ -1273,7 +1196,6 @@ namespace OLAP_WindowsForms.App
         private System.Windows.Forms.ComboBox CDW_MEDSERVICE;
         private System.Windows.Forms.Label label38;
         private System.Windows.Forms.Label label39;
-        private System.Windows.Forms.Button button2;
     }
 }
 

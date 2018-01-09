@@ -22,8 +22,8 @@ namespace OLAP_WindowsForms.App.View
         {
             userInput = p;
             InitializeComponent();
-            ComboItem.GetComboboxContent(comboBoxNav, "AGS_NAVSTEP_SCHEMA", "NAVSS_OPNAME");
-            ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            ComboItem.getComboboxContent(comboBoxNav, "AGS_NAVSTEP_SCHEMA", "NAVSS_OPNAME");
+            ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
         }
 
         // on selection of combo box

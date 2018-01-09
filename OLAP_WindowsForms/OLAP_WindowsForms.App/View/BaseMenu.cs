@@ -22,8 +22,7 @@ namespace OLAP_WindowsForms.App
             if (Login.loginSuccessful)
             {
                 InitializeComponent();
-                validateGraphSchema();
-                
+                validateGraphSchema(); 
             }
             else
             {
@@ -46,7 +45,14 @@ namespace OLAP_WindowsForms.App
 
             if (e.ColumnIndex == 0)
             {
-                Console.WriteLine("bearbeiten");
+                DataTable dt = DBContext.Service().GetData("Select AGS_SID FROM AGS_ANALYSIS_GRAPH_SCHEMA WHERE AGS_NAME = '" + cell.Value.ToString()+"'");
+                DataTable dt2 = dt.Copy();
+                DataRow[] dr = dt2.Select();
+                String index = dr[0].ItemArray[0].ToString();
+                int ags_sid = Int32.Parse(index);
+                Console.WriteLine("bearbeiten " + cell.Value.ToString()+" AGS_SID; "+ags_sid);
+                UserInput userinput = new UserInput(ags_sid,false);
+                userinput.ShowDialog();
             }
         }
 

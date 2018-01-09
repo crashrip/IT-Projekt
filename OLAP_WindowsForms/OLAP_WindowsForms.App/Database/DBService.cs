@@ -19,6 +19,10 @@ namespace OLAP_WindowsForms.App
         private string DBPassword;
         private string DBName;
 
+        private Boolean newTransaction = true;
+        private int nass_dq_sid;
+        private int nass_sc_sid;
+
         private DataSet ds = new DataSet(); // current data set
         private DataTable dt = new DataTable(); // copy of data table
 
@@ -130,7 +134,7 @@ namespace OLAP_WindowsForms.App
             }
             catch (Exception ex)
             {
-                Console.WriteLine("An error occurred: '{0}'", ex);
+                Console.WriteLine("An error occurred: '{0}'", ex.Message);
                 Environment.Exit(0);
                 return null;
             }
@@ -158,7 +162,7 @@ namespace OLAP_WindowsForms.App
 
         //----------------------------------START-INSERTS------------------------------------------------
         //insert into table
-        public void insinto(NpgsqlCommand command,String table, String columnPK, LinkedList<Insert_item> list)
+        public void insinto(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, String columnPK, LinkedList<Insert_item> list)
         {
             /*
             NpgsqlConnection connection = getConnection();
@@ -172,67 +176,73 @@ namespace OLAP_WindowsForms.App
             try
             {
                 */
-                // get new ID
-                int id = getLatestID(columnPK, table) + 1;
 
-                // insert
-                // build command string
-                StringBuilder cmds = new StringBuilder();
-                StringBuilder cmds2 = new StringBuilder();
+            NpgsqlCommand command = connection.CreateCommand();
+            command.Connection = connection;
+            command.Transaction = transaction;
+            command.CommandType = CommandType.Text;
 
-                cmds.Append("INSERT INTO " + table + " (" + columnPK);
-                cmds2.Append(") VALUES(:pk");
+            // get new ID
+            int id = getLatestID(columnPK, table) + 1;
 
-                int cnt = 1;
+            // insert
+            // build command string
+            StringBuilder cmds = new StringBuilder();
+            StringBuilder cmds2 = new StringBuilder();
 
-                foreach (Insert_item i in list)
+            cmds.Append("INSERT INTO " + table + " (" + columnPK);
+            cmds2.Append(") VALUES(:pk");
+
+            int cnt = 1;
+
+            foreach (Insert_item i in list)
+            {
+                cmds.Append(", " + i.getColumnName());
+                cmds2.Append(", :c" + cnt);
+                cnt++;
+            }
+
+            cmds.Append(cmds2);
+            cmds.Append(")");
+
+            Console.WriteLine(cmds.ToString());
+
+            command.CommandText = cmds.ToString();
+
+            // add primary key
+            command.Parameters.Add(new NpgsqlParameter(":pk", id));
+
+            // add rest string
+            cnt = 1;
+            foreach (Insert_item i in list)
+            {
+                if (i.isNull())
                 {
-                    cmds.Append(", " + i.getColumnName());
-                    cmds2.Append(", :c" + cnt);
-                    cnt++;
+                    Console.WriteLine("null value recognized");
+                    command.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
+                    Console.WriteLine("null value inserted");
                 }
-
-                cmds.Append(cmds2);
-                cmds.Append(")");
-
-                Console.WriteLine(cmds.ToString());
-
-                command.CommandText = cmds.ToString();
-
-                // add primary key
-                command.Parameters.Add(new NpgsqlParameter(":pk", id));
-
-                // add rest string
-                cnt = 1;
-                foreach (Insert_item i in list)
+                else
                 {
-                    if (i.isNull())
+                    if (i.intValue())
                     {
-                        Console.WriteLine("null value recognized");
-                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
-                        Console.WriteLine("null value inserted");
+                        Console.WriteLine(":c" + cnt + i.getIValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
                     }
                     else
                     {
-                        if (i.intValue())
-                        {
-                            Console.WriteLine(":c" + cnt + i.getIValue());
-                            command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
-                        }
-                        else
-                        {
-                            Console.WriteLine(":c" + cnt + i.getSValue());
-                            command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
-                        }
-
+                        Console.WriteLine(":c" + cnt + i.getSValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
                     }
-                    cnt++;
+
                 }
-                command.ExecuteNonQuery();
-                //transaction.Commit();
-                Console.WriteLine("Command sucessful");
-            //return command;
+                cnt++;
             }
+            command.ExecuteNonQuery();
+            //transaction.Commit();
+            Console.WriteLine("Command sucessful");
+            //return command;
+        }
         /*
             catch (Exception e)
             {
@@ -260,7 +270,7 @@ namespace OLAP_WindowsForms.App
         }
         */
         //insert into table -> PK provided as first item in list
-        public void insertWithoutPK(NpgsqlCommand command, String table, LinkedList<Insert_item> list)
+        public void insertWithoutPK(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, LinkedList<Insert_item> list)
         {/*
             NpgsqlConnection connection = getConnection();
             connection.Open();
@@ -273,63 +283,69 @@ namespace OLAP_WindowsForms.App
             try
             {
                 */
-                // build command string
-                StringBuilder cmds = new StringBuilder();
-                StringBuilder cmds2 = new StringBuilder();
+         // build command string
 
-                cmds.Append("INSERT INTO " + table + " (");
-                cmds2.Append(") VALUES(");
+            NpgsqlCommand command = connection.CreateCommand();
+            command.Connection = connection;
+            command.Transaction = transaction;
+            command.CommandType = CommandType.Text;
 
-                int cnt = 1;
+            StringBuilder cmds = new StringBuilder();
+            StringBuilder cmds2 = new StringBuilder();
 
-                foreach (Insert_item i in list)
+            cmds.Append("INSERT INTO " + table + " (");
+            cmds2.Append(") VALUES(");
+
+            int cnt = 1;
+
+            foreach (Insert_item i in list)
+            {
+                cmds.Append(i.getColumnName() + " ,");
+                cmds2.Append(":c" + cnt + " ,");
+                cnt++;
+            }
+
+            cmds.Remove(cmds.Length - 1, 1);
+            cmds2.Remove(cmds2.Length - 1, 1);
+
+            cmds.Append(cmds2);
+            cmds.Append(")");
+
+            Console.WriteLine(cmds.ToString());
+
+            command.CommandText = cmds.ToString();
+
+            // add rest string
+            cnt = 1;
+            foreach (Insert_item i in list)
+            {
+                if (i.isNull())
                 {
-                    cmds.Append(i.getColumnName() + " ,");
-                    cmds2.Append(":c" + cnt + " ,");
-                    cnt++;
+                    Console.WriteLine("null value recognized");
+                    command.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
+                    Console.WriteLine("null value inserted");
                 }
-
-                cmds.Remove(cmds.Length - 1, 1);
-                cmds2.Remove(cmds2.Length - 1, 1);
-
-                cmds.Append(cmds2);
-                cmds.Append(")");
-
-                Console.WriteLine(cmds.ToString());
-
-                command.CommandText = cmds.ToString();
-
-                // add rest string
-                cnt = 1;
-                foreach (Insert_item i in list)
+                else
                 {
-                    if (i.isNull())
+                    if (i.intValue())
                     {
-                        Console.WriteLine("null value recognized");
-                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
-                        Console.WriteLine("null value inserted");
+                        Console.WriteLine("Int :c" + cnt + i.getIValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
                     }
                     else
                     {
-                        if (i.intValue())
-                        {
-                            Console.WriteLine("Int :c" + cnt + i.getIValue());
-                            command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
-                        }
-                        else
-                        {
-                            Console.WriteLine("String :c" + cnt + i.getSValue());
-                            command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
-                        }
-
+                        Console.WriteLine("String :c" + cnt + i.getSValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
                     }
-                    cnt++;
+
                 }
-                command.ExecuteNonQuery();
-                //transaction.Commit();
-                Console.WriteLine("Command sucessful");
+                cnt++;
+            }
+            command.ExecuteNonQuery();
+            //transaction.Commit();
+            Console.WriteLine("Command sucessful");
             //return command;
-            }/*
+        }/*
             catch (Exception e)
             {
                 try
@@ -356,19 +372,21 @@ namespace OLAP_WindowsForms.App
         }
         */
         // insert into ags_nass_dim_qual and ags_nass_dim_qual_slice from schema
-        public void insertDimQual(NpgsqlCommand command, ComboBox cdw, ComboBox cdw_gl, TextBox tdw, ListBox ldw, int ass_sid, int dim_sid, String defSC, CheckBox dl, CheckBox dn, CheckBox sc, CheckBox gl)
+        public void insertDimQual(NpgsqlConnection connection, NpgsqlTransaction transaction, ComboBox cdw, ComboBox cdw_gl, TextBox tdw, ListBox ldw, int ass_sid, int dim_sid, String defSC, CheckBox dl, CheckBox dn, CheckBox sc, CheckBox gl)
         {
-            // get max id (nass_dq_sid)
-            int nass_dq_sid = getLatestID("Nass_DQ_SID", "AGS_NASS_DIM_QUAL")+1;
-            /*
-            NpgsqlConnection connection = getConnection();
-            connection.Open();
-            NpgsqlCommand command = connection.CreateCommand();
-            NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+            if (newTransaction)
+            {
+                // get max IDs
+                this.nass_dq_sid = getLatestID("Nass_DQ_SID", "AGS_NASS_DIM_QUAL") + 1;
+                this.nass_sc_sid = getLatestID("NASS_SC_SID", "AGS_NASS_DIM_QUAL_SLICE_COND") + 1;
+                this.newTransaction = false;
+            }
+            else
+            {
+                this.nass_dq_sid += 1; // raise pk from table
+                this.nass_sc_sid += 1;
+            }
 
-            command.Connection = connection;
-            command.Transaction = transaction;
-            */
             LinkedList<Insert_item> list = new LinkedList<Insert_item>();
             list.AddFirst(new Insert_item("Nass_DQ_SID", nass_dq_sid));
             list.AddLast(new Insert_item("ASS_SID_NASS", ass_sid));
@@ -429,7 +447,7 @@ namespace OLAP_WindowsForms.App
                 list.AddLast(new Insert_item("LVL_SID_GRANLVL", null));
             }
 
-            DBContext.Service().insertWithoutPK(command,"AGS_NASS_DIM_QUAL", list);
+            DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_DIM_QUAL", list);
 
             // insert slice cond -> ags_nass_dim_qual_slice
             list.Clear();
@@ -448,9 +466,10 @@ namespace OLAP_WindowsForms.App
                 //Console.WriteLine("query sucess: -> " + pred);
                 int dim_pred = Int32.Parse(pred);
 
-                list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
+                list.AddFirst(new Insert_item("NASS_SC_SID", nass_sc_sid));
+                list.AddLast(new Insert_item("NASS_DQ_SID", nass_dq_sid));
                 list.AddLast(new Insert_item("DIM_PRED_SID", dim_pred));
-                DBContext.Service().insinto(command,"AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
+                DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_DIM_QUAL_SLICE_COND", list);
 
             }
             else if (ldw.SelectedValue != null)
@@ -461,9 +480,11 @@ namespace OLAP_WindowsForms.App
                 foreach (Object sel in ldw.SelectedItems)
                 {
                     Console.WriteLine((sel as DataRowView)["DIM_PRED_SID"]);
-                    list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
+                    list.AddFirst(new Insert_item("NASS_SC_SID", nass_sc_sid));
+                    list.AddLast(new Insert_item("NASS_DQ_SID", nass_dq_sid));
                     list.AddLast(new Insert_item("DIM_PRED_SID", Int32.Parse((sel as DataRowView)["DIM_PRED_SID"].ToString())));
-                    DBContext.Service().insinto(command,"AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
+                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_DIM_QUAL_SLICE_COND", list);
+                    this.nass_sc_sid += 1;// raise pk 
                     list.Clear();
                 }
             }
@@ -485,12 +506,12 @@ namespace OLAP_WindowsForms.App
                 //Console.WriteLine("dim_pred_empty: " + dim_pred);
 
                 // insert
-                list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
+                list.AddFirst(new Insert_item("NASS_SC_SID", nass_sc_sid));
+                list.AddLast(new Insert_item("NASS_DQ_SID", nass_dq_sid));
                 list.AddLast(new Insert_item("DIM_PRED_SID", dim_pred));
-                DBContext.Service().insinto(command,"AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
+                DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_DIM_QUAL_SLICE_COND", list);
 
             }
-            //return command;
         }
 
 
@@ -508,6 +529,11 @@ namespace OLAP_WindowsForms.App
             {
                 Console.WriteLine(e.StackTrace.ToString());
             }
+        }
+
+        public void transactionComplete()
+        {
+            this.newTransaction = true;
         }
     }
 }

@@ -25,3 +25,9 @@ INSERT INTO DW_BMSR_PREDICATE
 	(-3,	'HospitalizationVar',		3,	'True'),
 	(-2,	'AmbTreatmentVar',			2,	'True'),
 	(-1,	'DrugPrescriptionVar',		1,	'True');
+
+INSERT INTO DW_AMSR_PREDICATE
+	(AMSR_PRED_SID, AMSR_PRED_NAME, CUBE_SID, AMSR_PRED_EXPR) values
+   (-3,		'HospitalizationVar',		3,	'TRUE'),
+   (-2,		'AmbTreatmentVar',			2,	'TRUE'),
+   (-1,		'DrugPrescriptionVar',		1,	'TRUE');

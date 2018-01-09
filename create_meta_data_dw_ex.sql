@@ -253,6 +253,9 @@ INSERT INTO DW_BMSR_PREDICATE_SUBSUMPTION
 	
 INSERT INTO DW_AMSR_PREDICATE
 	(AMSR_PRED_SID, AMSR_PRED_NAME, CUBE_SID, AMSR_PRED_EXPR) values
+   (-3,		'HospitalizationVar',		3,	'TRUE'),
+   (-2,		'AmbTreatmentVar',			2,	'TRUE'),
+   (-1,		'DrugPrescriptionVar',		1,	'TRUE'),
 	(1,		'trueDrugPrescription',		1,	'TRUE'),
 	(2,		'trueAmbTreatment',			2,	'TRUE'),
 	(3,		'trueHospitalization',		3,	'TRUE'),

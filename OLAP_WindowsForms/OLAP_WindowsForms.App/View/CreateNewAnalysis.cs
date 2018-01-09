@@ -26,11 +26,7 @@ namespace OLAP_WindowsForms.App.View
             //prepare Connection
             NpgsqlConnection connection = DBContext.Service().getConnection();
             connection.Open();
-            NpgsqlCommand command = connection.CreateCommand();
             NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
-
-            command.Connection = connection;
-            command.Transaction = transaction;
             try { 
             // save ASS_SID 
             DataTable dt = DBContext.Service().GetData(
@@ -46,21 +42,14 @@ namespace OLAP_WindowsForms.App.View
             list.AddFirst(new Insert_item("AGS_SID", ags_sid));
             list.AddLast(new Insert_item("AGS_NAME", AGS_NAME.Text));
             list.AddLast(new Insert_item("AGS_DESCRIPTION", AGS_DESCRITPION.Text));
-            DBContext.Service().insertWithoutPK(command,"AGS_ANALYSIS_GRAPH_SCHEMA", list);
-                // test
-                list.Clear();
-                list.AddFirst(new Insert_item("AGS_SID", 7));
-                list.AddLast(new Insert_item("AGS_NAME","asdfasdewrww"));
-                list.AddLast(new Insert_item("AGS_DESCRIPTION", AGS_DESCRITPION.Text));
-                DBContext.Service().insertWithoutPK(command, "AGS_ANALYSIS_GRAPH_SCHEMA", list);
-                // test end
+            DBContext.Service().insertWithoutPK(connection,transaction,"AGS_ANALYSIS_GRAPH_SCHEMA", list);
 
-                transaction.Commit();
+            transaction.Commit();
             Console.WriteLine("Transaction sucessful");
             // enter userinput -> define schema
             this.Hide();
             this.Close();
-            UserInput userinput = new UserInput(ags_sid);
+            UserInput userinput = new UserInput(ags_sid,true);
             userinput.ShowDialog();
 
             }
