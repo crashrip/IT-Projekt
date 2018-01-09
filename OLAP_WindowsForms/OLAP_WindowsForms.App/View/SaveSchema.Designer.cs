@@ -1,6 +1,6 @@
 ﻿namespace OLAP_WindowsForms.App.View
 {
-    partial class Save
+    partial class SaveSchema
     {
         /// <summary>
         /// Required designer variable.

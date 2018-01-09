@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace OLAP_WindowsForms.App.View
 {
-    public partial class Save : Form
+    public partial class SaveSchema : Form
     {
         public UserInput ui;
 
-        public Save(UserInput ui)
+        public SaveSchema(UserInput ui)
         {
             this.ui = ui;
             InitializeComponent();
