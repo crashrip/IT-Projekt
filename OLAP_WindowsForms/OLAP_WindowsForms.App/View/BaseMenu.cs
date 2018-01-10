@@ -13,6 +13,9 @@ namespace OLAP_WindowsForms.App
 {
     public partial class BaseMenu : Form
     {
+        private int row;
+        private int column;
+
         public BaseMenu()
         {
             // show login dialog
@@ -40,20 +43,27 @@ namespace OLAP_WindowsForms.App
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            Console.WriteLine(cell.Value.ToString());
-
-            if (e.ColumnIndex == 0)
+            //Console.WriteLine("enter cell content click");
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                DataTable dt = DBContext.Service().GetData("Select AGS_SID FROM AGS_ANALYSIS_GRAPH_SCHEMA WHERE AGS_NAME = '" + cell.Value.ToString()+"'");
-                DataTable dt2 = dt.Copy();
-                DataRow[] dr = dt2.Select();
-                String index = dr[0].ItemArray[0].ToString();
-                int ags_sid = Int32.Parse(index);
-                Console.WriteLine("bearbeiten " + cell.Value.ToString()+" AGS_SID: "+ags_sid);
-                LoadForm load = new LoadForm(ags_sid);
-                load.ShowDialog();
+                row = e.RowIndex;
+                column = e.ColumnIndex;
+                Console.WriteLine("row: " + row + " column " + column);
+                if (e.ColumnIndex == 0)
+                {
+                    DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    DataTable dt = DBContext.Service().GetData("Select AGS_SID FROM AGS_ANALYSIS_GRAPH_SCHEMA WHERE AGS_NAME = '" + cell.Value.ToString() + "'");
+                    DataTable dt2 = dt.Copy();
+                    DataRow[] dr = dt2.Select();
+                    String index = dr[0].ItemArray[0].ToString();
+                    int ags_sid = Int32.Parse(index);
+                    Console.WriteLine("bearbeiten " + cell.Value.ToString() + " AGS_SID: " + ags_sid);
+                    LoadForm load = new LoadForm(ags_sid);
+                    load.ShowDialog();
+                }
             }
+
+            
         }
 
         private void validateGraphSchema()
@@ -72,6 +82,27 @@ namespace OLAP_WindowsForms.App
         {
             validateGraphSchema();
             Console.WriteLine("graph updated");
+        }
+
+        private void delete_selected_schema_Click(object sender, EventArgs e)
+        {
+            if( column == 0)
+            {
+                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                DBContext.Service().delete("AGS_ANALYSIS_GRAPH_SCHEMA", "AGS_NAME","'"+cell.Value.ToString()+"'");
+            }
+        }
+
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //Console.WriteLine("enter cell mouse click");
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                row = e.RowIndex;
+                column = e.ColumnIndex;
+                Console.WriteLine("row: " + row + " column " + column);
+            }
+
         }
     }
 }

@@ -13,6 +13,8 @@ namespace OLAP_WindowsForms.App.View
     public partial class LoadForm : Form
     {
         private int ags_sid;
+        private int row;
+        private int column;
 
         public LoadForm(int ags_sid)
         {
@@ -35,19 +37,23 @@ namespace OLAP_WindowsForms.App.View
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            Console.WriteLine(cell.Value.ToString());
-
-            if (e.ColumnIndex == 0)
+            //Console.WriteLine("enter cell content click");
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-
-                Console.WriteLine("bearbeiten " + cell.Value);
-                int value = Int32.Parse(cell.Value.ToString());
-                UserInput userinput = new UserInput(ags_sid, false, value);
-                userinput.ShowDialog();
-                this.Hide();
-                this.Close();
-            }
+                row = e.RowIndex;
+                column = e.ColumnIndex;
+                Console.WriteLine("row: " + row + " column " + column);
+                if (e.ColumnIndex == 0)
+                {
+                    DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    Console.WriteLine("bearbeiten " + cell.Value);
+                    int value = Int32.Parse(cell.Value.ToString());
+                    UserInput userinput = new UserInput(ags_sid, false, value);
+                    userinput.ShowDialog();
+                    this.Hide();
+                    this.Close();
+                }
+            }  
         }
 
         private void LoadForm_Click(object sender, EventArgs e)
@@ -62,6 +68,32 @@ namespace OLAP_WindowsForms.App.View
             userinput.ShowDialog();
             this.Hide();
             this.Close();
+        }
+
+        private void delete_selected_schema_Click(object sender, EventArgs e)
+        {
+            if (column == 1)
+            {
+                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                Console.WriteLine("column 1 - delete: " + cell.Value.ToString());
+                DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_NAME", "'" + cell.Value.ToString() + "'");
+            }
+            if (column == 0)
+            {
+                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                Console.WriteLine("column 0 - delete: " + cell.Value.ToString());
+                DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
+            }
+        }
+
+        private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                row = e.RowIndex;
+                column = e.ColumnIndex;
+                Console.WriteLine("row: " + row + " column " + column);
+            }
         }
     }
 }
