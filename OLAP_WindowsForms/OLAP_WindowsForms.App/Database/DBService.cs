@@ -174,6 +174,26 @@ namespace OLAP_WindowsForms.App
                 return -1;
             }
         }
+        public String getSKeyfromTable(String table, int keyValue, String keyColumn, String targetColum)
+        {
+            try
+            {
+                DataTable dt = DBContext.Service().GetData(
+                  "SELECT " + targetColum +
+                  " FROM " + table +
+                  " WHERE " + keyColumn + " = " + keyValue);
+
+                DataTable dt2 = dt.Copy();
+                DataRow[] dr = dt2.Select();
+
+                return dr[0].ItemArray[0].ToString();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("The loaded Analysis-Schema is empty. A new one will be loaded", "Empty Schema!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return "";
+            }
+        }
 
         // END ------------------------------- LOAD -----------------------------------------------------------------
 

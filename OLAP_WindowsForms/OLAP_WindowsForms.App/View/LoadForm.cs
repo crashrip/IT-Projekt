@@ -55,5 +55,13 @@ namespace OLAP_WindowsForms.App.View
             validateGraphSchema();
             Console.WriteLine("graph updated");
         }
+
+        private void create_new_schema_Click(object sender, EventArgs e)
+        {
+            UserInput userinput = new UserInput(this.ags_sid, true);
+            userinput.ShowDialog();
+            this.Hide();
+            this.Close();
+        }
     }
 }
