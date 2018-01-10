@@ -114,6 +114,11 @@ namespace OLAP_WindowsForms.App
             }
         }
 
+        public string getStringFromStmt(string stmt, int row, int column)
+        {
+            return GetData(stmt).Copy().Select()[row].ItemArray[column].ToString();
+        }
+
         public DataTable GetData(String sqlStmt)
         {
 

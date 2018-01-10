@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,7 +14,7 @@ namespace OLAP_WindowsForms.App.View
     public partial class SelectNavigationOperator : Form
     {
         private UserInput userInput;
-        private string currentSelection;
+        private string currentSelection, currentCube;
 
         // saves the navigation operators and corresponding tables as strings
         Dictionary<string, string> AGS_NAVSTEP_SCHEMA_dictionary = new Dictionary<string, string>();
@@ -23,8 +24,8 @@ namespace OLAP_WindowsForms.App.View
             userInput = p;
             InitializeComponent();
 
-            ComboItem.GetComboboxContent(comboBoxNav, "AGS_NAVSTEP_SCHEMA", "NAVSS_OPNAME");
-            ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            ComboItem.getComboboxContent(comboBoxNav, "AGS_NAVSTEP_SCHEMA", "NAVSS_OPNAME");
+            ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
 
             FillDictionary_AGS_NAVSTEP_SCHEMA();
         }
@@ -33,6 +34,7 @@ namespace OLAP_WindowsForms.App.View
         private void comboBoxNav_SelectedIndexChanged(object sender, EventArgs e)
         {
             currentSelection = comboBoxNav.Text;
+            Console.WriteLine("[SUBMIT] Selection: " + currentSelection);
 
             if (currentSelection == "drillAcrossToCube")
             {
@@ -42,6 +44,12 @@ namespace OLAP_WindowsForms.App.View
             {
                 ComboBoxCube.Visible = false;
             }
+        }
+
+        private void ComboBoxCube_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentCube = ComboBoxCube.Text;
+            Console.WriteLine("[SUBMIT] Cube: " + currentCube);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -60,25 +68,58 @@ namespace OLAP_WindowsForms.App.View
             // userInput.SelectComboBoxCube(ComboBoxCube.Text);
 
             // insert into function table
-            Console.WriteLine("Current selection: " + currentSelection);
-            System.Threading.Thread.Sleep(5000);
+            Console.WriteLine("[SUBMIT] Selection: " + currentSelection); // Current selection: drillAcrossToCube
 
-            string table = "";
+            string table = null;
             if (AGS_NAVSTEP_SCHEMA_dictionary.ContainsKey(currentSelection))
             {
                  table = AGS_NAVSTEP_SCHEMA_dictionary[currentSelection];
             }
-            System.Threading.Thread.Sleep(5000);
-            Console.WriteLine("Table: " + table);
-            System.Threading.Thread.Sleep(5000);
-            //DBContext.Service().insertInto(); 
 
+            Console.WriteLine("[SUBMIT] Table: " + table); // Table: AGS_NAVSS_DRILL_ACROSS_TO_CUBE
+
+            // START insertion
+            if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE") {
+
+                Console.WriteLine("[SUBMIT] trying to open connection... ");
+                NpgsqlConnection connection = DBContext.Service().getConnection();
+                connection.Open();
+
+                Console.WriteLine("[SUBMIT] trying to begin transaction... ");
+                NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+                Console.WriteLine("[SUBMIT] creating sql statement... ");
+                Console.WriteLine("[SUBMIT] currentSelection: " + currentSelection);
+                String stmt = "SELECT NAVSS_SID FROM AGS_NAVSTEP_SCHEMA WHERE NAVSS_OPNAME = \'" + currentSelection + "\'";
+
+                Console.WriteLine("[SUBMIT] get coulumnPK... ");
+                int int_columnPK;
+                Int32.TryParse(DBContext.Service().getStringFromStmt(stmt, 0, 0), out int_columnPK);
+                int_columnPK--;
+                String columnPK = int_columnPK.ToString();
+                
+                Console.WriteLine("[SUBMIT] get cubeId... ");
+                String cubeId = DBContext.Service().getStringFromStmt("SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + currentCube + "\'", 0, 0);
+
+                // insert items
+                Console.WriteLine("[SUBMIT] creating a list of items... ");
+                LinkedList<Insert_item> list = new LinkedList<Insert_item>();
+                list.AddFirst(new Insert_item("NAVSS_SID", columnPK));
+                list.AddLast(new Insert_item("CUBE_SID", cubeId));
+
+
+                Console.WriteLine("[SUBMIT] calling function insinto(...)... ");
+                DBContext.Service().insinto(connection, transaction, table, columnPK, list);
+                // END insertion
+            }
+
+            // UserInput.load(ags_sid, ass_sid);
+
+            // DBContext.Service().insertInto(); 
+
+            Console.WriteLine("[SUBMIT] finished");
+            System.Threading.Thread.Sleep(5000);
             this.Close();
-        }
-
-        private void ComboBoxCube_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void FillDictionary_AGS_NAVSTEP_SCHEMA()
