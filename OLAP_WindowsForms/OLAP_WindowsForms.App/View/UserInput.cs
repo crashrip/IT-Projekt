@@ -57,7 +57,7 @@ namespace OLAP_WindowsForms.App
         // start Form with Cube Dimension Selection
         private void comboBoxCube_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("ComboboxCube: selectIndex " + ComboBoxCube.SelectedIndex.ToString() + " selValue " + ComboBoxCube.SelectedValue.ToString()+" selItem "+ ComboBoxCube.SelectedItem.ToString());
+            //Console.WriteLine("ComboboxCube: selectIndex " + ComboBoxCube.SelectedIndex.ToString() + " selValue " + ComboBoxCube.SelectedValue.ToString()+" selItem "+ ComboBoxCube.SelectedItem.ToString());
             if (!(ComboBoxCube.SelectedValue.ToString().Equals("System.Data.DataRowView")))
             {
                 //Console.WriteLine(Int32.Parse(ComboBoxCube.SelectedValue.ToString()));
@@ -362,7 +362,7 @@ namespace OLAP_WindowsForms.App
         // START --------------FILL DW GL AND SC-----------------------------------------
         private void CDW_TIME_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("time: " + CDW_TIME.SelectedIndex);
+            //Console.WriteLine("time: " + CDW_TIME.SelectedIndex);
             if (CDW_TIME.SelectedIndex != -1)
             {
                 CDW_TIME_GL.Enabled = true;
@@ -385,7 +385,7 @@ namespace OLAP_WindowsForms.App
         }
         private void CDW_INSURANT_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("insurant: " + CDW_INSURANT.SelectedIndex);
+            //Console.WriteLine("insurant: " + CDW_INSURANT.SelectedIndex);
             if (CDW_INSURANT.SelectedIndex != -1)
             {
                 CDW_INSURANT_GL.Enabled = true;
@@ -408,7 +408,7 @@ namespace OLAP_WindowsForms.App
         }
         private void CDW_MEDSERVICE_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("medservice: " + CDW_MEDSERVICE.SelectedIndex);
+            //Console.WriteLine("medservice: " + CDW_MEDSERVICE.SelectedIndex);
             if (CDW_MEDSERVICE.SelectedIndex != -1)
             {
                 CDW_MEDSERVICE_GL.Enabled = true;
@@ -431,7 +431,7 @@ namespace OLAP_WindowsForms.App
         }
         private void CDW_DRUG_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("drug: " + CDW_DRUG.SelectedIndex);
+            //Console.WriteLine("drug: " + CDW_DRUG.SelectedIndex);
             if (CDW_DRUG.SelectedIndex != -1)
             {
                 CDW_DRUG_GL.Enabled = true;
@@ -454,7 +454,7 @@ namespace OLAP_WindowsForms.App
         }
         private void CDW_DOCTOR_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("doctor: " + CDW_DOCTOR.SelectedIndex);
+           // Console.WriteLine("doctor: " + CDW_DOCTOR.SelectedIndex);
             if (CDW_DOCTOR.SelectedIndex != -1)
             {
                 CDW_DOCTOR_GL.Enabled = true;
@@ -477,7 +477,7 @@ namespace OLAP_WindowsForms.App
         }
         private void CDW_HOSPITAL_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Console.WriteLine("hospital: " + CDW_HOSPITAL.SelectedIndex);
+           // Console.WriteLine("hospital: " + CDW_HOSPITAL.SelectedIndex);
             if (CDW_HOSPITAL.SelectedIndex != -1)
             {
                 CDW_HOSPITAL_GL.Enabled = true;
@@ -550,6 +550,7 @@ namespace OLAP_WindowsForms.App
         }
         // END ------------------- Buttons ------------------------------------------
 
+        // load schema from cube
         public void load(int ags_sid, int ass_sid)
         {
             InitializeComponent();
@@ -564,259 +565,261 @@ namespace OLAP_WindowsForms.App
             ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             if (cube_sid >= 0)
             {
-                //ComboBoxCube.SelectedIndex = 1; // to start handlers
                 ComboBoxCube.SelectedIndex = ComboBoxCube.FindStringExact(cube_name); ; // set to actual value
                 if (ComboBoxCube.SelectedIndex == 0) dimension_enable_disable();// to start handlers
-                // set Dimension Qualifications
+
+                // set Dimension Qualifications & slice condition
                 DataTable dt_dim_qual = DBContext.Service().GetData(
-                    "SELECT DIM_SID, LVL_SID_DICELVL, NASS_DQ_DICE_NODE, LVL_SID_GRANLVL " +
+                    "SELECT NASS_DQ_SID, DIM_SID, LVL_SID_DICELVL, NASS_DQ_DICE_NODE, LVL_SID_GRANLVL " +
                     "FROM AGS_NASS_DIM_QUAL " +
                     "WHERE ASS_SID_NASS = " + ass_sid);
                 DataTable dt2_dim_qual = dt_dim_qual.Copy();
-                DataRow[] dr_dim_qual = dt2_dim_qual.Select();
-                for (int i = 0; i < dr_dim_qual.Length; i++)
+
+                foreach (DataRow row in dt2_dim_qual.Rows)
                 {
-                    
-                    
-                    int dicelvl = 0;
-                    int granlvl = 0;
-                    int dim_sid = Int32.Parse(dr_dim_qual[i].ItemArray[0].ToString());
-                    String dice_node = "";
-                    /*
-                    if (!(dr_dim_qual[i].ItemArray[1] != null)) dicelvl = Int32.Parse(dr_dim_qual[i].ItemArray[1].ToString()); Console.WriteLine("________________DL-"+ dr_dim_qual[i].ItemArray[1].ToString());
-                    if (dr_dim_qual[i].ItemArray[2] != DBNull.Value) dice_node = dr_dim_qual[i].ItemArray[2].ToString();// Console.WriteLine("dn not null DBnull");
-                    if (dr_dim_qual[i].ItemArray[2] == DBNull.Value)// Console.WriteLine("dn null DBnull");
-                    if (!(dr_dim_qual[i].ItemArray[3] != null)) granlvl = Int32.Parse(dr_dim_qual[i].ItemArray[3].ToString()); Console.WriteLine("________________GL-"+ dr_dim_qual[i].ItemArray[3].ToString());
-                    */
-                    int dl;
-                    int gl;
-                    String dn;
-                    if (dr_dim_qual[i].Field<Int32>("LVL_SID_DICELVL") != DBNull) dl = dr_dim_qual[i].Field<Int32>("LVL_SID_DICELVL");
-                    if(dr_dim_qual[i].Field<Int32>("LVL_SID_GRANLVL") != null) gl = dr_dim_qual[i].Field<Int32>("LVL_SID_GRANLVL");
-                    if(dn = dr_dim_qual[i].Field<String>("NASS_DQ_DICE_NODE");
+                    object dim = row["DIM_SID"];
+                    object nass_dq = row["NASS_DQ_SID"];
+                    object dl = row["LVL_SID_DICELVL"];
+                    object dn = row["NASS_DQ_DICE_NODE"];
+                    object gl = row["LVL_SID_GRANLVL"];
 
-                    Console.WriteLine("FIELD: DL " + dl + " DN " + dn + " GL " + gl);
-
-                    Console.WriteLine("dim_sid:"+dim_sid+"DL: " + dr_dim_qual[i].ItemArray[1] + " DN: " + dr_dim_qual[i].ItemArray[2] + " GL: " + dr_dim_qual[i].ItemArray[3]);
-                    //Console.WriteLine("CAST dim_sid:" + dim_sid + "DL: " + dicelvl + " DN: " + dice_node + " GL: " + granlvl);
-                    //Console.WriteLine("TOSTRING dim_sid:" + dim_sid + "DL: " + dr_dim_qual[i].ItemArray[1].ToString() + " DN: " + dr_dim_qual[i].ItemArray[2].ToString() + " GL: " + dr_dim_qual[i].ItemArray[3].ToString());
-                    //Console.WriteLine("aftercast dim_sid:" + dim_sid + "DL: " + Int32.Parse(dr_dim_qual[i].ItemArray[1].ToString()) + " DN: " + dr_dim_qual[i].ItemArray[2].ToString() + " GL: " + Int32.Parse(dr_dim_qual[i].ItemArray[3].ToString()));
-                    //load DL,DN,GL
-                    switch (dim_sid) 
+                    // SC
+                    int nass_dq_sid = Convert.ToInt32(nass_dq);
+                    LinkedList<int> sc_dim_pred = new LinkedList<int>(); //dim_pred
+                    Boolean sc = false;
+                    //LinkedList<int> sc_lvl_sid = new LinkedList<int>(); // lvl_sid to figure out if variable or actual value
+                    DataTable dt_dim_sc = DBContext.Service().GetData(
+                    "SELECT DIM_PRED_SID " +
+                    "FROM AGS_NASS_DIM_QUAL_SLICE_COND " +
+                    "WHERE NASS_DQ_SID = " + nass_dq_sid);
+                    DataTable dt2_dim_sc = dt_dim_sc.Copy();
+                    foreach(DataRow r in dt2_dim_sc.Rows)
                     {
-                        case 1: // Doctor DIM
-                            if (dicelvl < 0) // DL
-                            {
-                                //Console.WriteLine("DL -VAR- ");
-                                doctor_DL.Checked = true;
-                            } else if (dicelvl > 0)
-                            {
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + dicelvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_DOCTOR.SelectedIndex = CDW_DOCTOR.FindString(dr2[0].ItemArray[0].ToString());
-                               // Console.Write(" DL -"+CDW_DOCTOR.SelectedValue+"- ");
-                            }
-                            if (dice_node.Equals("")) // DN
-                            {
-                               // Console.Write(" DN -VAR- ");
-                                doctor_DN.Checked = true;
-                            } else if (dr_dim_qual[i].ItemArray[2] != DBNull.Value)
-                            {
-                              //  Console.Write(" DL -"+dice_node+"- ");
-                                TDW_DOCTOR.Text = dice_node;
-                            }
-                            if (granlvl < 0) // GL
-                            {
-                               // Console.Write(" GL -VAR- ");
-                                doctor_GL.Checked = true;
-                            }else if (granlvl > 0)
-                            {
-                                fillGL(CDW_DOCTOR, 1, CDW_DOCTOR_GL);
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + granlvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_DOCTOR_GL.SelectedIndex = CDW_DOCTOR_GL.FindString(dr2[0].ItemArray[0].ToString());
-                               // Console.Write(" DL -"+CDW_DOCTOR_GL.SelectedValue+"- ");
-                            }
-                            break;
-                        case 2: // INSURANT
-                            if (dicelvl < 0) // DL
-                            {
-                                insurant_DL.Checked = true;
-                            }
-                            else if (dicelvl > 0)
-                            {
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + dicelvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_INSURANT.SelectedIndex = CDW_INSURANT.FindString(dr2[0].ItemArray[0].ToString());
-                            }
-                            if (dice_node == null) // DN
-                            {
-                                insurant_DN.Checked = true;
-                            }
-                            else if (dice_node != null)
-                            {
-                                TDW_INSURANT.Text = dice_node;
-                            }
-                            if (granlvl < 0) // GL
-                            {
-                                insurant_GL.Checked = true;
-                            }
-                            else if (granlvl > 0)
-                            {
-                                fillGL(CDW_INSURANT, 2, CDW_INSURANT_GL);
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + granlvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_INSURANT_GL.SelectedIndex = CDW_INSURANT_GL.FindString(dr2[0].ItemArray[0].ToString());
-                            }
-                            break;
-                        case 3:
-                            if (dicelvl < 0) // DL
-                            {
-                                drug_DL.Checked = true;
-                            }
-                            else if (dicelvl > 0)
-                            {
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + dicelvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_DRUG.SelectedIndex = CDW_DRUG.FindString(dr2[0].ItemArray[0].ToString());
+                        sc_dim_pred.AddLast(Convert.ToInt32(r["DIM_PRED_SID"]));
+                        //sc_lvl_sid.AddLast(DBContext.)
+                        sc = true;
+                    }
 
-                            }
-                            if (dice_node == null) // DN
+                    int dim_i = Convert.ToInt32(dim);
+                    int dl_i = -11;
+                    String dn_s = "asdf";
+                    int gl_i = -11;
+                    String dl_s = "";
+                    String gl_s = "";
+
+                    Boolean dlNull = false;
+                    Boolean dnNull = false;
+                    Boolean glNull = false;
+
+                    if (dl == DBNull.Value)
+                    {
+                        dlNull = true;
+                    }
+                    else
+                    {
+                        dl_i = Convert.ToInt32(dl);
+                        dl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", dl_i, "LVL_SID", "LVL_NAME");
+                    }
+                    if (dn == DBNull.Value)
+                    {
+                        dnNull = true;
+                    }
+                    else
+                    {
+                        dn_s = Convert.ToString(dn);
+                    }
+                    if (gl == DBNull.Value)
+                    {
+                        glNull = true;
+                    }
+                    else
+                    {
+                        gl_i = Convert.ToInt32(gl);
+                        gl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", gl_i, "LVL_SID", "LVL_NAME");
+                    }
+                    Console.WriteLine("dim: "+dim_i);
+                    if (dlNull) { Console.Write(" DL: Null "); } else { Console.Write(" DL: " + dl_i); }
+                    if (dnNull) { Console.Write(" DN: Null "); } else { Console.Write(" DN: " + dn_s); }
+                    if (glNull) { Console.Write(" GL: Null \n"); } else { Console.Write(" GL: " + gl_i+"\n"); }
+
+                    switch (dim_i)
+                    {
+                        case 1: // DOCTOR
+                            if (!dlNull)
                             {
-                                drug_DN.Checked = true;
+                                if (dl_i < 0) doctor_DL.Checked = true;
+                                if (dl_i > 0)
+                                {
+                                    CDW_DOCTOR.SelectedIndex = CDW_DOCTOR.FindString(dl_s);
+                                    CDW_DOCTOR_SelectedIndexChanged(CDW_DOCTOR, new EventArgs());
+                                }
                             }
-                            else if (dice_node != null)
+                            if (!dnNull)
                             {
-                                TDW_DRUG.Text = dice_node;
+                                if (dn_s.Equals(""))
+                                {
+                                    doctor_DN.Checked = true;
+                                }
+                                else
+                                {
+                                    TDW_DOCTOR.Text = dn_s;
+                                }
                             }
-                            if (granlvl < 0) // GL
+                            if (!glNull)
                             {
-                                drug_GL.Checked = true;
-                            }
-                            else if (granlvl > 0)
-                            {
-                                Console.WriteLine("enters now");
-                                fillGL(CDW_DRUG, 3, CDW_DRUG_GL);
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + granlvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_DRUG_GL.SelectedIndex = CDW_DRUG_GL.FindString(dr2[0].ItemArray[0].ToString());
+                                if (gl_i < 0) doctor_GL.Checked = true;
+                                if (gl_i > 0)
+                                {
+                                    
+                                    CDW_DOCTOR_GL.SelectedIndex = CDW_DOCTOR_GL.FindString(gl_s);
+                                }
                             }
                             break;
-                        case 4:
-                            if (dicelvl < 0) // DL
+                        case 2: //INSURANT
+                            if (!dlNull)
                             {
-                                meds_DL.Checked = true;
+                                if (dl_i < 0) insurant_DL.Checked = true;
+                                if (dl_i > 0)
+                                {
+                                    CDW_INSURANT.SelectedIndex = CDW_INSURANT.FindString(dl_s);
+                                    CDW_INSURANT_SelectedIndexChanged(CDW_INSURANT, new EventArgs());
+                                }
                             }
-                            else if (dicelvl > 0)
+                            if (!dnNull)
                             {
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + dicelvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_MEDSERVICE.SelectedIndex = CDW_MEDSERVICE.FindString(dr2[0].ItemArray[0].ToString());
+                                if (dn_s.Equals(""))
+                                {
+                                    insurant_DN.Checked = true;
+                                }
+                                else
+                                {
+                                    TDW_INSURANT.Text = dn_s;
+                                }
                             }
-                            if (dice_node == null) // DN
+                            if (!glNull)
                             {
-                                meds_DN.Checked = true;
-                            }
-                            else if (dice_node != null)
-                            {
-                                TDW_MEDSERVICE.Text = dice_node;
-                            }
-                            if (granlvl < 0) // GL
-                            {
-                                meds_GL.Checked = true;
-                            }
-                            else if (granlvl > 0)
-                            {
-                                fillGL(CDW_MEDSERVICE, 4, CDW_MEDSERVICE_GL);
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + granlvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_MEDSERVICE_GL.SelectedIndex = CDW_MEDSERVICE_GL.FindString(dr2[0].ItemArray[0].ToString());
+                                if (gl_i < 0) insurant_GL.Checked = true;
+                                if (gl_i > 0) CDW_INSURANT_GL.SelectedIndex = CDW_INSURANT_GL.FindString(gl_s);
                             }
                             break;
-                        case 5:
-                            if (dicelvl < 0) // DL
+                        case 3: // DRUG
+                            if (!dlNull)
                             {
-                                hospital_DL.Checked = true;
+                                if (dl_i < 0) drug_DL.Checked = true;
+                                if (dl_i > 0)
+                                {
+                                    CDW_DRUG.SelectedIndex = CDW_DRUG.FindString(dl_s);
+                                    CDW_DRUG_SelectedIndexChanged(CDW_DRUG, new EventArgs());
+                                }
                             }
-                            else if (dicelvl > 0)
+                            if (!dnNull)
                             {
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + dicelvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_HOSPITAL.SelectedIndex = CDW_HOSPITAL.FindString(dr2[0].ItemArray[0].ToString());
+                                if (dn_s.Equals(""))
+                                {
+                                    drug_DN.Checked = true;
+                                }
+                                else
+                                {
+                                    TDW_DRUG.Text = dn_s;
+                                }
                             }
-                            if (dice_node == null) // DN
+                            if (!glNull)
                             {
-                                hospital_DN.Checked = true;
-                            }
-                            else if (dice_node != null)
-                            {
-                                TDW_HOSPITAL.Text = dice_node;
-                            }
-                            if (granlvl < 0) // GL
-                            {
-                                hospital_GL.Checked = true;
-                            }
-                            else if (granlvl > 0)
-                            {
-                                fillGL(CDW_HOSPITAL, 5, CDW_HOSPITAL_GL);
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + granlvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_HOSPITAL_GL.SelectedIndex = CDW_HOSPITAL_GL.FindString(dr2[0].ItemArray[0].ToString());
+                                if (gl_i < 0) drug_GL.Checked = true;
+                                if (gl_i > 0) CDW_DRUG_GL.SelectedIndex = CDW_DRUG_GL.FindString(gl_s);
                             }
                             break;
-                        case 6:
-                            if (dicelvl < 0) // DL
+                        case 4: // MEDSERVICE
+                            if (!dlNull)
                             {
-                                time_DL.Checked = true;
+                                if (dl_i < 0) meds_DL.Checked = true;
+                                if (dl_i > 0)
+                                {
+                                    CDW_MEDSERVICE.SelectedIndex = CDW_MEDSERVICE.FindString(dl_s);
+                                    CDW_MEDSERVICE_SelectedIndexChanged(CDW_MEDSERVICE, new EventArgs());
+                                }
                             }
-                            else if (dicelvl > 0)
+                            if (!dnNull)
                             {
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + dicelvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_TIME.SelectedIndex = CDW_TIME.FindString(dr2[0].ItemArray[0].ToString());
+                                if (dn_s.Equals(""))
+                                {
+                                    meds_DN.Checked = true;
+                                }
+                                else
+                                {
+                                    TDW_MEDSERVICE.Text = dn_s;
+                                }
                             }
-                            if (dice_node == null) // DN
+                            if (!glNull)
                             {
-                                time_DN.Checked = true;
-                            }
-                            else if (dice_node != null)
-                            {
-                                TDW_TIME.Text = dice_node;
-                            }
-                            if (granlvl < 0) // GL
-                            {
-                                time_GL.Checked = true;
-                            }
-                            else if (granlvl > 0)
-                            {
-                                fillGL(CDW_TIME, 6, CDW_TIME_GL);
-                                DataTable dt = DBContext.Service().GetData("SELECT LVL_NAME FROM DW_LEVEL WHERE LVL_SID = " + granlvl);
-                                DataTable dt2 = dt.Copy();
-                                DataRow[] dr2 = dt2.Select();
-                                CDW_TIME_GL.SelectedIndex = CDW_TIME_GL.FindString(dr2[0].ItemArray[0].ToString());
+                                if (gl_i < 0) meds_GL.Checked = true;
+                                if (gl_i > 0) CDW_MEDSERVICE_GL.SelectedIndex = CDW_MEDSERVICE_GL.FindString(gl_s);
                             }
                             break;
-                    } 
-                    //Console.WriteLine("dim sid: " + dim_sid);
+                        case 5: // HOSPITAL
+                            if (!dlNull)
+                            {
+                                if (dl_i < 0) hospital_DL.Checked = true;
+                                if (dl_i > 0)
+                                {
+                                    CDW_HOSPITAL.SelectedIndex = CDW_HOSPITAL.FindString(dl_s);
+                                    CDW_HOSPITAL_SelectedIndexChanged(CDW_HOSPITAL, new EventArgs());
+                                }
+                            }
+                            if (!dnNull)
+                            {
+                                if (dn_s.Equals(""))
+                                {
+                                    hospital_DN.Checked = true;
+                                }
+                                else
+                                {
+                                    TDW_HOSPITAL.Text = dn_s;
+                                }
+                            }
+                            if (!glNull)
+                            {
+                                if (gl_i < 0) hospital_GL.Checked = true;
+                                if (gl_i > 0) CDW_HOSPITAL_GL.SelectedIndex = CDW_HOSPITAL_GL.FindString(gl_s);
+                            }
+                            break;
+                        case 6: //TIME
+                            if (!dlNull)
+                            {
+                                if (dl_i < 0) time_DL.Checked = true;
+                                if (dl_i > 0)
+                                {
+                                    CDW_TIME.SelectedIndex = CDW_TIME.FindString(dl_s);
+                                    CDW_TIME_SelectedIndexChanged(CDW_TIME, new EventArgs());
+                                }
+                            }
+                            if (!dnNull)
+                            {
+                                if (dn_s.Equals(""))
+                                {
+                                    time_DN.Checked = true;
+                                }
+                                else
+                                {
+                                    TDW_TIME.Text = dn_s;
+                                }
+                            }
+                            if (!glNull)
+                            {
+                                if (gl_i < 0) time_GL.Checked = true;
+                                if (gl_i > 0) CDW_TIME_GL.SelectedIndex = CDW_TIME_GL.FindString(gl_s);
+                            }
+                            break;
+                    }
+
                 }
-            } else
-            {
-                return;
+
+
             }
         }
 
-        public void insert()
+        // inser schema into cube
+        public void insert(int ass_sid = -1)
         {
             //prepare Connection
             NpgsqlConnection connection = DBContext.Service().getConnection();
@@ -835,16 +838,22 @@ namespace OLAP_WindowsForms.App
                 list.AddLast(new Insert_item("ASS_POS_Y", 0));
                 DBContext.Service().insinto(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", list);
 
+                int id = 0;
                 // save ASS_SID 
-                DataTable dt = DBContext.Service().GetData(
-                  "SELECT MAX(ASS_SID) FROM AGS_ANALYSIS_SITUATION_SCHEMA");
+                if (ass_sid == -1)
+                {
+                    DataTable dt = DBContext.Service().GetData(
+                      "SELECT MAX(ASS_SID) FROM AGS_ANALYSIS_SITUATION_SCHEMA");
 
-                DataTable dt2 = dt.Copy();
-                DataRow[] dr = dt2.Select();
-                String index = dr[0].ItemArray[0].ToString();
-                int id = Int32.Parse(index) + 1; // -> +1 for current ass_sid
-                Console.WriteLine(id);
-
+                    DataTable dt2 = dt.Copy();
+                    DataRow[] dr = dt2.Select();
+                    String index = dr[0].ItemArray[0].ToString();
+                    id = Int32.Parse(index) + 1; // -> +1 for current ass_sid
+                    Console.WriteLine(id);
+                } else
+                {
+                    id = ass_sid;
+                }
                 list.Clear();
                 // Cube -> AGS_NON_CMP_ASS 
                 if (ComboBoxCube.SelectedIndex != -1 || (!(ComboBoxCube.SelectedValue.ToString().Equals("System.Data.DataRowView"))))
@@ -957,10 +966,18 @@ namespace OLAP_WindowsForms.App
                 Console.WriteLine("Nothing was written to database.");
             }
         }
-        // TODO
-        public void updateDB()
-        {
 
+        // replaces old schema with new one
+        public void overrideDB(int ass_sid)
+        {
+            this.deleteSchema(ass_sid);
+            this.insert(ass_sid);
+        }
+
+        // deletes schema from cube
+        public void deleteSchema(int ass_sid)
+        {
+            DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", ass_sid.ToString());
         }
 
         // START-------------------- disable GL if DL is variable -----------------------------
@@ -1037,5 +1054,10 @@ namespace OLAP_WindowsForms.App
             }
         }
         // END---------------------- disable GL if DL is variable------------------------------
+
+        public int getAssSid()
+        {
+            return this.loaded_ass_sid;
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace OLAP_WindowsForms.App.View
                        MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
                         
-                        ui.updateDB();
+                        ui.overrideDB(ui.getAssSid());
                         this.Close();
                         return;
                     } 

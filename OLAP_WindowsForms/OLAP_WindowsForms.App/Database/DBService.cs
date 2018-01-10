@@ -195,6 +195,7 @@ namespace OLAP_WindowsForms.App
             }
         }
 
+
         // END ------------------------------- LOAD -----------------------------------------------------------------
 
         public NpgsqlConnection getConnection()
@@ -570,7 +571,7 @@ namespace OLAP_WindowsForms.App
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.StackTrace.ToString());
+                MessageBox.Show("An Error occured while trying to delete the schema! \n"+e.Message, "Deletion error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
