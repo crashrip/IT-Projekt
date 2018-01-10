@@ -37,7 +37,7 @@ namespace OLAP_WindowsForms.App
                 this.loaded_ags_sid = ags_sid;
                 InitializeComponent();
                 // fill combobox with data preview from cube
-                ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+                ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             } else
             {
                 this.load(ags_sid,ass_sid);
@@ -562,7 +562,7 @@ namespace OLAP_WindowsForms.App
             int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
             String cube_name = DBContext.Service().getSKeyfromTable("DW_CUBE", cube_sid, "CUBE_SID", "CUBE_NAME");
             // initialize combobox
-            ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             if (cube_sid >= 0)
             {
                 ComboBoxCube.SelectedIndex = ComboBoxCube.FindStringExact(cube_name); ; // set to actual value

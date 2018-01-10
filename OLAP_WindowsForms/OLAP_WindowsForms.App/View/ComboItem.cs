@@ -25,7 +25,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // get data value and description from cube for certain table, 2 columns and a combobox
-        public static void getComboboxContent(ComboBox combobox, string table, string column1, string column2)
+        public static void GetComboboxContent(ComboBox combobox, string table, string column1, string column2)
         {
             DataTable dt = DBContext.Service().GetData(table, column1, column2);
             DataTable dt2 = dt.Copy();
@@ -36,7 +36,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // get data value and description from cube for certain table, 2 columns and a combobox
-        public static void getComboboxContent(ComboBox combobox, string table, string column)
+        public static void GetComboboxContent(ComboBox combobox, string table, string column)
         {
             DataTable dt = DBContext.Service().GetData(table, column);
             DataTable dt2 = dt.Copy();
@@ -47,7 +47,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // get data value and description from cube for certain table, 2 columns and a combobox
-        public static void getListBoxContent(ListBox listbox, string table, string column1, string column2)
+        public static void GetListBoxContent(ListBox listbox, string table, string column1, string column2)
         {
             DataTable dt = DBContext.Service().GetData(table, column1, column2);
             DataTable dt2 = dt.Copy();
