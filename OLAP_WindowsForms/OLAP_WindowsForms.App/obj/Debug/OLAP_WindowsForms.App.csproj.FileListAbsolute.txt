@@ -82,3 +82,6 @@ C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.pdb
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectNavigationOperator.resources
 C:\Users\Alexander\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectNavigationOperator.resources
+C:\Users\Alexander\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SaveSchema.resources
+C:\Users\Alexander\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.CreateNewAnalysis.resources
+C:\Users\Alexander\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.LoadForm.resources

@@ -1,0 +1,33 @@
+// Abfrage zur Wiederherstellung des Originalzustandes vor Inserts
+Delete from AGS_ANALYSIS_GRAPH_SCHEMA where ags_sid > 1;
+Delete from ags_analysis_situation_schema where ass_sid > 23;
+Delete from ags_non_cmp_ass where ass_sid_nass > 23;
+Delete from ags_nass_dim_qual where nass_dq_sid > 16;
+Delete from ags_nass_dim_qual_slice_cond where nass_sc_sid > 16;
+
+// Update der bereitgestellten Datenbank
+Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-1, 'DoctorVar',		1,	'VARCHAR(100)',	0);
+Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-2, 'InsurantVar',		2,	'VARCHAR(100)',	0);
+Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-3, 'DrugVar',			3,	'VARCHAR(100)',	0);
+Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-4, 'MedServiceVar',	4,	'VARCHAR(100)',	0);
+Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-5, 'HospitalVar',		5,	'VARCHAR(100)',	0);
+Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-6, 'TimeVar',			6,	'VARCHAR(100)',	0);
+
+Insert into DW_DIM_PREDICATE (Dim_pred_sid, dim_pred_name, lvl_sid, dim_pred_expr) VALUES(-6,		'TimeVar',			-6,		''	  );
+Insert into DW_DIM_PREDICATE (Dim_pred_sid, dim_pred_name, lvl_sid, dim_pred_expr) VALUES(-5,		'HospitalVar',		-5,		''	  );
+Insert into DW_DIM_PREDICATE (Dim_pred_sid, dim_pred_name, lvl_sid, dim_pred_expr) VALUES(-4,		'MedServiceVar',	-4,		''	  );
+Insert into DW_DIM_PREDICATE (Dim_pred_sid, dim_pred_name, lvl_sid, dim_pred_expr) VALUES(-3,		'DrugVar',			-3,		''	  );
+Insert into DW_DIM_PREDICATE (Dim_pred_sid, dim_pred_name, lvl_sid, dim_pred_expr) VALUES(-2,		'InsurantVar',		-2,		''	  );
+Insert into DW_DIM_PREDICATE (Dim_pred_sid, dim_pred_name, lvl_sid, dim_pred_expr) VALUES(-1,		'DoctorVar',		-1,		''	  );
+
+INSERT INTO DW_BMSR_PREDICATE
+	(BMSR_PRED_SID, BMSR_PRED_NAME, CUBE_SID, BMSR_PRED_EXPR) values
+	(-3,	'HospitalizationVar',		3,	'True'),
+	(-2,	'AmbTreatmentVar',			2,	'True'),
+	(-1,	'DrugPrescriptionVar',		1,	'True');
+
+INSERT INTO DW_AMSR_PREDICATE
+	(AMSR_PRED_SID, AMSR_PRED_NAME, CUBE_SID, AMSR_PRED_EXPR) values
+   (-3,		'HospitalizationVar',		3,	'TRUE'),
+   (-2,		'AmbTreatmentVar',			2,	'TRUE'),
+   (-1,		'DrugPrescriptionVar',		1,	'TRUE');

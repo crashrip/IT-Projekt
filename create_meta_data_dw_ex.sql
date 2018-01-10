@@ -10,6 +10,12 @@
 
 INSERT INTO DW_LEVEL
 	(LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) values
+   (-1, 'DoctorVar',		1,	'VARCHAR(100)',	0),
+   (-2, 'InsurantVar',		2,	'VARCHAR(100)',	0),
+   (-3, 'DrugVar',			3,	'VARCHAR(100)',	0),
+   (-4, 'MedServiceVar',	4,	'VARCHAR(100)',	0),
+   (-5, 'HospitalVar',		5,	'VARCHAR(100)',	0),
+   (-6, 'TimeVar',			6,	'VARCHAR(100)',	0),
 	(1, 'doctor',			1,	'VARCHAR(100)', 1),
 	(2, 'docDistrict',		1,	'VARCHAR(100)', 2),
 	(3, 'docProvince',		1,	'VARCHAR(100)', 3),
@@ -180,6 +186,12 @@ INSERT INTO DW_CUBE_DERIVED_AGGREGATE_MEASURE
 	
 INSERT INTO DW_DIM_PREDICATE
 	(DIM_PRED_SID, DIM_PRED_NAME, LVL_SID, DIM_PRED_EXPR) values
+   (-6,		'TimeVar',			-6,		''	  ),
+   (-5,		'HospitalVar',		-5,		''	  ),
+   (-4,		'MedServiceVar',	-4,		''	  ),
+   (-3,		'DrugVar',			-3,		''	  ),
+   (-2,		'InsurantVar',		-2,		''	  ),
+   (-1,		'DoctorVar',		-1,		''	  ),
 	(1,		'trueDoctor',		4,		'TRUE'),
 	(2,		'trueInsurant',		8,		'TRUE'),
 	(3,		'trueDrug',			15,		'TRUE'),
@@ -222,6 +234,9 @@ INSERT INTO DW_DIM_PREDICATE_SUBSUMPTION
 	
 INSERT INTO DW_BMSR_PREDICATE
 	(BMSR_PRED_SID, BMSR_PRED_NAME, CUBE_SID, BMSR_PRED_EXPR) values
+	(-3,	'HospitalizationVar',		3,	'True'),
+	(-2,	'AmbTreatmentVar',			2,	'True'),
+	(-1,	'DrugPrescriptionVar',		1,	'True'),
 	(1,		'trueDrugPrescription',		1,	'TRUE'),
 	(2,		'trueAmbTreatment',			2,	'TRUE'),
 	(3,		'trueHospitalization',		3,	'TRUE'),
@@ -238,6 +253,9 @@ INSERT INTO DW_BMSR_PREDICATE_SUBSUMPTION
 	
 INSERT INTO DW_AMSR_PREDICATE
 	(AMSR_PRED_SID, AMSR_PRED_NAME, CUBE_SID, AMSR_PRED_EXPR) values
+   (-3,		'HospitalizationVar',		3,	'TRUE'),
+   (-2,		'AmbTreatmentVar',			2,	'TRUE'),
+   (-1,		'DrugPrescriptionVar',		1,	'TRUE'),
 	(1,		'trueDrugPrescription',		1,	'TRUE'),
 	(2,		'trueAmbTreatment',			2,	'TRUE'),
 	(3,		'trueHospitalization',		3,	'TRUE'),

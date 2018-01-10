@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OLAP_WindowsForms.App.View;
 
 namespace OLAP_WindowsForms.App
 {

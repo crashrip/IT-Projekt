@@ -54,11 +54,24 @@
     <Compile Include="View\ComboItem.cs" />
     <Compile Include="Database\DBContext.cs" />
     <Compile Include="Database\DBService.cs" />
+    <Compile Include="View\CreateNewAnalysis.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CreateNewAnalysis.Designer.cs">
+      <DependentUpon>CreateNewAnalysis.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\DataView.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\DataView.Designer.cs">
       <DependentUpon>DataView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Insert_item.cs" />
+    <Compile Include="View\LoadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\LoadForm.Designer.cs">
+      <DependentUpon>LoadForm.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Login.cs">
       <SubType>Form</SubType>
@@ -71,6 +84,12 @@
     </Compile>
     <Compile Include="View\BaseMenu.Designer.cs">
       <DependentUpon>BaseMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\SaveSchema.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SaveSchema.Designer.cs">
+      <DependentUpon>SaveSchema.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SelectNavigationOperator.cs">
       <SubType>Form</SubType>
@@ -86,14 +105,23 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="View\CreateNewAnalysis.resx">
+      <DependentUpon>CreateNewAnalysis.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\DataView.resx">
       <DependentUpon>DataView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\LoadForm.resx">
+      <DependentUpon>LoadForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Login.resx">
       <DependentUpon>Login.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\BaseMenu.resx">
       <DependentUpon>BaseMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SaveSchema.resx">
+      <DependentUpon>SaveSchema.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\SelectNavigationOperator.resx">
       <DependentUpon>SelectNavigationOperator.cs</DependentUpon>

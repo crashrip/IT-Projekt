@@ -23,7 +23,7 @@ namespace OLAP_WindowsForms.App
             textBox_hostname.Text = "localhost";
             textBox_port.Text = "5432";
             textBox_username.Text = "postgres";
-            /*textBox_password.Text = "k1556077";*/ // alex
+            //textBox_password.Text = "k1556077"; // alex
             textBox_password.Text = "1556474"; // maria
             textBox_dbName.Text = "postgres";
         }
