@@ -182,7 +182,11 @@ INSERT INTO DW_CUBE_DERIVED_AGGREGATE_MEASURE
 	(3, 1),
 	(3, 3),
 	(3, 5);
-	
+
+	SC!
+Select * 
+from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = 1 and l.lvl_position <= 
+(select lvl_position from dw_level where lvl_sid = 4)	
 	
 INSERT INTO DW_DIM_PREDICATE
 	(DIM_PRED_SID, DIM_PRED_NAME, LVL_SID, DIM_PRED_EXPR) values

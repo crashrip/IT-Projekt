@@ -278,7 +278,6 @@ namespace OLAP_WindowsForms.App
                         Console.WriteLine(":c" + cnt + i.getSValue());
                         command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
                     }
-
                 }
                 cnt++;
             }

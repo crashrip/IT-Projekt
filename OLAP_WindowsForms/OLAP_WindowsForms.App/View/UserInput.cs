@@ -977,6 +977,7 @@ namespace OLAP_WindowsForms.App
         // deletes schema from cube
         public void deleteSchema(int ass_sid)
         {
+            //MessageBox.Show("Are you sure that you want to delete the Analysis-Schema with the number"+ass_sid+"?","Delete Schema",MessageBoxButtons.YesNoCancel,MessageBoxB)
             DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", ass_sid.ToString());
         }
 
