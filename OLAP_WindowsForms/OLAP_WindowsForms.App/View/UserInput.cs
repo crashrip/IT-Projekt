@@ -246,15 +246,14 @@ namespace OLAP_WindowsForms.App
             LDW_BMSR.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt = DBContext.Service().GetData(
-               "SELECT DBMSR_NAME, DBMSR_EXPR " +
-               "FROM (DW_CUBE NATURAL JOIN DW_CUBE_DERIVED_BASE_MEASURE) NATURAL JOIN DW_DERIVED_BASE_MEASURE " +
-               "WHERE DW_CUBE.CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
-                );
+               "select bmsr_pred_sid, bmsr_pred_name "+
+               "from dw_bmsr_predicate "+
+               "where bmsr_pred_sid > 0 AND cube_sid = "+ ComboBoxCube.SelectedValue.ToString());
             DataTable dt2 = dt.Copy();
             // set DataSource
             LDW_BMSR.DataSource = dt2;
-            LDW_BMSR.DisplayMember = "DBMSR_NAME";
-            LDW_BMSR.ValueMember = "DBMSR_EXPR";
+            LDW_BMSR.DisplayMember = "bmsr_pred_name";
+            LDW_BMSR.ValueMember = "bmsr_pred_sid";
             LDW_BMSR.SelectionMode = SelectionMode.MultiExtended;
         }
 
@@ -265,15 +264,16 @@ namespace OLAP_WindowsForms.App
             LDW_MEASURES.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt3 = DBContext.Service().GetData(
-               "SELECT DAMSR_NAME, DAMSR_EXPR " +
-               "FROM (DW_CUBE NATURAL JOIN DW_CUBE_DERIVED_AGGREGATE_MEASURE) NATURAL JOIN DW_DERIVED_AGGREGATE_MEASURE " +
-               "WHERE DW_CUBE.CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()
+               "select c.damsr_sid, d.damsr_name "+
+               "from dw_cube_derived_aggregate_measure c inner join "+
+               "dw_derived_aggregate_measure d on c.damsr_sid = d.damsr_sid "+
+               "where c.cube_sid = " + ComboBoxCube.SelectedValue.ToString()
                 );
             DataTable dt4 = dt3.Copy();
             // set DataSource
             LDW_MEASURES.DataSource = dt4;
-            LDW_MEASURES.DisplayMember = "DAMSR_NAME";
-            LDW_MEASURES.ValueMember = "DAMSR_EXPR";
+            LDW_MEASURES.DisplayMember = "damsr_name";
+            LDW_MEASURES.ValueMember = "damsr_sid";
             LDW_MEASURES.SelectionMode = SelectionMode.MultiExtended;
         }
 
@@ -284,9 +284,9 @@ namespace OLAP_WindowsForms.App
             LDW_FILTER.SelectionMode = SelectionMode.None;
             // SQL Query 
             DataTable dt = DBContext.Service().GetData(
-               "SELECT AMSR_PRED_SID, AMSR_PRED_NAME " +
-               "FROM DW_AMSR_PREDICATE " +
-               "WHERE CUBE_SID = " + ComboBoxCube.SelectedValue.ToString()+ " AND AMSR_PRED_SID > 0"
+               "select amsr_pred_sid, amsr_pred_name "+
+               "from dw_amsr_predicate "+
+               "where cube_sid = " + ComboBoxCube.SelectedValue.ToString()+ " AND AMSR_PRED_SID > 0"
                 );
             DataTable dt2 = dt.Copy();
             // set DataSource
@@ -328,20 +328,28 @@ namespace OLAP_WindowsForms.App
             cBox.ValueMember = "LVL_SID";
         }
 
-        private void fillListBoxDimension(ListBox lBox, string lvl_sid)
+        private void fillListBoxDimension(ListBox lBox, int dim_sid, string lvl_sid)
         {
-            lBox.SelectionMode = SelectionMode.None;
-            DataTable dt = DBContext.Service().GetData(
-              "SELECT DIM_PRED_NAME, DIM_PRED_SID " +
-              "FROM DW_DIM_PREDICATE " +
-              "WHERE LVL_SID = " + lvl_sid
-               );
-            DataTable dt2 = dt.Copy();
+            try
+            {
+                lBox.SelectionMode = SelectionMode.None;
+                DataTable dt = DBContext.Service().GetData(
+                //  "SELECT DIM_PRED_NAME, DIM_PRED_SID " +
+                //  "FROM DW_DIM_PREDICATE " +
+                //  "WHERE LVL_SID = " + lvl_sid
+                "Select DIM_PRED_NAME, DIM_PRED_SID " +
+                "from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
+                "l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
+                DataTable dt2 = dt.Copy();
 
-            lBox.DataSource = dt2;
-            lBox.DisplayMember = "DIM_PRED_NAME";
-            lBox.ValueMember = "DIM_PRED_SID";
-            lBox.SelectionMode = SelectionMode.MultiExtended;
+                lBox.DataSource = dt2;
+                lBox.DisplayMember = "DIM_PRED_NAME";
+                lBox.ValueMember = "DIM_PRED_SID";
+                lBox.SelectionMode = SelectionMode.MultiExtended;
+            } catch ( Exception e)
+            {
+                Console.WriteLine("ERROR: " + e.Message);
+            } 
         }
 
         private void fillGL(ComboBox readFromCB, int dim_sid, ComboBox changeThisCB)
@@ -374,7 +382,7 @@ namespace OLAP_WindowsForms.App
                 // changes Listbox SC only if something is selected
                 if (!(CDW_TIME.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
-                    fillListBoxDimension(LDW_TIME, CDW_TIME.SelectedValue.ToString());
+                    fillListBoxDimension(LDW_TIME,6, CDW_TIME.SelectedValue.ToString());
                 }
             }
             else
@@ -397,7 +405,7 @@ namespace OLAP_WindowsForms.App
                 // changes Listbox SC only if something is selected
                 if (!(CDW_INSURANT.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
-                    fillListBoxDimension(LDW_INSURANT, CDW_INSURANT.SelectedValue.ToString());
+                    fillListBoxDimension(LDW_INSURANT,2, CDW_INSURANT.SelectedValue.ToString());
                 }
             }
             else
@@ -420,7 +428,7 @@ namespace OLAP_WindowsForms.App
                 // changes Listbox SC only if something is selected
                 if (!(CDW_MEDSERVICE.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
-                    fillListBoxDimension(LDW_MEDSERVICE, CDW_MEDSERVICE.SelectedValue.ToString());
+                    fillListBoxDimension(LDW_MEDSERVICE,4, CDW_MEDSERVICE.SelectedValue.ToString());
                 }
             }
             else
@@ -443,7 +451,7 @@ namespace OLAP_WindowsForms.App
                 // changes Listbox SC only if something is selected
                 if (!(CDW_DRUG.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
-                    fillListBoxDimension(LDW_DRUG, CDW_DRUG.SelectedValue.ToString());
+                    fillListBoxDimension(LDW_DRUG,3, CDW_DRUG.SelectedValue.ToString());
                 }
             }
             else
@@ -466,7 +474,7 @@ namespace OLAP_WindowsForms.App
                 // changes Listbox SC only if something is selected
                 if (!(CDW_DOCTOR.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
-                    fillListBoxDimension(LDW_DOCTOR, CDW_DOCTOR.SelectedValue.ToString());
+                    fillListBoxDimension(LDW_DOCTOR,1, CDW_DOCTOR.SelectedValue.ToString());
                 }
             }
             else
@@ -489,7 +497,7 @@ namespace OLAP_WindowsForms.App
                 // changes Listbox SC only if something is selected
                 if (!(CDW_HOSPITAL.SelectedValue.ToString().Equals("System.Data.DataRowView")))
                 {
-                    fillListBoxDimension(LDW_HOSPITAL, CDW_HOSPITAL.SelectedValue.ToString());
+                    fillListBoxDimension(LDW_HOSPITAL,5, CDW_HOSPITAL.SelectedValue.ToString());
                 }
             }
             else
@@ -517,6 +525,8 @@ namespace OLAP_WindowsForms.App
                 if (sender.GetType().ToString().Equals("System.Windows.Forms.ListBox"))
                 {
                     (sender as ListBox).ClearSelected();
+                    (sender as ListBox).SelectedIndex = - 1;
+                    //Console.WriteLine((sender as ListBox).ToString()+" -> "+(sender as ListBox).SelectedIndex);
                 }
                 if (sender.GetType().ToString().Equals("System.Windows.Forms.ComboBox"))
                 {
@@ -557,6 +567,7 @@ namespace OLAP_WindowsForms.App
             this.loaded_ags_sid = ags_sid;
             this.loaded_ass_sid = ass_sid;
             this.overrideSchema = true;
+
             Console.WriteLine("AGS_SID: " + loaded_ags_sid + " ASS_SID: " + loaded_ass_sid);
             // load cube_sid
             int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
@@ -586,19 +597,13 @@ namespace OLAP_WindowsForms.App
                     // SC
                     int nass_dq_sid = Convert.ToInt32(nass_dq);
                     LinkedList<int> sc_dim_pred = new LinkedList<int>(); //dim_pred
-                    Boolean sc = false;
                     //LinkedList<int> sc_lvl_sid = new LinkedList<int>(); // lvl_sid to figure out if variable or actual value
                     DataTable dt_dim_sc = DBContext.Service().GetData(
                     "SELECT DIM_PRED_SID " +
                     "FROM AGS_NASS_DIM_QUAL_SLICE_COND " +
                     "WHERE NASS_DQ_SID = " + nass_dq_sid);
                     DataTable dt2_dim_sc = dt_dim_sc.Copy();
-                    foreach(DataRow r in dt2_dim_sc.Rows)
-                    {
-                        sc_dim_pred.AddLast(Convert.ToInt32(r["DIM_PRED_SID"]));
-                        //sc_lvl_sid.AddLast(DBContext.)
-                        sc = true;
-                    }
+                    
 
                     int dim_i = Convert.ToInt32(dim);
                     int dl_i = -11;
@@ -652,8 +657,24 @@ namespace OLAP_WindowsForms.App
                                 {
                                     CDW_DOCTOR.SelectedIndex = CDW_DOCTOR.FindString(dl_s);
                                     CDW_DOCTOR_SelectedIndexChanged(CDW_DOCTOR, new EventArgs());
+                                    //CDW_DOCTOR.Enabled = false;
                                 }
-                            }
+                                // SC
+                                foreach (DataRow r in dt2_dim_sc.Rows)
+                                {
+                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                    if (dim_pred_sid < 0)
+                                    {
+                                        doctor_SC.Checked = true;
+                                    } else
+                                    {
+                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                        int index = LDW_DOCTOR.FindString(key);
+                                        LDW_DOCTOR.SetSelected(index, true);
+                                        //LDW_DOCTOR.Enabled = false;
+                                    }
+                                }
+                            } 
                             if (!dnNull)
                             {
                                 if (dn_s.Equals(""))
@@ -663,6 +684,7 @@ namespace OLAP_WindowsForms.App
                                 else
                                 {
                                     TDW_DOCTOR.Text = dn_s;
+                                    //TDW_DOCTOR.Enabled = false;
                                 }
                             }
                             if (!glNull)
@@ -670,8 +692,8 @@ namespace OLAP_WindowsForms.App
                                 if (gl_i < 0) doctor_GL.Checked = true;
                                 if (gl_i > 0)
                                 {
-                                    
                                     CDW_DOCTOR_GL.SelectedIndex = CDW_DOCTOR_GL.FindString(gl_s);
+                                    //CDW_DOCTOR_GL.Enabled = false;
                                 }
                             }
                             break;
@@ -830,14 +852,6 @@ namespace OLAP_WindowsForms.App
             {
                 LinkedList<Insert_item> list = new LinkedList<Insert_item>();
 
-                // AGS_ANALYSIS_SITUATION SCHEMA
-                list.AddFirst(new Insert_item("ASS_NAME", this.name));
-                list.AddLast(new Insert_item("ASS_DESCRIPTION", this.description));
-                list.AddLast(new Insert_item("AGS_SID", loaded_ags_sid)); //  Variable aus ags_analysis_graph_schema
-                list.AddLast(new Insert_item("ASS_POS_X", 0));
-                list.AddLast(new Insert_item("ASS_POS_Y", 0));
-                DBContext.Service().insinto(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", list);
-
                 int id = 0;
                 // save ASS_SID 
                 if (ass_sid == -1)
@@ -850,10 +864,22 @@ namespace OLAP_WindowsForms.App
                     String index = dr[0].ItemArray[0].ToString();
                     id = Int32.Parse(index) + 1; // -> +1 for current ass_sid
                     Console.WriteLine(id);
-                } else
+                }
+                else
                 {
                     id = ass_sid;
                 }
+
+                // AGS_ANALYSIS_SITUATION SCHEMA
+                list.AddFirst(new Insert_item("ASS_SID", id));
+                list.AddLast(new Insert_item("ASS_NAME", this.name));
+                list.AddLast(new Insert_item("ASS_DESCRIPTION", this.description));
+                list.AddLast(new Insert_item("AGS_SID", loaded_ags_sid)); //  Variable aus ags_analysis_graph_schema
+                list.AddLast(new Insert_item("ASS_POS_X", 0));
+                list.AddLast(new Insert_item("ASS_POS_Y", 0));
+                DBContext.Service().insertWithoutPK(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", list);
+
+                
                 list.Clear();
                 // Cube -> AGS_NON_CMP_ASS 
                 if (ComboBoxCube.SelectedIndex != -1 || (!(ComboBoxCube.SelectedValue.ToString().Equals("System.Data.DataRowView"))))
@@ -863,7 +889,7 @@ namespace OLAP_WindowsForms.App
                     list.AddLast(new Insert_item("ASS_USED_IN_CASS", 0)); // 1 used in comparative analysis , 0 used in non comparative analysis
                     list.AddLast(new Insert_item("CUBE_SID", Int32.Parse(ComboBoxCube.SelectedValue.ToString())));
                     DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NON_CMP_ASS", list);
-                }
+                } 
 
                 // DIM Qualification -> AGS_NASS_DIM_QUAL & AGS_NASS_DIM_QUAL_SLICE_COND
                 if (dim_doctor) { DBContext.Service().insertDimQual(connection, transaction, CDW_DOCTOR, CDW_DOCTOR_GL, TDW_DOCTOR, LDW_DOCTOR, id, 1, "Doctor", doctor_DL, doctor_DN, doctor_SC, doctor_GL); }
@@ -875,69 +901,109 @@ namespace OLAP_WindowsForms.App
 
                 // BMSR ->
                 list.Clear();
-                
-                // Measures ->
+                Console.WriteLine("Listboxes: - BMSR: " + LDW_BMSR.SelectedIndex + " Measure: " + LDW_MEASURES.SelectedIndex + " Filter: " + LDW_FILTER.SelectedIndex);
+                if (bmsr_variable.Checked)
+                {
+                    list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID",DBContext.Service().getLatestID("NASS_BMSR_FLT_SID","AGS_NASS_BMSR_FILTER")+1));
+                    list.AddLast(new Insert_item("ASS_SID_NASS", id));
+                    Console.WriteLine("variable: pk"+ (DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1)+" pred_sid " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
+                    list.AddLast(new Insert_item("BMSR_PRED_SID", (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1)));
+                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
+                } else if (LDW_BMSR.SelectedIndex != -1)
+                { 
+                    int nass_bmsr_flt_sid = DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1;
+                    foreach (DataRowView dr in LDW_BMSR.SelectedItems)
+                    {
+                        list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID",nass_bmsr_flt_sid));
+                        list.AddLast(new Insert_item("ASS_SID_NASS", id));
+                        list.AddLast(new Insert_item("BMSR_PRED_SID", Int32.Parse(dr.Row["bmsr_pred_sid"].ToString())));
+                        Console.WriteLine("bmsr: " + dr.Row["bmsr_pred_sid"].ToString());
+                        DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
+                        list.Clear();
+                        nass_bmsr_flt_sid++;
+                    }
+                } else
+                {
+                    DataTable dt = DBContext.Service().GetData(
+                        "Select bmsr_pred_sid "+
+                        "from dw_bmsr_predicate where cube_sid = " + Int32.Parse(ComboBoxCube.SelectedValue.ToString()) + 
+                        " and bmsr_pred_name like 'true%'");
+                    DataTable dt2 = dt.Copy();
+                    DataRow[] dr = dt2.Select();
+                    int bmsr_pred_sid = Int32.Parse(dr[0].ItemArray[0].ToString());
 
+                    list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID", DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1));
+                    list.AddLast(new Insert_item("ASS_SID_NASS", id));
+                    list.AddLast(new Insert_item("BMSR_PRED_SID", bmsr_pred_sid));
+                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
+                }
+
+                // Measures ->
+                list.Clear();
+
+                if (LDW_MEASURES.SelectedIndex != -1)
+                {
+                    int nass_amsr_sid = DBContext.Service().getLatestID("NASS_AMSR_SID", "AGS_NASS_AGGREGATE_MEASSURE") + 1;
+                    foreach (DataRowView dr in LDW_MEASURES.SelectedItems)
+                    {
+                        list.AddFirst(new Insert_item("NASS_AMSR_SID", nass_amsr_sid));
+                        list.AddLast(new Insert_item("ASS_SID_NASS", id));
+                        list.AddLast(new Insert_item("DAMSR_SID", Int32.Parse(dr.Row["damsr_sid"].ToString())));
+                        Console.WriteLine("bmsr: " + dr.Row["damsr_sid"].ToString());
+                        DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AGGREGATE_MEASSURE", list);
+                        list.Clear();
+                        nass_amsr_sid++;
+                    }
+                }
                 // Filter -> 
-                /*
+                list.Clear();
+
                 if (filter_variable.Checked)
                 {
-                    Console.WriteLine("entered_filter_variable -> Var");
+                    DataTable dt = DBContext.Service().GetData(
+                        "Select amsr_pred_sid " +
+                        "from dw_amsr_predicate where cube_sid = " + Int32.Parse(ComboBoxCube.SelectedValue.ToString()) +
+                        " and amsr_pred_name like '%Var%'");
+                    DataTable dt2 = dt.Copy();
+                    DataRow[] dr = dt2.Select();
+                    int amsr_pred_sid = Int32.Parse(dr[0].ItemArray[0].ToString());
 
-                    DataTable sdt = DBContext.Service().GetData(
-                    "select * from dw_dim_predicate " +
-                    "where dim_pred_name = '" + defSC + "Var'");
-
-                    //Console.WriteLine("query sucess");
-                    DataTable sdt2 = sdt.Copy();
-                    DataRow[] sdr = sdt2.Select();
-                    String pred = sdr[0].ItemArray[0].ToString();
-                    //Console.WriteLine("query sucess: -> " + pred);
-                    int dim_pred = Int32.Parse(pred);
-
-                    list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
-                    list.AddLast(new Insert_item("DIM_PRED_SID", dim_pred));
-                    DBContext.Service().insinto("AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
-
+                    list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", DBContext.Service().getLatestID("NASS_AMSR_FLT_SID", "AGS_NASS_AMSR_FILTER") + 1));
+                    list.AddLast(new Insert_item("ASS_SID_NASS", id));
+                    Console.WriteLine("variable: pk" +amsr_pred_sid);
+                    list.AddLast(new Insert_item("AMSR_PRED_SID", amsr_pred_sid));
+                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
                 }
-                else if (ldw.SelectedValue != null)
+                else if (LDW_FILTER.SelectedIndex != -1)
                 {
-                    Console.WriteLine("entered slice: ");
-                    Console.WriteLine(ldw.SelectedValue.ToString());
-
-                    foreach (Object sel in ldw.SelectedItems)
+                    int nass_amsr_flt_sid = DBContext.Service().getLatestID("NASS_AMSR_FLT_SID", "AGS_NASS_AMSR_FILTER") + 1;
+                    foreach (DataRowView dr in LDW_FILTER.SelectedItems)
                     {
-                        Console.WriteLine((sel as DataRowView)["DIM_PRED_SID"]);
-                        list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
-                        list.AddLast(new Insert_item("DIM_PRED_SID", Int32.Parse((sel as DataRowView)["DIM_PRED_SID"].ToString())));
-                        DBContext.Service().insinto("AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
+                        list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", nass_amsr_flt_sid));
+                        list.AddLast(new Insert_item("ASS_SID_NASS", id));
+                        list.AddLast(new Insert_item("AMSR_PRED_SID", Int32.Parse(dr.Row["amsr_pred_sid"].ToString())));
+                        Console.WriteLine("amsr filter: " + dr.Row["amsr_pred_sid"].ToString());
+                        DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
                         list.Clear();
+                        nass_amsr_flt_sid++;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("entered slice empty --- def: " + defSC);
+                    DataTable dt = DBContext.Service().GetData(
+                        "Select amsr_pred_sid " +
+                        "from dw_amsr_predicate where cube_sid = " + Int32.Parse(ComboBoxCube.SelectedValue.ToString()) +
+                        " and amsr_pred_name like '%Var%'");
+                    DataTable dt2 = dt.Copy();
+                    DataRow[] dr = dt2.Select();
+                    int amsr_pred_sid = Int32.Parse(dr[0].ItemArray[0].ToString());
 
-                    DataTable sdt = DBContext.Service().GetData(
-                  "select dim_pred_sid from dw_dim_predicate where dim_pred_name like '%true" + defSC + "%'");
-
-                    //Console.WriteLine("query sucess");
-                    DataTable sdt2 = sdt.Copy();
-                    DataRow[] sdr = sdt2.Select();
-                    String pred = sdr[0].ItemArray[0].ToString();
-                    //Console.WriteLine("query sucess: -> " + pred);
-                    int dim_pred = Int32.Parse(pred);
-
-
-                    //Console.WriteLine("dim_pred_empty: " + dim_pred);
-
-                    // insert
-                    list.AddFirst(new Insert_item("NASS_DQ_SID", nass_dq_sid));
-                    list.AddLast(new Insert_item("DIM_PRED_SID", dim_pred));
-                    DBContext.Service().insinto("AGS_NASS_DIM_QUAL_SLICE_COND", "NASS_SC_SID", list);
-
+                    list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1));
+                    list.AddLast(new Insert_item("ASS_SID_NASS", id));
+                    list.AddLast(new Insert_item("AMSR_PRED_SID", amsr_pred_sid));
+                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
                 }
-                */
+
                 transaction.Commit();
                 DBContext.Service().transactionComplete();
                 Console.WriteLine("Transaction sucessful");
@@ -962,7 +1028,7 @@ namespace OLAP_WindowsForms.App
                     }
                 }
                 Console.WriteLine("An exception of type " + e.GetType() +
-                " was encountered while inserting the data.");
+                " was encountered while inserting the data."+e.Message);
                 Console.WriteLine("Nothing was written to database.");
             }
         }
@@ -977,8 +1043,8 @@ namespace OLAP_WindowsForms.App
         // deletes schema from cube
         public void deleteSchema(int ass_sid)
         {
-            //MessageBox.Show("Are you sure that you want to delete the Analysis-Schema with the number"+ass_sid+"?","Delete Schema",MessageBoxButtons.YesNoCancel,MessageBoxB)
             DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", ass_sid.ToString());
+            Console.WriteLine("Schema deleted " + ass_sid);
         }
 
         // START-------------------- disable GL if DL is variable -----------------------------
@@ -988,10 +1054,12 @@ namespace OLAP_WindowsForms.App
             {
                 CDW_TIME_GL.SelectedIndex = -1;
                 CDW_TIME_GL.Enabled = false;
+                LDW_TIME.DataSource = null;
             }
             else
             {
                 CDW_TIME_GL.Enabled = true;
+                CDW_TIME_SelectedIndexChanged(CDW_TIME, new EventArgs());
             }
         }
         private void insurant_DL_CheckedChanged(object sender, EventArgs e)
@@ -1000,10 +1068,12 @@ namespace OLAP_WindowsForms.App
             {
                 CDW_INSURANT_GL.SelectedIndex = -1;
                 CDW_INSURANT_GL.Enabled = false;
+                LDW_INSURANT.DataSource = null;
             }
             else
             {
                 CDW_INSURANT_GL.Enabled = true;
+                CDW_INSURANT_SelectedIndexChanged(CDW_INSURANT, new EventArgs());
             }
         }
         private void meds_DL_CheckedChanged(object sender, EventArgs e)
@@ -1012,10 +1082,12 @@ namespace OLAP_WindowsForms.App
             {
                 CDW_MEDSERVICE_GL.SelectedIndex = -1;
                 CDW_MEDSERVICE_GL.Enabled = false;
+                LDW_MEDSERVICE.DataSource = null;
             }
             else
             {
                 CDW_MEDSERVICE_GL.Enabled = true;
+                CDW_MEDSERVICE_SelectedIndexChanged(CDW_MEDSERVICE, new EventArgs());
             }
         }
         private void hospital_DL_CheckedChanged(object sender, EventArgs e)
@@ -1024,10 +1096,12 @@ namespace OLAP_WindowsForms.App
             {
                 CDW_HOSPITAL_GL.SelectedIndex = -1;
                 CDW_HOSPITAL_GL.Enabled = false;
+                LDW_HOSPITAL.DataSource = null;
             }
             else
             {
                 CDW_HOSPITAL_GL.Enabled = true;
+                CDW_HOSPITAL_SelectedIndexChanged(CDW_HOSPITAL, new EventArgs());
             }
         }
         private void doctor_DL_CheckedChanged(object sender, EventArgs e)
@@ -1036,10 +1110,12 @@ namespace OLAP_WindowsForms.App
             {
                 CDW_DOCTOR_GL.SelectedIndex = -1;
                 CDW_DOCTOR_GL.Enabled = false;
+                LDW_DOCTOR.DataSource = null;
             }
             else
             {
                 CDW_DOCTOR_GL.Enabled = true;
+                CDW_DOCTOR_SelectedIndexChanged(CDW_DOCTOR, new EventArgs());
             }
         }
         private void drug_DL_CheckedChanged(object sender, EventArgs e)
@@ -1048,10 +1124,12 @@ namespace OLAP_WindowsForms.App
             {
                 CDW_DRUG_GL.SelectedIndex = -1;
                 CDW_DRUG_GL.Enabled = false;
+                LDW_DRUG.DataSource = null;
             }
             else
             {
                 CDW_DRUG_GL.Enabled = true;
+                CDW_DRUG_SelectedIndexChanged(CDW_DRUG, new EventArgs());
             }
         }
         // END---------------------- disable GL if DL is variable------------------------------
@@ -1059,6 +1137,18 @@ namespace OLAP_WindowsForms.App
         public int getAssSid()
         {
             return this.loaded_ass_sid;
+        }
+
+        private void bmsr_variable_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("variable 1 " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
+            //Console.WriteLine("variable 2 " + ((Int32.Parse(ComboBoxCube.SelectedIndex.ToString())) * -1));
+            
+        }
+
+        private void LDW_MEASURES_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("measure: " +LDW_MEASURES.SelectedIndex);
         }
     }
 }

@@ -147,7 +147,7 @@ namespace OLAP_WindowsForms.App
         // END --- COMBO ITEM HELPER METHODS
 
         // get new ID
-        private int getLatestID(String columnPK, String table)
+        public int getLatestID(String columnPK, String table)
         {
             DataTable dt = DBContext.Service().GetData(
              "SELECT MAX(" + columnPK + ") FROM " + table);
@@ -213,18 +213,6 @@ namespace OLAP_WindowsForms.App
         //insert into table
         public void insinto(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, String columnPK, LinkedList<Insert_item> list)
         {
-            /*
-            NpgsqlConnection connection = getConnection();
-            connection.Open();
-            NpgsqlCommand command = connection.CreateCommand();
-            NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
-
-            command.Connection = connection;
-            command.Transaction = transaction;
-            
-            try
-            {
-                */
 
             NpgsqlCommand command = connection.CreateCommand();
             command.Connection = connection;
@@ -260,7 +248,7 @@ namespace OLAP_WindowsForms.App
 
             // add primary key
             command.Parameters.Add(new NpgsqlParameter(":pk", id));
-
+            Console.WriteLine(":pk "+id);
             // add rest string
             cnt = 1;
             foreach (Insert_item i in list)
@@ -319,18 +307,7 @@ namespace OLAP_WindowsForms.App
         */
         //insert into table -> PK provided as first item in list
         public void insertWithoutPK(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, LinkedList<Insert_item> list)
-        {/*
-            NpgsqlConnection connection = getConnection();
-            connection.Open();
-            NpgsqlCommand command = connection.CreateCommand();
-            NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
-
-            command.Connection = connection;
-            command.Transaction = transaction;
-
-            try
-            {
-                */
+        {
          // build command string
 
             NpgsqlCommand command = connection.CreateCommand();

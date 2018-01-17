@@ -96,6 +96,7 @@ namespace OLAP_WindowsForms.App
         private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             //Console.WriteLine("enter cell mouse click");
+            validateGraphSchema();
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
                 row = e.RowIndex;

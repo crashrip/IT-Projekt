@@ -74,15 +74,23 @@ namespace OLAP_WindowsForms.App.View
         {
             if (column == 1)
             {
-                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
-                Console.WriteLine("column 1 - delete: " + cell.Value.ToString());
-                DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_NAME", "'" + cell.Value.ToString() + "'");
+                if (MessageBox.Show("Are you sure that you want to delete the Analysis-Schema ?", "Delete Schema", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) ==
+    DialogResult.Yes)
+                {
+                    DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                    Console.WriteLine("column 1 - delete: " + cell.Value.ToString());
+                    DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_NAME", "'" + cell.Value.ToString() + "'");
+                } 
             }
             if (column == 0)
             {
-                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
-                Console.WriteLine("column 0 - delete: " + cell.Value.ToString());
-                DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
+                if (MessageBox.Show("Are you sure that you want to delete the Analysis-Schema?", "Delete Schema", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) ==
+    DialogResult.Yes)
+                {
+                    DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                    Console.WriteLine("column 0 - delete: " + cell.Value.ToString());
+                    DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
+                }
             }
         }
 
