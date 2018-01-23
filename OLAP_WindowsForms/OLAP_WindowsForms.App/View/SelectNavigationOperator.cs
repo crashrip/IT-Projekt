@@ -74,51 +74,79 @@ namespace OLAP_WindowsForms.App.View
             if (AGS_NAVSTEP_SCHEMA_dictionary.ContainsKey(currentSelection))
             {
                  table = AGS_NAVSTEP_SCHEMA_dictionary[currentSelection];
+
+                // TODO
             }
 
             Console.WriteLine("[SUBMIT] Table: " + table); // Table: AGS_NAVSS_DRILL_ACROSS_TO_CUBE
 
+            Console.WriteLine("[SUBMIT] open connection");
+            NpgsqlConnection connection = DBContext.Service().getConnection();
+            connection.Open();
+
+            Console.WriteLine("[SUBMIT] begin transaction");
+            NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
+
+            Console.WriteLine("[SUBMIT] create sql statement");
+            Console.WriteLine("[SUBMIT] currentSelection: " + currentSelection);
+            String stmt = "SELECT NAVSS_SID FROM AGS_NAVSTEP_SCHEMA WHERE NAVSS_OPNAME = \'" + currentSelection + "\'";
+
+            Console.WriteLine("[SUBMIT] get coulumnPK");
+            int columnPK;
+            Int32.TryParse(DBContext.Service().getStringFromStmt(stmt, 0, 0), out columnPK);
+
+            Console.WriteLine("[SUBMIT] get cubeId");
+            
+            String columnNamePK = "NAVSS_SID";
+
+            Console.WriteLine("[SUBMIT] create a list of items");
+            LinkedList<Insert_item> list = new LinkedList<Insert_item>();
+
+            Console.WriteLine("[SUBMIT] insert items");
+
             // START insertion
-            if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE") {
-
-                Console.WriteLine("[SUBMIT] open connection");
-                NpgsqlConnection connection = DBContext.Service().getConnection();
-                connection.Open();
-
-                Console.WriteLine("[SUBMIT] begin transaction");
-                NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
-
-                Console.WriteLine("[SUBMIT] create sql statement");
-                Console.WriteLine("[SUBMIT] currentSelection: " + currentSelection);
-                String stmt = "SELECT NAVSS_SID FROM AGS_NAVSTEP_SCHEMA WHERE NAVSS_OPNAME = \'" + currentSelection + "\'";
-
-                Console.WriteLine("[SUBMIT] get coulumnPK");
-                int int_columnPK;
-                Int32.TryParse(DBContext.Service().getStringFromStmt(stmt, 0, 0), out int_columnPK);
-                int_columnPK--;
-                String columnPK = int_columnPK.ToString();
-                
-                Console.WriteLine("[SUBMIT] get cubeId");
-                String cubeId = DBContext.Service().getStringFromStmt("SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + currentCube + "\'", 0, 0);
-
-                // insert items
-                Console.WriteLine("[SUBMIT] creating a list of items... ");
-                LinkedList<Insert_item> list = new LinkedList<Insert_item>();
-                list.AddFirst(new Insert_item("NAVSS_SID", columnPK));
-                list.AddLast(new Insert_item("CUBE_SID", cubeId));
-
-                Console.WriteLine("[SUBMIT] calling function insinto(...)... ");
-                DBContext.Service().insinto(connection, transaction, table, columnPK, list);
-                Console.WriteLine("[SUBMIT] finished");
-                // END insertion
+            if (table == "AGS_NAVSS_MOVE_TO_PREV_NODE")
+            {
+                Int32 dim_sid = Int32.Parse(DBContext.Service().getStringFromStmt("SELECT DIM_SID FROM DW_DIMENSION WHERE CUBE_NAME = \'" + currentCube + "\'", 0, 0));
+                list.AddLast(new Insert_item("DIM_SID", dim_sid));
             }
 
-            // UserInput.load(ags_sid, ass_sid);
+            if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE") {
+                Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt("SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + currentCube + "\'", 0, 0));
+                list.AddLast(new Insert_item("CUBE_SID", cube_sid));
+            }
 
-            // DBContext.Service().insertInto(); 
+            Console.WriteLine("[SUBMIT] calling function insinto(" +
+                    connection + ", " + transaction + ", " + table + ", " + columnPK + ", " + columnNamePK + ", " + list + ")");
+
+            // key exists already
+            bool keyExistsAlready = false;
+            DataTable dt = DBContext.Service().GetData("SELECT " + columnNamePK + " FROM " + table);
+            DataRow[] dr = dt.Copy().Select();
+
+            for (int i = 0; i < dr.Length; i++)
+            {
+                if (dr[i].ItemArray[0].Equals(columnPK))
+                {
+                    keyExistsAlready = true;
+                }
+            }
+
+            if (keyExistsAlready)
+            {
+                Console.WriteLine("[SUBMIT] key exists already -> no insert was made");
+            }
+            else
+            {
+                DBContext.Service().insinto(connection, transaction, table, columnPK, columnNamePK, list);
+            }
+            // END insertion
+
+            // UserInput.load(ags_sid, ass_sid); // load new UserInput form TODO
+
 
             Console.WriteLine("[SUBMIT] finished");
-            System.Threading.Thread.Sleep(5000);
+            
             this.Close();
         }
 
