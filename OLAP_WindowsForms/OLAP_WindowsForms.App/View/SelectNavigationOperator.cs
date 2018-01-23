@@ -24,8 +24,8 @@ namespace OLAP_WindowsForms.App.View
             userInput = p;
             InitializeComponent();
 
-            ComboItem.getComboboxContent(comboBoxNav, "AGS_NAVSTEP_SCHEMA", "NAVSS_OPNAME");
-            ComboItem.getComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            ComboItem.GetComboboxContent(comboBoxNav, "AGS_NAVSTEP_SCHEMA", "NAVSS_OPNAME");
+            ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
 
             FillDictionary_AGS_NAVSTEP_SCHEMA();
         }
@@ -81,24 +81,24 @@ namespace OLAP_WindowsForms.App.View
             // START insertion
             if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE") {
 
-                Console.WriteLine("[SUBMIT] trying to open connection... ");
+                Console.WriteLine("[SUBMIT] open connection");
                 NpgsqlConnection connection = DBContext.Service().getConnection();
                 connection.Open();
 
-                Console.WriteLine("[SUBMIT] trying to begin transaction... ");
+                Console.WriteLine("[SUBMIT] begin transaction");
                 NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
-                Console.WriteLine("[SUBMIT] creating sql statement... ");
+                Console.WriteLine("[SUBMIT] create sql statement");
                 Console.WriteLine("[SUBMIT] currentSelection: " + currentSelection);
                 String stmt = "SELECT NAVSS_SID FROM AGS_NAVSTEP_SCHEMA WHERE NAVSS_OPNAME = \'" + currentSelection + "\'";
 
-                Console.WriteLine("[SUBMIT] get coulumnPK... ");
+                Console.WriteLine("[SUBMIT] get coulumnPK");
                 int int_columnPK;
                 Int32.TryParse(DBContext.Service().getStringFromStmt(stmt, 0, 0), out int_columnPK);
                 int_columnPK--;
                 String columnPK = int_columnPK.ToString();
                 
-                Console.WriteLine("[SUBMIT] get cubeId... ");
+                Console.WriteLine("[SUBMIT] get cubeId");
                 String cubeId = DBContext.Service().getStringFromStmt("SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + currentCube + "\'", 0, 0);
 
                 // insert items
@@ -107,9 +107,9 @@ namespace OLAP_WindowsForms.App.View
                 list.AddFirst(new Insert_item("NAVSS_SID", columnPK));
                 list.AddLast(new Insert_item("CUBE_SID", cubeId));
 
-
                 Console.WriteLine("[SUBMIT] calling function insinto(...)... ");
                 DBContext.Service().insinto(connection, transaction, table, columnPK, list);
+                Console.WriteLine("[SUBMIT] finished");
                 // END insertion
             }
 

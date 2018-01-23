@@ -35,8 +35,7 @@ namespace OLAP_WindowsForms.App.View
                     // Display a MsgBox asking the user to override or save as new schema
                     if (MessageBox.Show("Do you want to override your Schema with your new selection?\nYes = override\nNo = create new Schema", "Override Schema?",
                        MessageBoxButtons.YesNo) == DialogResult.Yes)
-                    {
-                        
+                    {   
                         ui.overrideDB(ui.getAssSid());
                         this.Close();
                         return;
