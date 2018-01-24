@@ -149,8 +149,7 @@ namespace OLAP_WindowsForms.App
         // get new ID
         public int getLatestID(String columnPK, String table)
         {
-            DataTable dt = DBContext.Service().GetData(
-             "SELECT MAX(" + columnPK + ") FROM " + table);
+            DataTable dt = DBContext.Service().GetData("SELECT MAX(" + columnPK + ") FROM " + table);
 
             DataTable dt2 = dt.Copy();
             DataRow[] dr = dt2.Select();
@@ -263,12 +262,79 @@ namespace OLAP_WindowsForms.App
                 {
                     if (i.intValue())
                     {
-                        Console.WriteLine(":c" + cnt + i.getIValue());
+                        Console.WriteLine(":c" + cnt + " " + i.getIValue());
                         command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
                     }
                     else
                     {
-                        Console.WriteLine(":c" + cnt + i.getSValue());
+                        Console.WriteLine(":c" + cnt + " " + i.getSValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
+                    }
+                }
+                cnt++;
+            }
+            command.ExecuteNonQuery();
+            //transaction.Commit();
+            Console.WriteLine("Command sucessful");
+            //return command;
+        }
+
+        //insert into table
+        public void insinto(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, int id, String columnPK, LinkedList<Insert_item> list)
+        {
+
+            NpgsqlCommand command = connection.CreateCommand();
+            command.Connection = connection;
+            command.Transaction = transaction;
+            command.CommandType = CommandType.Text;
+            
+            // insert
+            // build command string
+            StringBuilder cmds = new StringBuilder();
+            StringBuilder cmds2 = new StringBuilder();
+
+            cmds.Append("INSERT INTO " + table + " (" + columnPK);
+            cmds2.Append(") VALUES(:pk");
+
+            int cnt = 1;
+
+            foreach (Insert_item i in list)
+            {
+                cmds.Append(", " + i.getColumnName());
+                cmds2.Append(", :c" + cnt);
+                cnt++;
+            }
+
+            cmds.Append(cmds2);
+            cmds.Append(")");
+
+            Console.WriteLine(cmds.ToString());
+
+            command.CommandText = cmds.ToString();
+
+            // add primary key
+            command.Parameters.Add(new NpgsqlParameter(":pk", id));
+            Console.WriteLine(":pk " + id);
+            // add rest string
+            cnt = 1;
+            foreach (Insert_item i in list)
+            {
+                if (i.isNull())
+                {
+                    Console.WriteLine("null value recognized");
+                    command.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
+                    Console.WriteLine("null value inserted");
+                }
+                else
+                {
+                    if (i.intValue())
+                    {
+                        Console.WriteLine(":c" + cnt + " " + i.getIValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
+                    }
+                    else
+                    {
+                        Console.WriteLine(":c" + cnt + " " + i.getSValue());
                         command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
                     }
                 }
