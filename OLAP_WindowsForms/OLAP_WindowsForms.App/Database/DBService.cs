@@ -279,7 +279,7 @@ namespace OLAP_WindowsForms.App
             //return command;
         }
 
-        //insert into table
+        //insert into table with known id
         public void insinto(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, int id, String columnPK, LinkedList<Insert_item> list)
         {
 
