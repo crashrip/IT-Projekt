@@ -45,9 +45,9 @@ namespace OLAP_WindowsForms.App
         }
 
         // START ----- SelectNavigatinOperator class -------------------------------------------
-        public void SelectComboBoxCube(string selection) // TODO not yet working
+        public void SelectComboBoxCube(int selection) // TODO not yet working
         {
-            Console.WriteLine(selection);
+            Console.WriteLine("[SelectComboBoxCube] " + selection);
             System.Threading.Thread.Sleep(5000);
             //ComboBoxCube.SelectedIndex = ComboBoxCube.Items.IndexOf(selection);
             ComboBoxCube.SelectedItem = selection;

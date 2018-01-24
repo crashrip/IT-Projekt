@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Data;
 
 namespace OLAP_WindowsForms.App
 {
@@ -54,10 +56,17 @@ namespace OLAP_WindowsForms.App
 
         }
 
-        //TODO
-        public void MoveToPrevNode(Object d)
+        //TODO !!!
+        public void MoveToPrevNode(int dLvl)
         {
+            DBService myService = new DBService();
+            DataTable myTable = myService.GetData("DW_LEVEL", "LVL_SID", "LVL_NAME");
 
+            String dName;
+            foreach(String str in myTable.Rows[][]())
+            {
+
+            }
         }
         //END Operators Changing Dice Node
 
@@ -139,7 +148,7 @@ namespace OLAP_WindowsForms.App
 
         ///START Use of analysis situations as cubes
         //START Operators Changing Cube Access
-        //TODO
+        //TODO !!!
         public void DrillAcrossToCube(Object c, Object b, Object m, Object f)
         {
 
@@ -147,19 +156,19 @@ namespace OLAP_WindowsForms.App
         //END Operators Changing Cube Access
 
         //START Operators Changing Comparison
-        //TODO
+        //TODO 
         public void Rerelate(Object[] op, Object j)
         {
 
         }
 
-        //TODO
+        //TODO 
         public void Rerelate(Object[] op, Object j, Object s, Object f)
         {
 
         }
 
-        //TODO
+        //TODO 
         public void Rerelate(Object[] op)
         {
 
@@ -319,13 +328,13 @@ namespace OLAP_WindowsForms.App
         //END Operators Changing Filters
 
         //START Operators Introducing Comparison
-        //TODO
+        //TODO !!!
         public void Relate(Object[] op, Object j, Object s, Object f)
         {
 
         }
 
-        //TODO
+        //TODO !!!
         public void Relate(Object j, Object s, Object f)
         {
 
