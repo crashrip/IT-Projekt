@@ -1312,5 +1312,13 @@ namespace OLAP_WindowsForms.App
         {
             Console.WriteLine("measure: " +LDW_MEASURES.SelectedIndex);
         }
+
+        //Used for testing initalisation
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("The Test Commences!");
+            SelectTable selectTable = new SelectTable();
+            selectTable.ShowDialog(this);
+        }
     }
 }
