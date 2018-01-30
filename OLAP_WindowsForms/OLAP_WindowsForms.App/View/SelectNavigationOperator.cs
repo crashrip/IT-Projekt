@@ -109,6 +109,9 @@ namespace OLAP_WindowsForms.App.View
             {
                 Int32 dim_sid = Int32.Parse(DBContext.Service().getStringFromStmt("SELECT DIM_SID FROM DW_DIMENSION WHERE CUBE_NAME = \'" + currentCube + "\'", 0, 0));
                 list.AddLast(new Insert_item("DIM_SID", dim_sid));
+
+                userInput.SelectComboBoxCube(dim_sid);
+                //userInput.load(); // load new UserInput form TODO
             }
 
             if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE") {
@@ -141,8 +144,6 @@ namespace OLAP_WindowsForms.App.View
                 DBContext.Service().insinto(connection, transaction, table, columnPK, columnNamePK, list);
             }
             // END insertion
-
-            // UserInput.load(ags_sid, ass_sid); // load new UserInput form TODO
 
 
             Console.WriteLine("[SUBMIT] finished");

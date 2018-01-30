@@ -45,9 +45,9 @@ namespace OLAP_WindowsForms.App
         }
 
         // START ----- SelectNavigatinOperator class -------------------------------------------
-        public void SelectComboBoxCube(string selection) // TODO not yet working
+        public void SelectComboBoxCube(int selection) // TODO not yet working
         {
-            Console.WriteLine(selection);
+            Console.WriteLine("[SelectComboBoxCube] " + selection);
             System.Threading.Thread.Sleep(5000);
             //ComboBoxCube.SelectedIndex = ComboBoxCube.Items.IndexOf(selection);
             ComboBoxCube.SelectedItem = selection;
@@ -297,7 +297,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // START -------- general DimensionQualification fill operations ---------------------
-        private void fillComboboxDimension(ComboBox cBox, int dim_sid)
+        private void fillComboboxDimension(ComboBox cBox, int dim_sid) // DL
         {
             DataTable dt = DBContext.Service().GetData(
               "SELECT LVL_SID, LVL_NAME " +
@@ -577,7 +577,8 @@ namespace OLAP_WindowsForms.App
             if (cube_sid >= 0)
             {
                 ComboBoxCube.SelectedIndex = ComboBoxCube.FindStringExact(cube_name); ; // set to actual value
-                if (ComboBoxCube.SelectedIndex == 0) dimension_enable_disable();// to start handlers
+                comboBoxCube_SelectedIndexChanged(ComboBoxCube, new EventArgs());
+                //if (ComboBoxCube.SelectedIndex == 0) dimension_enable_disable();// to start handlers
 
                 // set Dimension Qualifications & slice condition
                 DataTable dt_dim_qual = DBContext.Service().GetData(
@@ -706,6 +707,22 @@ namespace OLAP_WindowsForms.App
                                     CDW_INSURANT.SelectedIndex = CDW_INSURANT.FindString(dl_s);
                                     CDW_INSURANT_SelectedIndexChanged(CDW_INSURANT, new EventArgs());
                                 }
+                                // SC
+                                foreach (DataRow r in dt2_dim_sc.Rows)
+                                {
+                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                    if (dim_pred_sid < 0)
+                                    {
+                                        insurant_SC.Checked = true;
+                                    }
+                                    else
+                                    {
+                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                        int index = LDW_INSURANT.FindString(key);
+                                        LDW_INSURANT.SetSelected(index, true);
+                                        //LDW_DOCTOR.Enabled = false;
+                                    }
+                                }
                             }
                             if (!dnNull)
                             {
@@ -732,6 +749,22 @@ namespace OLAP_WindowsForms.App
                                 {
                                     CDW_DRUG.SelectedIndex = CDW_DRUG.FindString(dl_s);
                                     CDW_DRUG_SelectedIndexChanged(CDW_DRUG, new EventArgs());
+                                }
+                                // SC
+                                foreach (DataRow r in dt2_dim_sc.Rows)
+                                {
+                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                    if (dim_pred_sid < 0)
+                                    {
+                                        drug_SC.Checked = true;
+                                    }
+                                    else
+                                    {
+                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                        int index = LDW_DRUG.FindString(key);
+                                        LDW_DRUG.SetSelected(index, true);
+                                        //LDW_DOCTOR.Enabled = false;
+                                    }
                                 }
                             }
                             if (!dnNull)
@@ -760,6 +793,22 @@ namespace OLAP_WindowsForms.App
                                     CDW_MEDSERVICE.SelectedIndex = CDW_MEDSERVICE.FindString(dl_s);
                                     CDW_MEDSERVICE_SelectedIndexChanged(CDW_MEDSERVICE, new EventArgs());
                                 }
+                                // SC
+                                foreach (DataRow r in dt2_dim_sc.Rows)
+                                {
+                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                    if (dim_pred_sid < 0)
+                                    {
+                                        meds_SC.Checked = true;
+                                    }
+                                    else
+                                    {
+                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                        int index = LDW_MEDSERVICE.FindString(key);
+                                        LDW_MEDSERVICE.SetSelected(index, true);
+                                        //LDW_DOCTOR.Enabled = false;
+                                    }
+                                }
                             }
                             if (!dnNull)
                             {
@@ -786,6 +835,22 @@ namespace OLAP_WindowsForms.App
                                 {
                                     CDW_HOSPITAL.SelectedIndex = CDW_HOSPITAL.FindString(dl_s);
                                     CDW_HOSPITAL_SelectedIndexChanged(CDW_HOSPITAL, new EventArgs());
+                                }
+                                // SC
+                                foreach (DataRow r in dt2_dim_sc.Rows)
+                                {
+                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                    if (dim_pred_sid < 0)
+                                    {
+                                        hospital_SC.Checked = true;
+                                    }
+                                    else
+                                    {
+                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                        int index = LDW_HOSPITAL.FindString(key);
+                                        LDW_HOSPITAL.SetSelected(index, true);
+                                        //LDW_DOCTOR.Enabled = false;
+                                    }
                                 }
                             }
                             if (!dnNull)
@@ -814,6 +879,22 @@ namespace OLAP_WindowsForms.App
                                     CDW_TIME.SelectedIndex = CDW_TIME.FindString(dl_s);
                                     CDW_TIME_SelectedIndexChanged(CDW_TIME, new EventArgs());
                                 }
+                                // SC
+                                foreach (DataRow r in dt2_dim_sc.Rows)
+                                {
+                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                    if (dim_pred_sid < 0)
+                                    {
+                                        time_SC.Checked = true;
+                                    }
+                                    else
+                                    {
+                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                        int index = LDW_TIME.FindString(key);
+                                        LDW_TIME.SetSelected(index, true);
+                                        //LDW_DOCTOR.Enabled = false;
+                                    }
+                                }
                             }
                             if (!dnNull)
                             {
@@ -835,8 +916,74 @@ namespace OLAP_WindowsForms.App
                     }
 
                 }
+                // load BMSR
+                LinkedList<int> bmsr = new LinkedList<int>(); //dim_pred
+                DataTable dt_bmsr = DBContext.Service().GetData(
+                "SELECT BMSR_PRED_SID " +
+                "FROM AGS_NASS_BMSR_FILTER " +
+                "WHERE ASS_SID_NASS = " + loaded_ass_sid);
+                DataTable dt2_bmsr = dt_bmsr.Copy();
 
+                foreach (DataRow row in dt2_bmsr.Rows)
+                {
+                    object bmsr_o = row["BMSR_PRED_SID"];
+                    int bmsr_int = Convert.ToInt32(bmsr_o);
+                    Console.WriteLine("bmsr_int: " + bmsr_int);
+                    if(bmsr_int < 0)
+                    {
+                        bmsr_variable.Checked = true;
+                    } else
+                    {
+                            String key = DBContext.Service().getSKeyfromTable("DW_BMSR_PREDICATE", bmsr_int, "BMSR_PRED_SID", "BMSR_PRED_NAME");
+                            Console.WriteLine("key: " + key);
+                            int index = LDW_BMSR.FindString(key);
+                            Console.WriteLine("key_int: " + index);
+                            LDW_BMSR.SetSelected(index, true);
+                    }
+                }
+                // load Measures
+                LinkedList<int> measure = new LinkedList<int>(); //dim_pred
+                DataTable dt_measure = DBContext.Service().GetData(
+                "Select DAMSR_SID FROM ags_nass_aggregate_meassure WHERE ASS_SID_NASS = " + loaded_ass_sid);
+                DataTable dt2_measure = dt_measure.Copy();
 
+                foreach (DataRow row in dt2_measure.Rows)
+                {
+                    object damsr_o = row["DAMSR_SID"];
+                    int damsr_int = Convert.ToInt32(damsr_o);
+                    Console.WriteLine("bmsr_int: " + damsr_int);
+
+                    String key = DBContext.Service().getSKeyfromTable("DW_DERIVED_AGGREGATE_MEASURE", damsr_int, "DAMSR_SID", "DAMSR_NAME");
+                    Console.WriteLine("key: " + key);
+                    int index = LDW_MEASURES.FindString(key);
+                    Console.WriteLine("key_int: " + index);
+                    LDW_MEASURES.SetSelected(index, true);
+                    
+                }
+                // load Filter
+                LinkedList<int> filter = new LinkedList<int>(); //dim_pred
+                DataTable dt_filter = DBContext.Service().GetData(
+                "Select AMSR_PRED_SID FROM ags_nass_amsr_filter WHERE ASS_SID_NASS = " + loaded_ass_sid);
+                DataTable dt2_filter = dt_filter.Copy();
+
+                foreach (DataRow row in dt2_filter.Rows)
+                {
+                    object filter_o = row["AMSR_PRED_SID"];
+                    int filter_int = Convert.ToInt32(filter_o);
+                    Console.WriteLine("bmsr_int: " + filter_int);
+                    if (filter_int < 0)
+                    {
+                        filter_variable.Checked = true;
+                    }
+                    else
+                    {
+                        String key = DBContext.Service().getSKeyfromTable("dw_amsr_predicate", filter_int, "AMSR_PRED_SID", "AMSR_PRED_NAME");
+                        Console.WriteLine("key: " + key);
+                        int index = LDW_FILTER.FindString(key);
+                        Console.WriteLine("key_int: " + index);
+                        LDW_FILTER.SetSelected(index, true);
+                    }
+                }
             }
         }
 
@@ -850,26 +997,41 @@ namespace OLAP_WindowsForms.App
 
             try
             {
+                Console.WriteLine("enter insert");
+
                 LinkedList<Insert_item> list = new LinkedList<Insert_item>();
 
                 int id = 0;
                 // save ASS_SID 
                 if (ass_sid == -1)
                 {
+                    Console.WriteLine("safepoint 1");
                     DataTable dt = DBContext.Service().GetData(
                       "SELECT MAX(ASS_SID) FROM AGS_ANALYSIS_SITUATION_SCHEMA");
-
+                    Console.WriteLine("safepoint 2");
                     DataTable dt2 = dt.Copy();
+                    Console.WriteLine("safepoint 3");
                     DataRow[] dr = dt2.Select();
+                    Console.WriteLine("safepoint 4");
                     String index = dr[0].ItemArray[0].ToString();
-                    id = Int32.Parse(index) + 1; // -> +1 for current ass_sid
-                    Console.WriteLine(id);
+                    Console.WriteLine("safepoint 5");
+                    if (index.Equals("") || index == null)
+                    {
+                        Console.WriteLine("table empty -> index 1");
+                        id = 1;
+                    }
+                    else
+                    {
+                        Console.WriteLine("safepoint 6");
+                        id = Int32.Parse(index) + 1; // -> +1 for current ass_sid
+                        Console.WriteLine("id: "+id);
+                    }
                 }
                 else
                 {
                     id = ass_sid;
                 }
-
+                Console.WriteLine("final ass id: " + id);
                 // AGS_ANALYSIS_SITUATION SCHEMA
                 list.AddFirst(new Insert_item("ASS_SID", id));
                 list.AddLast(new Insert_item("ASS_NAME", this.name));
