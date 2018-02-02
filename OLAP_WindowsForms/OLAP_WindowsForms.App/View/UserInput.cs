@@ -47,7 +47,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // START ----- SelectNavigatinOperator class -------------------------------------------
-        public void SelectComboBoxCube(String selection) // TODO not yet working
+        public void SelectComboBoxCube(string selection) // TODO not yet working
         {
             Console.WriteLine("[SelectComboBoxCube] " + selection);
             ComboBoxCube.SelectedIndex = ComboBoxCube.FindString(selection);
@@ -144,7 +144,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // disable all fields except variables MARIA
-        private void disable_fields()
+        public void disable_fields()
         {
             LDW_MEASURES.Enabled = false;
             if (bmsr_variable.Checked) LDW_BMSR.Enabled = true;
