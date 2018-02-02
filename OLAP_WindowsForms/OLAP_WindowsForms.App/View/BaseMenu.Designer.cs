@@ -65,7 +65,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(515, 17);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Doppelklick auf den Namen um das gewünschte Analyse-Schmea zu bearbeiten.";
+            this.label1.Text = "Doppelklick auf den Namen um das gewünschte Analyse-Schema zu bearbeiten.";
             // 
             // delete_selected_schema
             // 
