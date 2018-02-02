@@ -47,7 +47,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // START ----- SelectNavigatinOperator class -------------------------------------------
-        public void SelectComboBoxCube(String selection) // TODO not yet working
+        public void SelectComboBoxCube(string selection) // TODO not yet working
         {
             Console.WriteLine("[SelectComboBoxCube] " + selection);
             ComboBoxCube.SelectedIndex = ComboBoxCube.FindString(selection);
@@ -144,7 +144,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // disable all fields except variables MARIA
-        private void disable_fields()
+        public void disable_fields()
         {
             LDW_MEASURES.Enabled = false;
             if (bmsr_variable.Checked) LDW_BMSR.Enabled = true;
@@ -610,7 +610,7 @@ namespace OLAP_WindowsForms.App
 
         private void button_select_navigation_operator_Click(object sender, EventArgs e)
         {
-            SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
+            SelectNavigationOperator sno = new SelectNavigationOperator(this, ComboBoxCube) { TopMost = true };
             sno.ShowDialog(this);
         }
 
@@ -1457,10 +1457,16 @@ namespace OLAP_WindowsForms.App
         private void button1_Click(object sender, EventArgs e)
         {
             
-            Console.WriteLine("The Test Commences!");
-            selectTable = new SelectTable();
-            selectTable.ShowDialog(this);
-            
+            Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
+            try { 
+                selectTable = new SelectTable();
+                selectTable.tableNameCB = ComboBoxCube.SelectedValue.ToString();
+                selectTable.setLabe2();
+                selectTable.ShowDialog(this);
+            } catch (Exception exx)
+            {
+                Console.WriteLine(exx.Message);
+            }
         }
     }
 }

@@ -18,10 +18,9 @@ namespace OLAP_WindowsForms.App.View
     {
 
         private UserInput userInput;
+        private ComboBox userInput_ComboBoxCube;
         private string agsNavstepSchema, selection;
-
-        private Operators operators;
-
+        
         // saves the navigation operators and corresponding tables as strings
         private Dictionary<string, string> AGS_NAVSTEP_SCHEMA_dictionary = new Dictionary<string, string>();
 
@@ -29,19 +28,24 @@ namespace OLAP_WindowsForms.App.View
         /// 
         /// </summary>
         /// <param name="ui">Reference to previous window.</param>
-        public SelectNavigationOperator(UserInput ui)
+        public SelectNavigationOperator(UserInput ui, ComboBox cube)
         {
             userInput = ui;
+            userInput_ComboBoxCube = cube;
             InitializeComponent();
 
-            ComboItem.SetComboboxContent(ComboBox_AgsNavstepSchema, "AGS_NAVSTEP_SCHEMA", "NAVSS_OPNAME");
-
-            FillDictionary_AGS_NAVSTEP_SCHEMA();
+            FillDictionary();
+            
+            foreach (KeyValuePair<string, string> entry in AGS_NAVSTEP_SCHEMA_dictionary)
+            {
+                ComboBox_AgsNavstepSchema.Items.Add(entry.Key);
+            }
         }
 
         // on selection of comboBoxNav
         private void ComboBox_AgsNavstepSchema_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // enable ComboBox_Selection
             ComboBox_Selection.Visible = true;
 
             agsNavstepSchema = ComboBox_AgsNavstepSchema.Text;
@@ -57,7 +61,15 @@ namespace OLAP_WindowsForms.App.View
             }
             else if (agsNavstepSchema == "moveToNode")
             {
-                // TODO
+                DataTable dt = DBContext.Service().GetData(
+                   "SELECT d.DIM_SID, d.DIM_NAME " +
+                   "FROM DW_CUBE_DIMENSION c,  DW_DIMENSION d " +
+                   "WHERE c.DIM_SID = d.DIM_SID AND CUBE_SID = " + userInput_ComboBoxCube.SelectedValue.ToString()
+                ).Copy();
+
+                ComboBox_Selection.DataSource = dt;
+                ComboBox_Selection.ValueMember = "DIM_SID";
+                ComboBox_Selection.DisplayMember = "DIM_NAME";
             }
             else if (agsNavstepSchema == "refocusSliceCond")
             {
@@ -133,8 +145,36 @@ namespace OLAP_WindowsForms.App.View
 
         private void ComboBox_Selection_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // get selection
             selection = ComboBox_Selection.Text;
+
+            // not initialized
+            if (selection.Equals("System.Data.DataRowView")) return;
+            if (ComboBox_Selection.SelectedValue.ToString().Equals("System.Data.DataRowView")) return;
+
+            // enable ComboBox_Selection2
+            ComboBox_Selection2.Visible = true;
+
             Console.WriteLine("[SelectedIndexChanged] ComboBox_Selection: " + selection);
+
+            // TODO add other navstepschemas
+            if (agsNavstepSchema == "moveToNode")
+            {
+                // get current dim_sid
+                
+                int dim_sid = Int32.Parse(ComboBox_Selection.SelectedValue.ToString());
+                Console.WriteLine("[SelectedIndexChanged] dim_sid: " + dim_sid);
+                
+                DataTable dt = DBContext.Service().GetData(
+                   "SELECT LVL_NAME, LVL_SID " +
+                   "FROM DW_LEVEL " +
+                   "WHERE DIM_SID = " + dim_sid + " AND LVL_SID > 0"
+                ).Copy();
+                
+                ComboBox_Selection2.DataSource = dt;
+                ComboBox_Selection2.ValueMember = "LVL_SID";
+                ComboBox_Selection2.DisplayMember = "LVL_NAME";
+            }
         }
 
         private void buttonSubmit_Click(object sender, EventArgs e)
@@ -176,6 +216,7 @@ namespace OLAP_WindowsForms.App.View
             }
             else if (table == "AGS_NAVSS_MOVE_TO_NODE")
             {
+
                 // TODO
             }
             else if (table == "AGS_NAVSS_REFOCUS_SLICE_COND")
@@ -235,6 +276,9 @@ namespace OLAP_WindowsForms.App.View
                 DBContext.Service().insinto(connection, transaction, table, columnPK, columnPKName, list);
             }
 
+            // disable fields -> user cannot do changes 
+            // userInput.disable_fields(); // TODO
+
             // close window
             Console.WriteLine("[SUBMIT] finished");
             this.Close();
@@ -250,7 +294,7 @@ namespace OLAP_WindowsForms.App.View
         }
 
         // operatoren
-        private void FillDictionary_AGS_NAVSTEP_SCHEMA()
+        private void FillDictionary()
         {
             AGS_NAVSTEP_SCHEMA_dictionary.Add("drillDownToLevel", "AGS_NAVSS_DRILL_DOWN_TO_LEVEL");
             AGS_NAVSTEP_SCHEMA_dictionary.Add("rollUpToLevel", "AGS_NAVSS_ROLL_UP_TO_LEVEL");
