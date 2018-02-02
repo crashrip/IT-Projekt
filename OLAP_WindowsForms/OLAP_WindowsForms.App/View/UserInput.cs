@@ -1436,10 +1436,16 @@ namespace OLAP_WindowsForms.App
         private void button1_Click(object sender, EventArgs e)
         {
             
-            Console.WriteLine("The Test Commences!");
-            selectTable = new SelectTable();
-            selectTable.ShowDialog(this);
-            
+            Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
+            try { 
+                selectTable = new SelectTable();
+                selectTable.tableNameCB = ComboBoxCube.SelectedValue.ToString();
+                selectTable.setLabe2();
+                selectTable.ShowDialog(this);
+            } catch (Exception exx)
+            {
+                Console.WriteLine(exx.Message);
+            }
         }
     }
 }

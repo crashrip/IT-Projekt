@@ -13,10 +13,19 @@ namespace OLAP_WindowsForms.App.View
 {
     public partial class SelectTable : Form
     {
+
+        public String tableNameCB;
+
         public SelectTable()
         {
             InitializeComponent();
+
             ComboItem.SetComboboxContent(comboBox1, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+        }
+
+        public void setLabe2()
+        {
+            label2.Text = tableNameCB;
         }
 
         //Cancel Button
@@ -106,6 +115,11 @@ namespace OLAP_WindowsForms.App.View
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
         {
 
         }
