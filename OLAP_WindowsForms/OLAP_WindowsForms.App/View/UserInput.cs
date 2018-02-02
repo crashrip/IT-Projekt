@@ -609,7 +609,7 @@ namespace OLAP_WindowsForms.App
 
         private void button_select_navigation_operator_Click(object sender, EventArgs e)
         {
-            SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
+            SelectNavigationOperator sno = new SelectNavigationOperator(this, ComboBoxCube) { TopMost = true };
             sno.ShowDialog(this);
         }
 
