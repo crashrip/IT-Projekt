@@ -43,6 +43,9 @@ namespace OLAP_WindowsForms.App.View
         //Start Button
         private void button1_Click(object sender, EventArgs e)
         {
+
+            //Yee olden code
+            /*
             String cube_sid = comboBox1.SelectedValue.ToString();
             string tableName = null;
 
@@ -88,16 +91,18 @@ namespace OLAP_WindowsForms.App.View
             foreach (DataRow row in dt2.Rows)
             {
 
-                string[] rowArray = new String[] {row[0].ToString(),
+                string[] rowArray = new String[] {
+                row[0].ToString(),
                 row[1].ToString(),
                 row[2].ToString(),
                 row[3].ToString(),
                 row[4].ToString(),
-                row[5].ToString()};
+                row[5].ToString()
+                };
                 dataGridView1.Rows.Add(rowArray); 
 
             }
-
+            */
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
