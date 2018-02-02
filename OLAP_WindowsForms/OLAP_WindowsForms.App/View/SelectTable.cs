@@ -69,9 +69,6 @@ namespace OLAP_WindowsForms.App.View
             }
             Console.WriteLine(tableName);
 
-
-            //Hospitalization is in der Tabelle falsch geschrieben...
-            //kann das Programm killen...
             DataTable dt = DBContext.Service().GetData(
                 "SELECT * " +
                 "FROM " + tableName);
