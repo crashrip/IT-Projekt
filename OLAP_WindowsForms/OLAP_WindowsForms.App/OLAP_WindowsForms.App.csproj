@@ -98,6 +98,12 @@
     <Compile Include="View\SelectNavigationOperator.Designer.cs">
       <DependentUpon>SelectNavigationOperator.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\SelectTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SelectTable.Designer.cs">
+      <DependentUpon>SelectTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UserInput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\SelectNavigationOperator.resx">
       <DependentUpon>SelectNavigationOperator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SelectTable.resx">
+      <DependentUpon>SelectTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UserInput.resx">
       <DependentUpon>UserInput.cs</DependentUpon>
