@@ -37,7 +37,7 @@ namespace OLAP_WindowsForms.App
                 this.loaded_ags_sid = ags_sid;
                 InitializeComponent();
                 // fill combobox with data preview from cube
-                ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+                ComboItem.SetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             } else
             {
                 this.load(ags_sid,ass_sid);
@@ -45,12 +45,11 @@ namespace OLAP_WindowsForms.App
         }
 
         // START ----- SelectNavigatinOperator class -------------------------------------------
-        public void SelectComboBoxCube(int selection) // TODO not yet working
+        public void SelectComboBoxCube(string selection)
         {
             Console.WriteLine("[SelectComboBoxCube] " + selection);
-            System.Threading.Thread.Sleep(5000);
-            //ComboBoxCube.SelectedIndex = ComboBoxCube.Items.IndexOf(selection);
-            ComboBoxCube.SelectedItem = selection;
+            ComboBoxCube.SelectedIndex = ComboBoxCube.FindString(selection);
+            comboBoxCube_SelectedIndexChanged(ComboBoxCube, new EventArgs());
         }
         // END ----- SelectNavigatinOperator class -------------------------------------------
 
@@ -573,7 +572,7 @@ namespace OLAP_WindowsForms.App
             int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
             String cube_name = DBContext.Service().getSKeyfromTable("DW_CUBE", cube_sid, "CUBE_SID", "CUBE_NAME");
             // initialize combobox
-            ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            ComboItem.SetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             if (cube_sid >= 0)
             {
                 ComboBoxCube.SelectedIndex = ComboBoxCube.FindStringExact(cube_name); ; // set to actual value

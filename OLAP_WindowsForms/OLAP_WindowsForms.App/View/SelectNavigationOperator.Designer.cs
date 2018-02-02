@@ -28,20 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBoxNav = new System.Windows.Forms.ComboBox();
+            this.ComboBox_AgsNavstepSchema = new System.Windows.Forms.ComboBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSubmit = new System.Windows.Forms.Button();
-            this.ComboBoxCube = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Selection = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
-            // comboBoxNav
+            // ComboBox_AgsNavstepSchema
             // 
-            this.comboBoxNav.FormattingEnabled = true;
-            this.comboBoxNav.Location = new System.Drawing.Point(41, 33);
-            this.comboBoxNav.Name = "comboBoxNav";
-            this.comboBoxNav.Size = new System.Drawing.Size(214, 24);
-            this.comboBoxNav.TabIndex = 0;
-            this.comboBoxNav.SelectedIndexChanged += new System.EventHandler(this.comboBoxNav_SelectedIndexChanged);
+            this.ComboBox_AgsNavstepSchema.FormattingEnabled = true;
+            this.ComboBox_AgsNavstepSchema.Location = new System.Drawing.Point(41, 33);
+            this.ComboBox_AgsNavstepSchema.Name = "ComboBox_AgsNavstepSchema";
+            this.ComboBox_AgsNavstepSchema.Size = new System.Drawing.Size(214, 24);
+            this.ComboBox_AgsNavstepSchema.TabIndex = 0;
+            this.ComboBox_AgsNavstepSchema.SelectedIndexChanged += new System.EventHandler(this.ComboBox_AgsNavstepSchema_SelectedIndexChanged);
             // 
             // buttonCancel
             // 
@@ -63,27 +63,27 @@
             this.buttonSubmit.UseVisualStyleBackColor = true;
             this.buttonSubmit.Click += new System.EventHandler(this.buttonSubmit_Click);
             // 
-            // ComboBoxCube
+            // ComboBox_Selection
             // 
-            this.ComboBoxCube.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ComboBoxCube.FormattingEnabled = true;
-            this.ComboBoxCube.Location = new System.Drawing.Point(41, 98);
-            this.ComboBoxCube.Margin = new System.Windows.Forms.Padding(4);
-            this.ComboBoxCube.Name = "ComboBoxCube";
-            this.ComboBoxCube.Size = new System.Drawing.Size(214, 24);
-            this.ComboBoxCube.TabIndex = 9;
-            this.ComboBoxCube.Visible = false;
-            this.ComboBoxCube.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCube_SelectedIndexChanged);
+            this.ComboBox_Selection.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Selection.FormattingEnabled = true;
+            this.ComboBox_Selection.Location = new System.Drawing.Point(41, 98);
+            this.ComboBox_Selection.Margin = new System.Windows.Forms.Padding(4);
+            this.ComboBox_Selection.Name = "ComboBox_Selection";
+            this.ComboBox_Selection.Size = new System.Drawing.Size(214, 24);
+            this.ComboBox_Selection.TabIndex = 9;
+            this.ComboBox_Selection.Visible = false;
+            this.ComboBox_Selection.SelectedIndexChanged += new System.EventHandler(this.ComboBox_Selection_SelectedIndexChanged);
             // 
             // SelectNavigationOperator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(304, 346);
-            this.Controls.Add(this.ComboBoxCube);
+            this.Controls.Add(this.ComboBox_Selection);
             this.Controls.Add(this.buttonSubmit);
             this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.comboBoxNav);
+            this.Controls.Add(this.ComboBox_AgsNavstepSchema);
             this.Name = "SelectNavigationOperator";
             this.Text = "Select Navigation Operator";
             this.ResumeLayout(false);
@@ -92,9 +92,9 @@
 
         #endregion
 
-        private System.Windows.Forms.ComboBox comboBoxNav;
+        private System.Windows.Forms.ComboBox ComboBox_AgsNavstepSchema;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.Button buttonSubmit;
-        private System.Windows.Forms.ComboBox ComboBoxCube;
+        private System.Windows.Forms.ComboBox ComboBox_Selection;
     }
 }

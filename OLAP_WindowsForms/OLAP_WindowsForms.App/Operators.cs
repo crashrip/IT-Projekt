@@ -62,11 +62,7 @@ namespace OLAP_WindowsForms.App
             DBService myService = new DBService();
             DataTable myTable = myService.GetData("DW_LEVEL", "LVL_SID", "LVL_NAME");
 
-            String dName;
-            foreach(String str in myTable.Rows[][]())
-            {
-
-            }
+            
         }
         //END Operators Changing Dice Node
 
