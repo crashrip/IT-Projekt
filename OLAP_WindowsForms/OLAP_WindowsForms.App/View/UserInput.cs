@@ -30,8 +30,6 @@ namespace OLAP_WindowsForms.App
         private Boolean dim_time = false;
         private Boolean newForm; // true = new Form | false = load old form
 
-        public SelectTable selectTable;
-
         public UserInput(int ags_sid, Boolean newForm, int ass_sid = 0)
         {
             if (newForm)
@@ -39,7 +37,7 @@ namespace OLAP_WindowsForms.App
                 this.loaded_ags_sid = ags_sid;
                 InitializeComponent();
                 // fill combobox with data preview from cube
-                ComboItem.SetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+                ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             } else
             {
                 this.load(ags_sid,ass_sid);
@@ -47,11 +45,12 @@ namespace OLAP_WindowsForms.App
         }
 
         // START ----- SelectNavigatinOperator class -------------------------------------------
-        public void SelectComboBoxCube(string selection)
+        public void SelectComboBoxCube(int selection) // TODO not yet working
         {
             Console.WriteLine("[SelectComboBoxCube] " + selection);
-            ComboBoxCube.SelectedIndex = ComboBoxCube.FindString(selection);
-            comboBoxCube_SelectedIndexChanged(ComboBoxCube, new EventArgs());
+            System.Threading.Thread.Sleep(5000);
+            //ComboBoxCube.SelectedIndex = ComboBoxCube.Items.IndexOf(selection);
+            ComboBoxCube.SelectedItem = selection;
         }
         // END ----- SelectNavigatinOperator class -------------------------------------------
 
@@ -568,423 +567,509 @@ namespace OLAP_WindowsForms.App
             this.loaded_ags_sid = ags_sid;
             this.loaded_ass_sid = ass_sid;
             this.overrideSchema = true;
-
-            Console.WriteLine("AGS_SID: " + loaded_ags_sid + " ASS_SID: " + loaded_ass_sid);
-            // load cube_sid
-            int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
-            String cube_name = DBContext.Service().getSKeyfromTable("DW_CUBE", cube_sid, "CUBE_SID", "CUBE_NAME");
-            // initialize combobox
-            ComboItem.SetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
-            if (cube_sid >= 0)
+            try
             {
-                ComboBoxCube.SelectedIndex = ComboBoxCube.FindStringExact(cube_name); ; // set to actual value
-                comboBoxCube_SelectedIndexChanged(ComboBoxCube, new EventArgs());
-                //if (ComboBoxCube.SelectedIndex == 0) dimension_enable_disable();// to start handlers
 
-                // set Dimension Qualifications & slice condition
-                DataTable dt_dim_qual = DBContext.Service().GetData(
-                    "SELECT NASS_DQ_SID, DIM_SID, LVL_SID_DICELVL, NASS_DQ_DICE_NODE, LVL_SID_GRANLVL " +
-                    "FROM AGS_NASS_DIM_QUAL " +
-                    "WHERE ASS_SID_NASS = " + ass_sid);
-                DataTable dt2_dim_qual = dt_dim_qual.Copy();
-
-                foreach (DataRow row in dt2_dim_qual.Rows)
+                Console.WriteLine("AGS_SID: " + loaded_ags_sid + " ASS_SID: " + loaded_ass_sid);
+                // load cube_sid
+                int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
+                String cube_name = DBContext.Service().getSKeyfromTable("DW_CUBE", cube_sid, "CUBE_SID", "CUBE_NAME");
+                // initialize combobox
+                ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+                if (cube_sid >= 0)
                 {
-                    object dim = row["DIM_SID"];
-                    object nass_dq = row["NASS_DQ_SID"];
-                    object dl = row["LVL_SID_DICELVL"];
-                    object dn = row["NASS_DQ_DICE_NODE"];
-                    object gl = row["LVL_SID_GRANLVL"];
+                    ComboBoxCube.SelectedIndex = ComboBoxCube.FindStringExact(cube_name); ; // set to actual value
+                    comboBoxCube_SelectedIndexChanged(ComboBoxCube, new EventArgs());
+                    //if (ComboBoxCube.SelectedIndex == 0) dimension_enable_disable();// to start handlers
 
-                    // SC
-                    int nass_dq_sid = Convert.ToInt32(nass_dq);
-                    LinkedList<int> sc_dim_pred = new LinkedList<int>(); //dim_pred
-                    //LinkedList<int> sc_lvl_sid = new LinkedList<int>(); // lvl_sid to figure out if variable or actual value
-                    DataTable dt_dim_sc = DBContext.Service().GetData(
-                    "SELECT DIM_PRED_SID " +
-                    "FROM AGS_NASS_DIM_QUAL_SLICE_COND " +
-                    "WHERE NASS_DQ_SID = " + nass_dq_sid);
-                    DataTable dt2_dim_sc = dt_dim_sc.Copy();
-                    
+                    // set Dimension Qualifications & slice condition
+                    DataTable dt_dim_qual = DBContext.Service().GetData(
+                        "SELECT NASS_DQ_SID, DIM_SID, LVL_SID_DICELVL, NASS_DQ_DICE_NODE, LVL_SID_GRANLVL " +
+                        "FROM AGS_NASS_DIM_QUAL " +
+                        "WHERE ASS_SID_NASS = " + ass_sid);
+                    DataTable dt2_dim_qual = dt_dim_qual.Copy();
 
-                    int dim_i = Convert.ToInt32(dim);
-                    int dl_i = -11;
-                    String dn_s = "asdf";
-                    int gl_i = -11;
-                    String dl_s = "";
-                    String gl_s = "";
+                    foreach (DataRow row in dt2_dim_qual.Rows)
+                    {
+                        object dim = row["DIM_SID"];
+                        object nass_dq = row["NASS_DQ_SID"];
+                        object dl = row["LVL_SID_DICELVL"];
+                        object dn = row["NASS_DQ_DICE_NODE"];
+                        object gl = row["LVL_SID_GRANLVL"];
 
-                    Boolean dlNull = false;
-                    Boolean dnNull = false;
-                    Boolean glNull = false;
+                        // SC
+                        int nass_dq_sid = Convert.ToInt32(nass_dq);
+                        LinkedList<int> sc_dim_pred = new LinkedList<int>(); //dim_pred
+                                                                             //LinkedList<int> sc_lvl_sid = new LinkedList<int>(); // lvl_sid to figure out if variable or actual value
+                        DataTable dt_dim_sc = DBContext.Service().GetData(
+                        "SELECT DIM_PRED_SID " +
+                        "FROM AGS_NASS_DIM_QUAL_SLICE_COND " +
+                        "WHERE NASS_DQ_SID = " + nass_dq_sid);
+                        DataTable dt2_dim_sc = dt_dim_sc.Copy();
 
-                    if (dl == DBNull.Value)
-                    {
-                        dlNull = true;
-                    }
-                    else
-                    {
-                        dl_i = Convert.ToInt32(dl);
-                        dl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", dl_i, "LVL_SID", "LVL_NAME");
-                    }
-                    if (dn == DBNull.Value)
-                    {
-                        dnNull = true;
-                    }
-                    else
-                    {
-                        dn_s = Convert.ToString(dn);
-                    }
-                    if (gl == DBNull.Value)
-                    {
-                        glNull = true;
-                    }
-                    else
-                    {
-                        gl_i = Convert.ToInt32(gl);
-                        gl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", gl_i, "LVL_SID", "LVL_NAME");
-                    }
-                    Console.WriteLine("dim: "+dim_i);
-                    if (dlNull) { Console.Write(" DL: Null "); } else { Console.Write(" DL: " + dl_i); }
-                    if (dnNull) { Console.Write(" DN: Null "); } else { Console.Write(" DN: " + dn_s); }
-                    if (glNull) { Console.Write(" GL: Null \n"); } else { Console.Write(" GL: " + gl_i+"\n"); }
 
-                    switch (dim_i)
-                    {
-                        case 1: // DOCTOR
-                            if (!dlNull)
-                            {
-                                if (dl_i < 0) doctor_DL.Checked = true;
-                                if (dl_i > 0)
+                        int dim_i = Convert.ToInt32(dim);
+                        int dl_i = -11;
+                        String dn_s = "asdf";
+                        int gl_i = -11;
+                        String dl_s = "";
+                        String gl_s = "";
+
+                        Boolean dlNull = false;
+                        Boolean dnNull = false;
+                        Boolean glNull = false;
+
+                        if (dl == DBNull.Value)
+                        {
+                            dlNull = true;
+                        }
+                        else
+                        {
+                            dl_i = Convert.ToInt32(dl);
+                            dl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", dl_i, "LVL_SID", "LVL_NAME");
+                        }
+                        if (dn == DBNull.Value)
+                        {
+                            dnNull = true;
+                        }
+                        else
+                        {
+                            dn_s = Convert.ToString(dn);
+                        }
+                        if (gl == DBNull.Value)
+                        {
+                            glNull = true;
+                        }
+                        else
+                        {
+                            gl_i = Convert.ToInt32(gl);
+                            gl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", gl_i, "LVL_SID", "LVL_NAME");
+                        }
+                        Console.WriteLine("dim: " + dim_i);
+                        if (dlNull) { Console.Write(" DL: Null "); } else { Console.Write(" DL: " + dl_i); }
+                        if (dnNull) { Console.Write(" DN: Null "); } else { Console.Write(" DN: " + dn_s); }
+                        if (glNull) { Console.Write(" GL: Null \n"); } else { Console.Write(" GL: " + gl_i + "\n"); }
+
+                        switch (dim_i)
+                        {
+                            case 1: // DOCTOR
+                                if (!dlNull)
                                 {
-                                    CDW_DOCTOR.SelectedIndex = CDW_DOCTOR.FindString(dl_s);
-                                    CDW_DOCTOR_SelectedIndexChanged(CDW_DOCTOR, new EventArgs());
-                                    //CDW_DOCTOR.Enabled = false;
-                                }
-                                // SC
-                                foreach (DataRow r in dt2_dim_sc.Rows)
-                                {
-                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
-                                    if (dim_pred_sid < 0)
+                                    if (dl_i < 0) doctor_DL.Checked = true;
+                                    if (dl_i > 0)
                                     {
-                                        doctor_SC.Checked = true;
-                                    } else
+                                        CDW_DOCTOR.SelectedIndex = CDW_DOCTOR.FindString(dl_s);
+                                        CDW_DOCTOR_SelectedIndexChanged(CDW_DOCTOR, new EventArgs());
+                                        //CDW_DOCTOR.Enabled = false;
+                                        foreach (DataRow r in dt2_dim_sc.Rows)
+                                        {
+                                            int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                            if (dim_pred_sid < 0)
+                                            {
+                                                doctor_SC.Checked = true;
+                                            }
+                                            if (dim_pred_sid > 0)
+                                            {
+                                                
+                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                int index = LDW_DOCTOR.FindString(key);
+                                                LDW_DOCTOR.SetSelected(index, true);
+                                                //LDW_DOCTOR.Enabled = false;
+                                            }
+                                        }
+                                    }
+                                    // SC
+                                    foreach (DataRow r in dt2_dim_sc.Rows)
                                     {
-                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
-                                        int index = LDW_DOCTOR.FindString(key);
-                                        LDW_DOCTOR.SetSelected(index, true);
-                                        //LDW_DOCTOR.Enabled = false;
+                                        int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                        if (dim_pred_sid < 0)
+                                        {
+                                            doctor_SC.Checked = true;
+                                        }
                                     }
                                 }
-                            } 
-                            if (!dnNull)
-                            {
-                                if (dn_s.Equals(""))
+                                if (!dnNull)
                                 {
-                                    doctor_DN.Checked = true;
-                                }
-                                else
-                                {
-                                    TDW_DOCTOR.Text = dn_s;
-                                    //TDW_DOCTOR.Enabled = false;
-                                }
-                            }
-                            if (!glNull)
-                            {
-                                if (gl_i < 0) doctor_GL.Checked = true;
-                                if (gl_i > 0)
-                                {
-                                    CDW_DOCTOR_GL.SelectedIndex = CDW_DOCTOR_GL.FindString(gl_s);
-                                    //CDW_DOCTOR_GL.Enabled = false;
-                                }
-                            }
-                            break;
-                        case 2: //INSURANT
-                            if (!dlNull)
-                            {
-                                if (dl_i < 0) insurant_DL.Checked = true;
-                                if (dl_i > 0)
-                                {
-                                    CDW_INSURANT.SelectedIndex = CDW_INSURANT.FindString(dl_s);
-                                    CDW_INSURANT_SelectedIndexChanged(CDW_INSURANT, new EventArgs());
-                                }
-                                // SC
-                                foreach (DataRow r in dt2_dim_sc.Rows)
-                                {
-                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
-                                    if (dim_pred_sid < 0)
+                                    if (dn_s.Equals(""))
                                     {
-                                        insurant_SC.Checked = true;
+                                        doctor_DN.Checked = true;
                                     }
                                     else
                                     {
-                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
-                                        int index = LDW_INSURANT.FindString(key);
-                                        LDW_INSURANT.SetSelected(index, true);
-                                        //LDW_DOCTOR.Enabled = false;
+                                        TDW_DOCTOR.Text = dn_s;
+                                        //TDW_DOCTOR.Enabled = false;
                                     }
                                 }
-                            }
-                            if (!dnNull)
-                            {
-                                if (dn_s.Equals(""))
+                                if (!glNull)
                                 {
-                                    insurant_DN.Checked = true;
-                                }
-                                else
-                                {
-                                    TDW_INSURANT.Text = dn_s;
-                                }
-                            }
-                            if (!glNull)
-                            {
-                                if (gl_i < 0) insurant_GL.Checked = true;
-                                if (gl_i > 0) CDW_INSURANT_GL.SelectedIndex = CDW_INSURANT_GL.FindString(gl_s);
-                            }
-                            break;
-                        case 3: // DRUG
-                            if (!dlNull)
-                            {
-                                if (dl_i < 0) drug_DL.Checked = true;
-                                if (dl_i > 0)
-                                {
-                                    CDW_DRUG.SelectedIndex = CDW_DRUG.FindString(dl_s);
-                                    CDW_DRUG_SelectedIndexChanged(CDW_DRUG, new EventArgs());
-                                }
-                                // SC
-                                foreach (DataRow r in dt2_dim_sc.Rows)
-                                {
-                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
-                                    if (dim_pred_sid < 0)
+                                    if (gl_i < 0) doctor_GL.Checked = true;
+                                    if (gl_i > 0)
                                     {
-                                        drug_SC.Checked = true;
+                                        CDW_DOCTOR_GL.SelectedIndex = CDW_DOCTOR_GL.FindString(gl_s);
+                                        //CDW_DOCTOR_GL.Enabled = false;
+                                    }
+                                }
+                                break;
+                            case 2: //INSURANT
+                                if (!dlNull)
+                                {
+                                    if (dl_i < 0) insurant_DL.Checked = true;
+                                    if (dl_i > 0)
+                                    {
+                                        CDW_INSURANT.SelectedIndex = CDW_INSURANT.FindString(dl_s);
+                                        CDW_INSURANT_SelectedIndexChanged(CDW_INSURANT, new EventArgs());
+
+                                        // SC
+                                        foreach (DataRow r in dt2_dim_sc.Rows)
+                                        {
+
+                                            int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                            Console.WriteLine("insurant entered ->" + dim_pred_sid);
+                                            if (dim_pred_sid < 0)
+                                            {
+                                                Console.WriteLine("variable insurant");
+                                                insurant_SC.Checked = true;
+                                            }
+
+                                            if (dim_pred_sid > 0)
+                                            {
+                                                Console.WriteLine("insurant: ");
+                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                int index = LDW_INSURANT.FindString(key);
+                                                Console.WriteLine("insurant_: " + key + " index: " + index);
+                                                LDW_INSURANT.SetSelected(index, true);
+                                                //LDW_DOCTOR.Enabled = false;
+                                            }
+                                        }
+                                    }
+                                    // SC
+                                    foreach (DataRow r in dt2_dim_sc.Rows)
+                                    {
+
+                                        int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                        Console.WriteLine("insurant entered ->"+dim_pred_sid);
+                                        if (dim_pred_sid < 0)
+                                        {
+                                            Console.WriteLine("variable insurant");
+                                            insurant_SC.Checked = true;
+                                        }
+                                        
+                                    }
+                                }
+                                if (!dnNull)
+                                {
+                                    if (dn_s.Equals(""))
+                                    {
+                                        insurant_DN.Checked = true;
                                     }
                                     else
                                     {
-                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
-                                        int index = LDW_DRUG.FindString(key);
-                                        LDW_DRUG.SetSelected(index, true);
-                                        //LDW_DOCTOR.Enabled = false;
+                                        TDW_INSURANT.Text = dn_s;
                                     }
                                 }
-                            }
-                            if (!dnNull)
-                            {
-                                if (dn_s.Equals(""))
+                                if (!glNull)
                                 {
-                                    drug_DN.Checked = true;
+                                    if (gl_i < 0) insurant_GL.Checked = true;
+                                    if (gl_i > 0) CDW_INSURANT_GL.SelectedIndex = CDW_INSURANT_GL.FindString(gl_s);
                                 }
-                                else
+                                break;
+                            case 3: // DRUG
+                                if (!dlNull)
                                 {
-                                    TDW_DRUG.Text = dn_s;
-                                }
-                            }
-                            if (!glNull)
-                            {
-                                if (gl_i < 0) drug_GL.Checked = true;
-                                if (gl_i > 0) CDW_DRUG_GL.SelectedIndex = CDW_DRUG_GL.FindString(gl_s);
-                            }
-                            break;
-                        case 4: // MEDSERVICE
-                            if (!dlNull)
-                            {
-                                if (dl_i < 0) meds_DL.Checked = true;
-                                if (dl_i > 0)
-                                {
-                                    CDW_MEDSERVICE.SelectedIndex = CDW_MEDSERVICE.FindString(dl_s);
-                                    CDW_MEDSERVICE_SelectedIndexChanged(CDW_MEDSERVICE, new EventArgs());
-                                }
-                                // SC
-                                foreach (DataRow r in dt2_dim_sc.Rows)
-                                {
-                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
-                                    if (dim_pred_sid < 0)
+                                    if (dl_i < 0) drug_DL.Checked = true;
+                                    if (dl_i > 0)
                                     {
-                                        meds_SC.Checked = true;
+                                        CDW_DRUG.SelectedIndex = CDW_DRUG.FindString(dl_s);
+                                        CDW_DRUG_SelectedIndexChanged(CDW_DRUG, new EventArgs());
+
+                                        foreach (DataRow r in dt2_dim_sc.Rows)
+                                        {
+                                            
+                                            int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                            Console.WriteLine("drug entered SC -> " +dim_pred_sid);
+                                            if (dim_pred_sid < 0)
+                                            {
+                                                Console.WriteLine("variable drug");
+                                                drug_SC.Checked = true;
+                                            }
+                                            
+                                            if (dim_pred_sid > 0){
+                                                Console.WriteLine("drug: ");
+                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                int index = LDW_DRUG.FindString(key);
+                                                Console.WriteLine("drug_: " + key + " index: " + index);
+                                                LDW_DRUG.SetSelected(index, true);
+                                                //LDW_DOCTOR.Enabled = false;
+                                            }
+                                        }
+                                    }
+                                    // SC
+                                    foreach (DataRow r in dt2_dim_sc.Rows)
+                                    {
+                                        Console.WriteLine("drug entered SC");
+                                        int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                        if (dim_pred_sid < 0)
+                                        {
+                                            Console.WriteLine("variable drug");
+                                            drug_SC.Checked = true;
+                                        }
+                                    }
+                                }
+                                if (!dnNull)
+                                {
+                                    if (dn_s.Equals(""))
+                                    {
+                                        drug_DN.Checked = true;
                                     }
                                     else
                                     {
-                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
-                                        int index = LDW_MEDSERVICE.FindString(key);
-                                        LDW_MEDSERVICE.SetSelected(index, true);
-                                        //LDW_DOCTOR.Enabled = false;
+                                        TDW_DRUG.Text = dn_s;
                                     }
                                 }
-                            }
-                            if (!dnNull)
-                            {
-                                if (dn_s.Equals(""))
+                                if (!glNull)
                                 {
-                                    meds_DN.Checked = true;
+                                    if (gl_i < 0) drug_GL.Checked = true;
+                                    if (gl_i > 0) CDW_DRUG_GL.SelectedIndex = CDW_DRUG_GL.FindString(gl_s);
                                 }
-                                else
+                                break;
+                            case 4: // MEDSERVICE
+                                if (!dlNull)
                                 {
-                                    TDW_MEDSERVICE.Text = dn_s;
-                                }
-                            }
-                            if (!glNull)
-                            {
-                                if (gl_i < 0) meds_GL.Checked = true;
-                                if (gl_i > 0) CDW_MEDSERVICE_GL.SelectedIndex = CDW_MEDSERVICE_GL.FindString(gl_s);
-                            }
-                            break;
-                        case 5: // HOSPITAL
-                            if (!dlNull)
-                            {
-                                if (dl_i < 0) hospital_DL.Checked = true;
-                                if (dl_i > 0)
-                                {
-                                    CDW_HOSPITAL.SelectedIndex = CDW_HOSPITAL.FindString(dl_s);
-                                    CDW_HOSPITAL_SelectedIndexChanged(CDW_HOSPITAL, new EventArgs());
-                                }
-                                // SC
-                                foreach (DataRow r in dt2_dim_sc.Rows)
-                                {
-                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
-                                    if (dim_pred_sid < 0)
+                                    if (dl_i < 0) meds_DL.Checked = true;
+                                    if (dl_i > 0)
                                     {
-                                        hospital_SC.Checked = true;
+                                        CDW_MEDSERVICE.SelectedIndex = CDW_MEDSERVICE.FindString(dl_s);
+                                        CDW_MEDSERVICE_SelectedIndexChanged(CDW_MEDSERVICE, new EventArgs());
+
+                                        foreach (DataRow r in dt2_dim_sc.Rows)
+                                        {
+                                            int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                            if (dim_pred_sid < 0)
+                                            {
+                                                meds_SC.Checked = true;
+                                            }
+
+                                            if (dim_pred_sid > 0)
+                                            {
+                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                int index = LDW_MEDSERVICE.FindString(key);
+                                                LDW_MEDSERVICE.SetSelected(index, true);
+                                                //LDW_DOCTOR.Enabled = false;
+                                            }
+                                        }
+                                    }
+                                    // SC
+                                    foreach (DataRow r in dt2_dim_sc.Rows)
+                                    {
+                                        int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                        if (dim_pred_sid < 0)
+                                        {
+                                            meds_SC.Checked = true;
+                                        }
+                                    }
+                                }
+                                if (!dnNull)
+                                {
+                                    if (dn_s.Equals(""))
+                                    {
+                                        meds_DN.Checked = true;
                                     }
                                     else
                                     {
-                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
-                                        int index = LDW_HOSPITAL.FindString(key);
-                                        LDW_HOSPITAL.SetSelected(index, true);
-                                        //LDW_DOCTOR.Enabled = false;
+                                        TDW_MEDSERVICE.Text = dn_s;
                                     }
                                 }
-                            }
-                            if (!dnNull)
-                            {
-                                if (dn_s.Equals(""))
+                                if (!glNull)
                                 {
-                                    hospital_DN.Checked = true;
+                                    if (gl_i < 0) meds_GL.Checked = true;
+                                    if (gl_i > 0) CDW_MEDSERVICE_GL.SelectedIndex = CDW_MEDSERVICE_GL.FindString(gl_s);
                                 }
-                                else
+                                break;
+                            case 5: // HOSPITAL
+                                if (!dlNull)
                                 {
-                                    TDW_HOSPITAL.Text = dn_s;
-                                }
-                            }
-                            if (!glNull)
-                            {
-                                if (gl_i < 0) hospital_GL.Checked = true;
-                                if (gl_i > 0) CDW_HOSPITAL_GL.SelectedIndex = CDW_HOSPITAL_GL.FindString(gl_s);
-                            }
-                            break;
-                        case 6: //TIME
-                            if (!dlNull)
-                            {
-                                if (dl_i < 0) time_DL.Checked = true;
-                                if (dl_i > 0)
-                                {
-                                    CDW_TIME.SelectedIndex = CDW_TIME.FindString(dl_s);
-                                    CDW_TIME_SelectedIndexChanged(CDW_TIME, new EventArgs());
-                                }
-                                // SC
-                                foreach (DataRow r in dt2_dim_sc.Rows)
-                                {
-                                    int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
-                                    if (dim_pred_sid < 0)
+                                    if (dl_i < 0) hospital_DL.Checked = true;
+                                    if (dl_i > 0)
                                     {
-                                        time_SC.Checked = true;
+                                        CDW_HOSPITAL.SelectedIndex = CDW_HOSPITAL.FindString(dl_s);
+                                        CDW_HOSPITAL_SelectedIndexChanged(CDW_HOSPITAL, new EventArgs());
+
+                                        // SC
+                                        foreach (DataRow r in dt2_dim_sc.Rows)
+                                        {
+                                            int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                            if (dim_pred_sid < 0)
+                                            {
+                                                hospital_SC.Checked = true;
+                                            }
+
+                                            if (dim_pred_sid > 0)
+                                            {
+                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                int index = LDW_HOSPITAL.FindString(key);
+                                                LDW_HOSPITAL.SetSelected(index, true);
+                                                //LDW_DOCTOR.Enabled = false;
+                                            }
+                                        }
+                                    }
+                                    // SC
+                                    foreach (DataRow r in dt2_dim_sc.Rows)
+                                    {
+                                        int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                        if (dim_pred_sid < 0)
+                                        {
+                                            hospital_SC.Checked = true;
+                                        }
+                                    }
+                                }
+                                if (!dnNull)
+                                {
+                                    if (dn_s.Equals(""))
+                                    {
+                                        hospital_DN.Checked = true;
                                     }
                                     else
                                     {
-                                        String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
-                                        int index = LDW_TIME.FindString(key);
-                                        LDW_TIME.SetSelected(index, true);
-                                        //LDW_DOCTOR.Enabled = false;
+                                        TDW_HOSPITAL.Text = dn_s;
                                     }
                                 }
-                            }
-                            if (!dnNull)
-                            {
-                                if (dn_s.Equals(""))
+                                if (!glNull)
                                 {
-                                    time_DN.Checked = true;
+                                    if (gl_i < 0) hospital_GL.Checked = true;
+                                    if (gl_i > 0) CDW_HOSPITAL_GL.SelectedIndex = CDW_HOSPITAL_GL.FindString(gl_s);
                                 }
-                                else
+                                break;
+                            case 6: //TIME
+                                if (!dlNull)
                                 {
-                                    TDW_TIME.Text = dn_s;
+                                    if (dl_i < 0) time_DL.Checked = true;
+                                    if (dl_i > 0)
+                                    {
+                                        CDW_TIME.SelectedIndex = CDW_TIME.FindString(dl_s);
+                                        CDW_TIME_SelectedIndexChanged(CDW_TIME, new EventArgs());
+
+                                        // SC
+                                        foreach (DataRow r in dt2_dim_sc.Rows)
+                                        {
+                                            int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                            if (dim_pred_sid < 0)
+                                            {
+                                                time_SC.Checked = true;
+                                            }
+
+                                            if (dim_pred_sid > 0)
+                                            {
+                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                int index = LDW_TIME.FindString(key);
+                                                LDW_TIME.SetSelected(index, true);
+                                                //LDW_DOCTOR.Enabled = false;
+                                            }
+                                        }
+                                    }
+                                    // SC
+                                    foreach (DataRow r in dt2_dim_sc.Rows)
+                                    {
+                                        int dim_pred_sid = Convert.ToInt32(r["DIM_PRED_SID"]);
+                                        if (dim_pred_sid < 0)
+                                        {
+                                            time_SC.Checked = true;
+                                        }
+                                    }
                                 }
-                            }
-                            if (!glNull)
-                            {
-                                if (gl_i < 0) time_GL.Checked = true;
-                                if (gl_i > 0) CDW_TIME_GL.SelectedIndex = CDW_TIME_GL.FindString(gl_s);
-                            }
-                            break;
+                                if (!dnNull)
+                                {
+                                    if (dn_s.Equals(""))
+                                    {
+                                        time_DN.Checked = true;
+                                    }
+                                    else
+                                    {
+                                        TDW_TIME.Text = dn_s;
+                                    }
+                                }
+                                if (!glNull)
+                                {
+                                    if (gl_i < 0) time_GL.Checked = true;
+                                    if (gl_i > 0) CDW_TIME_GL.SelectedIndex = CDW_TIME_GL.FindString(gl_s);
+                                }
+                                break;
+                        }
+
                     }
+                    // load BMSR
+                    LinkedList<int> bmsr = new LinkedList<int>(); //dim_pred
+                    DataTable dt_bmsr = DBContext.Service().GetData(
+                    "SELECT BMSR_PRED_SID " +
+                    "FROM AGS_NASS_BMSR_FILTER " +
+                    "WHERE ASS_SID_NASS = " + loaded_ass_sid);
+                    DataTable dt2_bmsr = dt_bmsr.Copy();
 
-                }
-                // load BMSR
-                LinkedList<int> bmsr = new LinkedList<int>(); //dim_pred
-                DataTable dt_bmsr = DBContext.Service().GetData(
-                "SELECT BMSR_PRED_SID " +
-                "FROM AGS_NASS_BMSR_FILTER " +
-                "WHERE ASS_SID_NASS = " + loaded_ass_sid);
-                DataTable dt2_bmsr = dt_bmsr.Copy();
-
-                foreach (DataRow row in dt2_bmsr.Rows)
-                {
-                    object bmsr_o = row["BMSR_PRED_SID"];
-                    int bmsr_int = Convert.ToInt32(bmsr_o);
-                    Console.WriteLine("bmsr_int: " + bmsr_int);
-                    if(bmsr_int < 0)
+                    foreach (DataRow row in dt2_bmsr.Rows)
                     {
-                        bmsr_variable.Checked = true;
-                    } else
-                    {
+                        object bmsr_o = row["BMSR_PRED_SID"];
+                        int bmsr_int = Convert.ToInt32(bmsr_o);
+                        Console.WriteLine("bmsr_int: " + bmsr_int);
+                        if (bmsr_int < 0)
+                        {
+                            bmsr_variable.Checked = true;
+                            LDW_BMSR.SelectedIndex = -1;
+                        }
+                        else
+                        {
                             String key = DBContext.Service().getSKeyfromTable("DW_BMSR_PREDICATE", bmsr_int, "BMSR_PRED_SID", "BMSR_PRED_NAME");
                             Console.WriteLine("key: " + key);
                             int index = LDW_BMSR.FindString(key);
                             Console.WriteLine("key_int: " + index);
                             LDW_BMSR.SetSelected(index, true);
+                        }
                     }
-                }
-                // load Measures
-                LinkedList<int> measure = new LinkedList<int>(); //dim_pred
-                DataTable dt_measure = DBContext.Service().GetData(
-                "Select DAMSR_SID FROM ags_nass_aggregate_meassure WHERE ASS_SID_NASS = " + loaded_ass_sid);
-                DataTable dt2_measure = dt_measure.Copy();
+                    // load Measures
+                    LinkedList<int> measure = new LinkedList<int>(); //dim_pred
+                    DataTable dt_measure = DBContext.Service().GetData(
+                    "Select DAMSR_SID FROM ags_nass_aggregate_meassure WHERE ASS_SID_NASS = " + loaded_ass_sid);
+                    DataTable dt2_measure = dt_measure.Copy();
 
-                foreach (DataRow row in dt2_measure.Rows)
-                {
-                    object damsr_o = row["DAMSR_SID"];
-                    int damsr_int = Convert.ToInt32(damsr_o);
-                    Console.WriteLine("bmsr_int: " + damsr_int);
-
-                    String key = DBContext.Service().getSKeyfromTable("DW_DERIVED_AGGREGATE_MEASURE", damsr_int, "DAMSR_SID", "DAMSR_NAME");
-                    Console.WriteLine("key: " + key);
-                    int index = LDW_MEASURES.FindString(key);
-                    Console.WriteLine("key_int: " + index);
-                    LDW_MEASURES.SetSelected(index, true);
-                    
-                }
-                // load Filter
-                LinkedList<int> filter = new LinkedList<int>(); //dim_pred
-                DataTable dt_filter = DBContext.Service().GetData(
-                "Select AMSR_PRED_SID FROM ags_nass_amsr_filter WHERE ASS_SID_NASS = " + loaded_ass_sid);
-                DataTable dt2_filter = dt_filter.Copy();
-
-                foreach (DataRow row in dt2_filter.Rows)
-                {
-                    object filter_o = row["AMSR_PRED_SID"];
-                    int filter_int = Convert.ToInt32(filter_o);
-                    Console.WriteLine("bmsr_int: " + filter_int);
-                    if (filter_int < 0)
+                    foreach (DataRow row in dt2_measure.Rows)
                     {
-                        filter_variable.Checked = true;
-                    }
-                    else
-                    {
-                        String key = DBContext.Service().getSKeyfromTable("dw_amsr_predicate", filter_int, "AMSR_PRED_SID", "AMSR_PRED_NAME");
+                        object damsr_o = row["DAMSR_SID"];
+                        int damsr_int = Convert.ToInt32(damsr_o);
+                        Console.WriteLine("bmsr_int: " + damsr_int);
+
+                        String key = DBContext.Service().getSKeyfromTable("DW_DERIVED_AGGREGATE_MEASURE", damsr_int, "DAMSR_SID", "DAMSR_NAME");
                         Console.WriteLine("key: " + key);
-                        int index = LDW_FILTER.FindString(key);
+                        int index = LDW_MEASURES.FindString(key);
                         Console.WriteLine("key_int: " + index);
-                        LDW_FILTER.SetSelected(index, true);
+                        LDW_MEASURES.SetSelected(index, true);
+
+                    }
+                    // load Filter
+                    LinkedList<int> filter = new LinkedList<int>(); //dim_pred
+                    DataTable dt_filter = DBContext.Service().GetData(
+                    "Select AMSR_PRED_SID FROM ags_nass_amsr_filter WHERE ASS_SID_NASS = " + loaded_ass_sid);
+                    DataTable dt2_filter = dt_filter.Copy();
+
+                    foreach (DataRow row in dt2_filter.Rows)
+                    {
+                        object filter_o = row["AMSR_PRED_SID"];
+                        int filter_int = Convert.ToInt32(filter_o);
+                        Console.WriteLine("bmsr_int: " + filter_int);
+                        if (filter_int < 0)
+                        {
+                            filter_variable.Checked = true;
+                        }
+                        else
+                        {
+                            String key = DBContext.Service().getSKeyfromTable("dw_amsr_predicate", filter_int, "AMSR_PRED_SID", "AMSR_PRED_NAME");
+                            Console.WriteLine("key: " + key);
+                            int index = LDW_FILTER.FindString(key);
+                            Console.WriteLine("key_int: " + index);
+                            LDW_FILTER.SetSelected(index, true);
+                        }
                     }
                 }
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
 
@@ -1015,7 +1100,7 @@ namespace OLAP_WindowsForms.App
                     DataRow[] dr = dt2.Select();
                     Console.WriteLine("safepoint 4");
                     String index = dr[0].ItemArray[0].ToString();
-                    Console.WriteLine("safepoint 5");
+                    Console.WriteLine("safepoint 5 - index: "+index);
                     if (index.Equals("") || index == null)
                     {
                         Console.WriteLine("table empty -> index 1");
@@ -1149,6 +1234,7 @@ namespace OLAP_WindowsForms.App
                         DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
                         list.Clear();
                         nass_amsr_flt_sid++;
+
                     }
                 }
                 else
@@ -1156,7 +1242,7 @@ namespace OLAP_WindowsForms.App
                     DataTable dt = DBContext.Service().GetData(
                         "Select amsr_pred_sid " +
                         "from dw_amsr_predicate where cube_sid = " + Int32.Parse(ComboBoxCube.SelectedValue.ToString()) +
-                        " and amsr_pred_name like '%Var%'");
+                        " and amsr_pred_name like '%true%'");
                     DataTable dt2 = dt.Copy();
                     DataRow[] dr = dt2.Select();
                     int amsr_pred_sid = Int32.Parse(dr[0].ItemArray[0].ToString());
@@ -1312,14 +1398,6 @@ namespace OLAP_WindowsForms.App
         private void LDW_MEASURES_Click(object sender, EventArgs e)
         {
             Console.WriteLine("measure: " +LDW_MEASURES.SelectedIndex);
-        }
-
-        //Used for testing initalisation
-        private void button1_Click(object sender, EventArgs e)
-        {
-            Console.WriteLine("The Test Commences!");
-            selectTable = new SelectTable();
-            selectTable.ShowDialog(this);
         }
     }
 }
