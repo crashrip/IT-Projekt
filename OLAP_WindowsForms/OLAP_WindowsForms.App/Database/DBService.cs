@@ -155,7 +155,14 @@ namespace OLAP_WindowsForms.App
             DataRow[] dr = dt2.Select();
 
             String index = dr[0].ItemArray[0].ToString();
-            return Int32.Parse(index);
+            if (index.Equals("") || index == null)
+            {
+                return 1;
+            }
+            else
+            {
+                return Int32.Parse(index);
+            }
         }
         // Start ------------------------------ LOAD -----------------------------------------------------------------
         public int getKeyfromTable(String table, int keyValue, String keyColumn, String targetColum)
@@ -279,7 +286,7 @@ namespace OLAP_WindowsForms.App
             //return command;
         }
 
-        //insert into table
+        //insert into table with known id
         public void insinto(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, int id, String columnPK, LinkedList<Insert_item> list)
         {
 
