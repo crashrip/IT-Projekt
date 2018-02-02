@@ -56,7 +56,7 @@ namespace OLAP_WindowsForms.App
         // END ----- SelectNavigatinOperator class -------------------------------------------
 
         // start Form with Cube Dimension Selection
-        private void comboBoxCube_SelectedIndexChanged(object sender, EventArgs e)
+        public void comboBoxCube_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Console.WriteLine("ComboboxCube: selectIndex " + ComboBoxCube.SelectedIndex.ToString() + " selValue " + ComboBoxCube.SelectedValue.ToString()+" selItem "+ ComboBoxCube.SelectedItem.ToString());
             if (!(ComboBoxCube.SelectedValue.ToString().Equals("System.Data.DataRowView")))
@@ -397,6 +397,7 @@ namespace OLAP_WindowsForms.App
                 //  "SELECT DIM_PRED_NAME, DIM_PRED_SID " +
                 //  "FROM DW_DIM_PREDICATE " +
                 //  "WHERE LVL_SID = " + lvl_sid
+                
                 "Select DIM_PRED_NAME, DIM_PRED_SID " +
                 "from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
                 "l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
@@ -609,7 +610,7 @@ namespace OLAP_WindowsForms.App
 
         private void button_select_navigation_operator_Click(object sender, EventArgs e)
         {
-            SelectNavigationOperator sno = new SelectNavigationOperator(this, ComboBoxCube) { TopMost = true };
+            SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
             sno.ShowDialog(this);
         }
 
@@ -1151,24 +1152,17 @@ namespace OLAP_WindowsForms.App
                 // save ASS_SID 
                 if (ass_sid == -1)
                 {
-                    Console.WriteLine("safepoint 1");
                     DataTable dt = DBContext.Service().GetData(
                       "SELECT MAX(ASS_SID) FROM AGS_ANALYSIS_SITUATION_SCHEMA");
-                    Console.WriteLine("safepoint 2");
                     DataTable dt2 = dt.Copy();
-                    Console.WriteLine("safepoint 3");
                     DataRow[] dr = dt2.Select();
-                    Console.WriteLine("safepoint 4");
                     String index = dr[0].ItemArray[0].ToString();
-                    Console.WriteLine("safepoint 5 - index: "+index);
                     if (index.Equals("") || index == null)
                     {
-                        Console.WriteLine("table empty -> index 1");
                         id = 1;
                     }
                     else
                     {
-                        Console.WriteLine("safepoint 6");
                         id = Int32.Parse(index) + 1; // -> +1 for current ass_sid
                         Console.WriteLine("id: "+id);
                     }

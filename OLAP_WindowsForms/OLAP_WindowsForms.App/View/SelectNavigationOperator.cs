@@ -18,7 +18,6 @@ namespace OLAP_WindowsForms.App.View
     {
 
         private UserInput userInput;
-        private ComboBox userInput_ComboBoxCube;
         private string agsNavstepSchema, selection;
         
         // saves the navigation operators and corresponding tables as strings
@@ -28,10 +27,9 @@ namespace OLAP_WindowsForms.App.View
         /// 
         /// </summary>
         /// <param name="ui">Reference to previous window.</param>
-        public SelectNavigationOperator(UserInput ui, ComboBox cube)
+        public SelectNavigationOperator(UserInput ui)
         {
             userInput = ui;
-            userInput_ComboBoxCube = cube;
             InitializeComponent();
 
             FillDictionary();
@@ -64,7 +62,7 @@ namespace OLAP_WindowsForms.App.View
                 DataTable dt = DBContext.Service().GetData(
                    "SELECT d.DIM_SID, d.DIM_NAME " +
                    "FROM DW_CUBE_DIMENSION c,  DW_DIMENSION d " +
-                   "WHERE c.DIM_SID = d.DIM_SID AND CUBE_SID = " + userInput_ComboBoxCube.SelectedValue.ToString()
+                   "WHERE c.DIM_SID = d.DIM_SID AND CUBE_SID = " + userInput.ComboBoxCube.SelectedValue.ToString()
                 ).Copy();
 
                 ComboBox_Selection.DataSource = dt;
@@ -175,13 +173,7 @@ namespace OLAP_WindowsForms.App.View
             }
             else if (table == "AGS_NAVSS_MOVE_TO_NODE")
             {
-                /*
-                string stmt = "SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + selection + "\'";
-                Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
-                list.AddLast(new Insert_item("CUBE_SID", cube_sid));
-
-                userInput.SelectComboBoxCube(selection);
-                */
+                
                 // TODO
             }
             else if (table == "AGS_NAVSS_REFOCUS_SLICE_COND")
@@ -206,6 +198,9 @@ namespace OLAP_WindowsForms.App.View
                 Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
                 list.AddLast(new Insert_item("CUBE_SID", cube_sid));
 
+                Console.WriteLine("[SUBMIT] " + selection);
+                userInput.ComboBoxCube.SelectedIndex = userInput.ComboBoxCube.FindString(selection);
+                userInput.comboBoxCube_SelectedIndexChanged(userInput.ComboBoxCube, new EventArgs());
                 userInput.SelectComboBoxCube(selection);
             }
             else if (table == "AGS_NAVSS_REFOCUS_SCORE_FILTER_PARS")
