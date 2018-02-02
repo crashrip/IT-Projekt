@@ -30,6 +30,8 @@ namespace OLAP_WindowsForms.App
         private Boolean dim_time = false;
         private Boolean newForm; // true = new Form | false = load old form
 
+        public SelectTable selectTable;
+
         public UserInput(int ags_sid, Boolean newForm, int ass_sid = 0)
         {
             if (newForm)
@@ -37,7 +39,7 @@ namespace OLAP_WindowsForms.App
                 this.loaded_ags_sid = ags_sid;
                 InitializeComponent();
                 // fill combobox with data preview from cube
-                ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+                ComboItem.SetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             } else
             {
                 this.load(ags_sid,ass_sid);
@@ -575,7 +577,7 @@ namespace OLAP_WindowsForms.App
                 int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
                 String cube_name = DBContext.Service().getSKeyfromTable("DW_CUBE", cube_sid, "CUBE_SID", "CUBE_NAME");
                 // initialize combobox
-                ComboItem.GetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+                ComboItem.SetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
                 if (cube_sid >= 0)
                 {
                     ComboBoxCube.SelectedIndex = ComboBoxCube.FindStringExact(cube_name); ; // set to actual value
@@ -1398,6 +1400,13 @@ namespace OLAP_WindowsForms.App
         private void LDW_MEASURES_Click(object sender, EventArgs e)
         {
             Console.WriteLine("measure: " +LDW_MEASURES.SelectedIndex);
+        }
+        //Used for testing initalisation
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("The Test Commences!");
+            selectTable = new SelectTable();
+            selectTable.ShowDialog(this);
         }
     }
 }
