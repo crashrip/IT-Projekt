@@ -1462,9 +1462,11 @@ namespace OLAP_WindowsForms.App
         //Used for testing initalisation
         private void button1_Click(object sender, EventArgs e)
         {
+            
             Console.WriteLine("The Test Commences!");
             selectTable = new SelectTable();
             selectTable.ShowDialog(this);
+            
         }
     }
 }

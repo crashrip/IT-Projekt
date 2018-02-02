@@ -59,9 +59,7 @@ namespace OLAP_WindowsForms.App
         //TODO !!!
         public void MoveToPrevNode(int dLvl)
         {
-            DBService myService = new DBService();
-            DataTable myTable = myService.GetData("DW_LEVEL", "LVL_SID", "LVL_NAME");
-            
+
         }
         //END Operators Changing Dice Node
 
