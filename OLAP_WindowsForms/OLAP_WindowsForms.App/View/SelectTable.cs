@@ -13,10 +13,19 @@ namespace OLAP_WindowsForms.App.View
 {
     public partial class SelectTable : Form
     {
+
+        public String tableNameCB;
+
         public SelectTable()
         {
             InitializeComponent();
+
             ComboItem.SetComboboxContent(comboBox1, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+        }
+
+        public void setLabe2()
+        {
+            label2.Text = tableNameCB;
         }
 
         //Cancel Button
@@ -43,6 +52,9 @@ namespace OLAP_WindowsForms.App.View
         //Start Button
         private void button1_Click(object sender, EventArgs e)
         {
+
+            //Yee olden code
+            /*
             String cube_sid = comboBox1.SelectedValue.ToString();
             string tableName = null;
 
@@ -69,9 +81,6 @@ namespace OLAP_WindowsForms.App.View
             }
             Console.WriteLine(tableName);
 
-
-            //Hospitalization is in der Tabelle falsch geschrieben...
-            //kann das Programm killen...
             DataTable dt = DBContext.Service().GetData(
                 "SELECT * " +
                 "FROM " + tableName);
@@ -91,19 +100,26 @@ namespace OLAP_WindowsForms.App.View
             foreach (DataRow row in dt2.Rows)
             {
 
-                string[] rowArray = new String[] {row[0].ToString(),
+                string[] rowArray = new String[] {
+                row[0].ToString(),
                 row[1].ToString(),
                 row[2].ToString(),
                 row[3].ToString(),
                 row[4].ToString(),
-                row[5].ToString()};
+                row[5].ToString()
+                };
                 dataGridView1.Rows.Add(rowArray); 
 
             }
-
+            */
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
         {
 
         }
