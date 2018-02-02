@@ -12,3 +12,6 @@ OLAP_WindowsForms/OLAP_WindowsForms.App/bin/Debug/OLAP_WindowsForms.App.exe
 OLAP_WindowsForms/OLAP_WindowsForms.App/bin/Debug/OLAP_WindowsForms.App.pdb
 OLAP_WindowsForms/OLAP_WindowsForms.App/obj/Debug/OLAP_WindowsForms.App.exe
 OLAP_WindowsForms/OLAP_WindowsForms.App/obj/Debug/OLAP_WindowsForms.App.pdb
+*.exe
+*.pdb
+*.Cache

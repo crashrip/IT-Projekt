@@ -6,6 +6,7 @@ Delete from ags_nass_dim_qual where nass_dq_sid > 16;
 Delete from ags_nass_dim_qual_slice_cond where nass_sc_sid > 16;
 
 // Update der bereitgestellten Datenbank
+Delete from 
 Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-1, 'DoctorVar',		1,	'VARCHAR(100)',	0);
 Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-2, 'InsurantVar',		2,	'VARCHAR(100)',	0);
 Insert into DW_LEVEL (LVL_SID, LVL_NAME, DIM_SID, LVL_DATATYPE, LVL_POSITION) VALUES(-3, 'DrugVar',			3,	'VARCHAR(100)',	0);
@@ -31,3 +32,24 @@ INSERT INTO DW_AMSR_PREDICATE
    (-3,		'HospitalizationVar',		3,	'TRUE'),
    (-2,		'AmbTreatmentVar',			2,	'TRUE'),
    (-1,		'DrugPrescriptionVar',		1,	'TRUE');
+
+Delete from DW_DIM_PREDICATE WHERE DIM_PRED_SID > 0;
+
+INSERT INTO DW_DIM_PREDICATE
+	(DIM_PRED_SID, DIM_PRED_NAME, LVL_SID, DIM_PRED_EXPR) values
+	(1,		'trueDoctor',		4,		'TRUE'),
+	(2,		'trueInsurant',		8,		'TRUE'),
+	(3,		'trueDrug',			15,		'TRUE'),
+	(4,		'trueMedService',	17,		'TRUE'),
+	(5,		'trueHospital',		21,		'TRUE'),
+	(6,		'trueTime',			26,		'TRUE'),
+	(7,		'DocInRuralDistrict',	2,	'inhPerSqkmInDocDistr < 400'),
+	(8,		'DocInUrbanDistrict',	2,	'inhPerSqkmInDocDistr >= 400'),
+	(9,		'OldDoctor',			1,	'docAge > 55'),
+	(10,	'OldDocInRuralDistrict',	1,	'docAge > 55 AND inhPerSqkmInDocDistr < 400'),
+	(11,	'OldDocInUrbanDistrict',	1,	'docAge > 55 AND inhPerSqkmInDocDistr >= 400'),
+	(12,	'InsInRuralDistrict',	6,	'inhPerSqkmInInsDistr < 400'),
+	(13,	'InsInUrbanDistrict',	6,	'inhPerSqkmInInsDistr >= 400'),
+	(14,	'OldInsurant',			5,	'insAge > 65'),
+	(15,	'OldInsInRuralDistrict',	5,	'insAge > 65 AND inhPerSqkmInDocDistr < 400'),
+	(16,	'OldInsInUrbanDistrict',	5,	'insAge > 65 AND inhPerSqkmInDocDistr >= 400');
