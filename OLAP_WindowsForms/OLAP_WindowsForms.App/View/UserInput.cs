@@ -388,6 +388,12 @@ namespace OLAP_WindowsForms.App
                 //  "SELECT DIM_PRED_NAME, DIM_PRED_SID " +
                 //  "FROM DW_DIM_PREDICATE " +
                 //  "WHERE LVL_SID = " + lvl_sid
+<<<<<<< HEAD
+                
+                "Select DIM_PRED_NAME, DIM_PRED_SID " +
+                "from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
+                "l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
+=======
 
                 //"Select DIM_PRED_NAME, DIM_PRED_SID " +
                 //"from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
@@ -401,6 +407,7 @@ namespace OLAP_WindowsForms.App
                 "join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid +
                 " and l.lvl_sid > 0 and l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
 
+>>>>>>> a6abfb64a901594f596ee4e56cce889629d27138
                 DataTable dt2 = dt.Copy();
 
                 lBox.DataSource = dt2;
@@ -610,7 +617,7 @@ namespace OLAP_WindowsForms.App
 
         public void button_select_navigation_operator_Click(object sender, EventArgs e)
         {
-            SelectNavigationOperator sno = new SelectNavigationOperator(this, ComboBoxCube) { TopMost = true };
+            SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
             sno.ShowDialog(this);
         }
 
@@ -1460,7 +1467,8 @@ namespace OLAP_WindowsForms.App
             Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
             try { 
                 selectTable = new SelectTable();
-                selectTable.tableNameCB = ComboBoxCube.SelectedValue.ToString();
+                selectTable.cube_sid = ComboBoxCube.SelectedValue.ToString();
+                selectTable.tableNameCB = "test";
                 selectTable.setLabe2();
                 selectTable.ShowDialog(this);
             } catch (Exception exx)
