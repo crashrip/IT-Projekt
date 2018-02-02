@@ -14,6 +14,7 @@ namespace OLAP_WindowsForms.App.View
     public partial class SelectTable : Form
     {
 
+        public String cube_sid;
         public String tableNameCB;
 
         public SelectTable()
@@ -52,6 +53,8 @@ namespace OLAP_WindowsForms.App.View
         //Start Button
         private void button1_Click(object sender, EventArgs e)
         {
+
+
 
             //Yee olden code
             /*

@@ -103,5 +103,26 @@ namespace OLAP_WindowsForms.App.View
                 Console.WriteLine("row: " + row + " column " + column);
             }
         }
+
+        //Initiate button
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (column == 0)
+            {
+                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                Console.WriteLine("column 0: " + cell.Value.ToString());
+            }
+            if (column == 1)
+            {
+                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column-1];
+                Console.WriteLine("column 1: " + cell.Value.ToString());
+                // UserInput uInput = new UserInput();
+            }
+            if (column == 2)
+            {
+                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column-2];
+                Console.WriteLine("column 2: " + cell.Value.ToString());
+            }
+        }
     }
 }

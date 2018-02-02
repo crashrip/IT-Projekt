@@ -1466,7 +1466,8 @@ namespace OLAP_WindowsForms.App
             Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
             try { 
                 selectTable = new SelectTable();
-                selectTable.tableNameCB = ComboBoxCube.SelectedValue.ToString();
+                selectTable.cube_sid = ComboBoxCube.SelectedValue.ToString();
+                selectTable.tableNameCB = "test";
                 selectTable.setLabe2();
                 selectTable.ShowDialog(this);
             } catch (Exception exx)
