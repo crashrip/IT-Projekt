@@ -143,10 +143,10 @@ namespace OLAP_WindowsForms.App
             time_GL.Enabled = false;
         }
 
-        // disable all fields except variables
-        private void disable_fields_exc_var()
+        // disable all fields except variables MARIA
+        private void disable_fields()
         {
-            this.disable_dimensions();
+            LDW_MEASURES.Enabled = false;
             if (bmsr_variable.Checked) LDW_BMSR.Enabled = true;
             if (filter_variable.Checked) LDW_FILTER.Enabled = true;
             if (doctor_DL.Checked) CDW_DOCTOR.Enabled = true;
@@ -173,6 +173,33 @@ namespace OLAP_WindowsForms.App
             if (time_DN.Checked) TDW_TIME.Enabled = true;
             if (time_SC.Checked) LDW_TIME.Enabled = true;
             if (time_GL.Checked) CDW_TIME_GL.Enabled = true;
+
+            if (!bmsr_variable.Checked) LDW_BMSR.Enabled = false;
+            if (!filter_variable.Checked) LDW_FILTER.Enabled = false;
+            if (!doctor_DL.Checked) CDW_DOCTOR.Enabled = false;
+            if (!doctor_DN.Checked) TDW_DOCTOR.Enabled = false;
+            if (!doctor_SC.Checked) LDW_DOCTOR.Enabled = false;
+            if (!doctor_GL.Checked) CDW_DOCTOR_GL.Enabled = false;
+            if (!insurant_DL.Checked) CDW_INSURANT.Enabled = false;
+            if (!insurant_DN.Checked) TDW_INSURANT.Enabled = false;
+            if (!insurant_SC.Checked) LDW_INSURANT.Enabled = false;
+            if (!insurant_GL.Checked) CDW_INSURANT_GL.Enabled = false;
+            if (!drug_DL.Checked) CDW_DRUG.Enabled = false;
+            if (!drug_DN.Checked) TDW_DRUG.Enabled = false;
+            if (!drug_SC.Checked) LDW_DRUG.Enabled = false;
+            if (!drug_GL.Checked) CDW_DRUG_GL.Enabled = false;
+            if (!meds_DL.Checked) CDW_MEDSERVICE.Enabled = false;
+            if (!meds_DN.Checked) TDW_MEDSERVICE.Enabled = false;
+            if (!meds_SC.Checked) LDW_MEDSERVICE.Enabled = false;
+            if (!meds_GL.Checked) CDW_MEDSERVICE_GL.Enabled = false;
+            if (!hospital_DL.Checked) CDW_HOSPITAL.Enabled = false;
+            if (!hospital_DN.Checked) TDW_HOSPITAL.Enabled = false;
+            if (!hospital_SC.Checked) LDW_HOSPITAL.Enabled = false;
+            if (!hospital_GL.Checked) CDW_HOSPITAL_GL.Enabled = false;
+            if (!time_DL.Checked) CDW_TIME.Enabled = false;
+            if (!time_DN.Checked) TDW_TIME.Enabled = false;
+            if (!time_SC.Checked) LDW_TIME.Enabled = false;
+            if (!time_GL.Checked) CDW_TIME_GL.Enabled = false;
         }
 
         // enables allowed dimension qualification elements 
@@ -593,7 +620,7 @@ namespace OLAP_WindowsForms.App
         }
         // END ------------------- Buttons ------------------------------------------
 
-        // load schema from cube
+        // load schema from cube MARIA
         public void load(int ags_sid, int ass_sid)
         {
             InitializeComponent();
