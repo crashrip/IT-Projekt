@@ -241,7 +241,7 @@ namespace OLAP_WindowsForms.App.View
                 Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
                 list.AddLast(new Insert_item("CUBE_SID", cube_sid));
 
-                userInput.SelectComboBoxCube(selection);
+
             }
             else if (table == "AGS_NAVSS_REFOCUS_SCORE_FILTER_PARS")
             {
