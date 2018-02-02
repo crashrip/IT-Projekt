@@ -143,6 +143,38 @@ namespace OLAP_WindowsForms.App
             time_GL.Enabled = false;
         }
 
+        // disable all fields except variables
+        private void disable_fields_exc_var()
+        {
+            this.disable_dimensions();
+            if (bmsr_variable.Checked) LDW_BMSR.Enabled = true;
+            if (filter_variable.Checked) LDW_FILTER.Enabled = true;
+            if (doctor_DL.Checked) CDW_DOCTOR.Enabled = true;
+            if (doctor_DN.Checked) TDW_DOCTOR.Enabled = true;
+            if (doctor_SC.Checked) LDW_DOCTOR.Enabled = true;
+            if (doctor_GL.Checked) CDW_DOCTOR_GL.Enabled = true;
+            if (insurant_DL.Checked) CDW_INSURANT.Enabled = true;
+            if (insurant_DN.Checked) TDW_INSURANT.Enabled = true;
+            if (insurant_SC.Checked) LDW_INSURANT.Enabled = true;
+            if (insurant_GL.Checked) CDW_INSURANT_GL.Enabled = true;
+            if (drug_DL.Checked) CDW_DRUG.Enabled = true;
+            if (drug_DN.Checked) TDW_DRUG.Enabled = true;
+            if (drug_SC.Checked) LDW_DRUG.Enabled = true;
+            if (drug_GL.Checked) CDW_DRUG_GL.Enabled = true;
+            if (meds_DL.Checked) CDW_MEDSERVICE.Enabled = true;
+            if (meds_DN.Checked) TDW_MEDSERVICE.Enabled = true;
+            if (meds_SC.Checked) LDW_MEDSERVICE.Enabled = true;
+            if (meds_GL.Checked) CDW_MEDSERVICE_GL.Enabled = true;
+            if (hospital_DL.Checked) CDW_HOSPITAL.Enabled = true;
+            if (hospital_DN.Checked) TDW_HOSPITAL.Enabled = true;
+            if (hospital_SC.Checked) LDW_HOSPITAL.Enabled = true;
+            if (hospital_GL.Checked) CDW_HOSPITAL_GL.Enabled = true;
+            if (time_DL.Checked) CDW_TIME.Enabled = true;
+            if (time_DN.Checked) TDW_TIME.Enabled = true;
+            if (time_SC.Checked) LDW_TIME.Enabled = true;
+            if (time_GL.Checked) CDW_TIME_GL.Enabled = true;
+        }
+
         // enables allowed dimension qualification elements 
         private void dimension_enable_disable()
         {
