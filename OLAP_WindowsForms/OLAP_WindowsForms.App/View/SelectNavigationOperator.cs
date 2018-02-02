@@ -198,10 +198,14 @@ namespace OLAP_WindowsForms.App.View
                 Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
                 list.AddLast(new Insert_item("CUBE_SID", cube_sid));
 
+<<<<<<< HEAD
                 Console.WriteLine("[SUBMIT] " + selection);
                 userInput.ComboBoxCube.SelectedIndex = userInput.ComboBoxCube.FindString(selection);
                 userInput.comboBoxCube_SelectedIndexChanged(userInput.ComboBoxCube, new EventArgs());
                 userInput.SelectComboBoxCube(selection);
+=======
+
+>>>>>>> a6abfb64a901594f596ee4e56cce889629d27138
             }
             else if (table == "AGS_NAVSS_REFOCUS_SCORE_FILTER_PARS")
             {
