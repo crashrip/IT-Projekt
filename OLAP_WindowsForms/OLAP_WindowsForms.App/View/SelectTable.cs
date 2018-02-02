@@ -16,7 +16,7 @@ namespace OLAP_WindowsForms.App.View
         public SelectTable()
         {
             InitializeComponent();
-            ComboItem.GetComboboxContent(comboBox1, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
+            ComboItem.SetComboboxContent(comboBox1, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
         }
 
         //Cancel Button
