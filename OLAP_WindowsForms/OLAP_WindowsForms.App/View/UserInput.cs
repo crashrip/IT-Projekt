@@ -30,6 +30,8 @@ namespace OLAP_WindowsForms.App
         private Boolean dim_time = false;
         private Boolean newForm; // true = new Form | false = load old form
 
+        public SelectTable selectTable;
+
         public UserInput(int ags_sid, Boolean newForm, int ass_sid = 0)
         {
             if (newForm)
@@ -1398,6 +1400,13 @@ namespace OLAP_WindowsForms.App
         private void LDW_MEASURES_Click(object sender, EventArgs e)
         {
             Console.WriteLine("measure: " +LDW_MEASURES.SelectedIndex);
+        }
+        //Used for testing initalisation
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Console.WriteLine("The Test Commences!");
+            selectTable = new SelectTable();
+            selectTable.ShowDialog(this);
         }
     }
 }
