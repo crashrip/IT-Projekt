@@ -18,7 +18,6 @@ namespace OLAP_WindowsForms.App.View
     {
 
         private UserInput userInput;
-        private ComboBox userInput_ComboBoxCube;
         private string agsNavstepSchema, selection;
         
         // saves the navigation operators and corresponding tables as strings
@@ -28,10 +27,9 @@ namespace OLAP_WindowsForms.App.View
         /// 
         /// </summary>
         /// <param name="ui">Reference to previous window.</param>
-        public SelectNavigationOperator(UserInput ui, ComboBox cube)
+        public SelectNavigationOperator(UserInput ui)
         {
             userInput = ui;
-            userInput_ComboBoxCube = cube;
             InitializeComponent();
 
             FillDictionary();
@@ -64,7 +62,7 @@ namespace OLAP_WindowsForms.App.View
                 DataTable dt = DBContext.Service().GetData(
                    "SELECT d.DIM_SID, d.DIM_NAME " +
                    "FROM DW_CUBE_DIMENSION c,  DW_DIMENSION d " +
-                   "WHERE c.DIM_SID = d.DIM_SID AND CUBE_SID = " + userInput_ComboBoxCube.SelectedValue.ToString()
+                   "WHERE c.DIM_SID = d.DIM_SID AND CUBE_SID = " + userInput.ComboBoxCube.SelectedValue.ToString()
                 ).Copy();
 
                 ComboBox_Selection.DataSource = dt;
@@ -99,47 +97,6 @@ namespace OLAP_WindowsForms.App.View
             {
                 // TODO some error message
             }
-
-            /*
-            // TODO delete this is not needed anymore
-            if (agsNavstepSchema == "moveToPrevNode")
-            {
-                DataRow[] dr_ags_nass_dim_qual = DBContext.Service().GetData("SELECT DIM_SID FROM AGS_NASS_DIM_QUAL").Copy().Select();
-                DataRow[] dr_dw_dimension = DBContext.Service().GetData("SELECT DIM_SID, DIM_NAME FROM DW_DIMENSION").Copy().Select();
-
-                Console.WriteLine("[dr_ags_nass_dim_qual] " + dr_ags_nass_dim_qual[0].ItemArray[0].ToString());
-                Console.WriteLine("[dr_dw_dimension] " + dr_dw_dimension[0].ItemArray[0].ToString());
-
-                DataRow[] dataRow = new DataRow[dr_dw_dimension.Length-1];
-                int index = 0;
-
-                for (int i = 0; i < dr_dw_dimension.Length; i++)
-                {
-                    if (dr_dw_dimension[i].ItemArray[0].Equals(dr_ags_nass_dim_qual[i].ItemArray[0]))
-                    {
-                        ComboBox_Selection.Items.Add(dr_dw_dimension[i]);
-                        Console.WriteLine("[dr_dw_dimension[i]]" + dr_dw_dimension[i]);
-                            
-                        dataRow[index] = dr_dw_dimension[i];
-                        index++;
-                        
-                    }
-                }
-                Console.WriteLine("[dataRow[0].ItemArray[0]] " + dataRow[0].ItemArray[0].ToString());
-                Console.WriteLine("[dataRow[0].ItemArray[1]] " + dataRow[0].ItemArray[1].ToString());
-
-                int j = 0;
-                while (dataRow[j] != null)
-                {
-                    Console.WriteLine("[dataRow[j].ItemArray[1]] " + dataRow[j].ItemArray[1].ToString());
-                    ComboItem item = new ComboItem(
-                        Int32.Parse(dataRow[j].ItemArray[0].ToString()),
-                        dataRow[j].ItemArray[1].ToString());
-                    Console.WriteLine("[comboItem] " + item.toString());
-                    ComboBoxCube.Items.Add(item.Text);
-                    j++;
-                }
-            }*/
         }
 
 
@@ -216,7 +173,7 @@ namespace OLAP_WindowsForms.App.View
             }
             else if (table == "AGS_NAVSS_MOVE_TO_NODE")
             {
-
+                
                 // TODO
             }
             else if (table == "AGS_NAVSS_REFOCUS_SLICE_COND")
@@ -235,13 +192,20 @@ namespace OLAP_WindowsForms.App.View
             {
                 // TODO
             }
-            else if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE") // TODO changed to NAVSS
+            else if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE")
             {
                 string stmt = "SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + selection + "\'";
                 Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
                 list.AddLast(new Insert_item("CUBE_SID", cube_sid));
 
+<<<<<<< HEAD
+                Console.WriteLine("[SUBMIT] " + selection);
+                userInput.ComboBoxCube.SelectedIndex = userInput.ComboBoxCube.FindString(selection);
+                userInput.comboBoxCube_SelectedIndexChanged(userInput.ComboBoxCube, new EventArgs());
+                userInput.SelectComboBoxCube(selection);
+=======
 
+>>>>>>> a6abfb64a901594f596ee4e56cce889629d27138
             }
             else if (table == "AGS_NAVSS_REFOCUS_SCORE_FILTER_PARS")
             {
@@ -276,8 +240,8 @@ namespace OLAP_WindowsForms.App.View
                 DBContext.Service().insinto(connection, transaction, table, columnPK, columnPKName, list);
             }
 
-            // disable fields -> user cannot do changes 
-            // userInput.disable_fields(); // TODO
+            // disable fields -> user cannot do changes
+            userInput.disable_fields();
 
             // close window
             Console.WriteLine("[SUBMIT] finished");
