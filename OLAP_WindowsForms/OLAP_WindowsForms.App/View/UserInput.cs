@@ -21,7 +21,6 @@ namespace OLAP_WindowsForms.App
         public Boolean overrideSchema = false; // true = override existing schema | false = create new schema based on selection
         public String name = "userinput";
         public String description = "";
-        // true = element enabled | false = element disabled
         public Boolean dim_doctor = false;
         public Boolean dim_insurance = false;
         public Boolean dim_drug = false;
@@ -49,10 +48,8 @@ namespace OLAP_WindowsForms.App
         // start Form with Cube Dimension Selection
         public void comboBoxCube_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Console.WriteLine("ComboboxCube: selectIndex " + ComboBoxCube.SelectedIndex.ToString() + " selValue " + ComboBoxCube.SelectedValue.ToString()+" selItem "+ ComboBoxCube.SelectedItem.ToString());
             if (!(ComboBoxCube.SelectedValue.ToString().Equals("System.Data.DataRowView")))
             {
-                //Console.WriteLine(Int32.Parse(ComboBoxCube.SelectedValue.ToString()));
                 disable_dimensions();
                 bmsr_Instantiate();
                 measures_Instantiate();
@@ -385,20 +382,6 @@ namespace OLAP_WindowsForms.App
             {
                 lBox.SelectionMode = SelectionMode.None;
                 DataTable dt = DBContext.Service().GetData(
-                //  "SELECT DIM_PRED_NAME, DIM_PRED_SID " +
-                //  "FROM DW_DIM_PREDICATE " +
-                //  "WHERE LVL_SID = " + lvl_sid
-<<<<<<< HEAD
-                
-                "Select DIM_PRED_NAME, DIM_PRED_SID " +
-                "from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
-                "l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
-=======
-
-                //"Select DIM_PRED_NAME, DIM_PRED_SID " +
-                //"from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
-                //"l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
-
                 "Select DIM_PRED_NAME, DIM_PRED_SID " +
                 "from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and p.dim_pred_expr = 'TRUE' " +
                 "union " +
@@ -406,8 +389,6 @@ namespace OLAP_WindowsForms.App
                 "from dw_dim_predicate p inner " +
                 "join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid +
                 " and l.lvl_sid > 0 and l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
-
->>>>>>> a6abfb64a901594f596ee4e56cce889629d27138
                 DataTable dt2 = dt.Copy();
 
                 lBox.DataSource = dt2;

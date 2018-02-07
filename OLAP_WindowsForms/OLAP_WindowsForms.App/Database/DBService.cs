@@ -35,38 +35,9 @@ namespace OLAP_WindowsForms.App
             DBName = dbName;
         }
 
-
-        // probably old code
-        /* 
-        public DataTable GetAllDataFromTable(string table)
-        {
-
-            try
-            {
-                NpgsqlConnection connection = getConnection();
-                string sqlStmt = "SELECT * FROM " + table;
-                NpgsqlDataAdapter dataAdapter = new NpgsqlDataAdapter(sqlStmt, connection); // adapter for select statements
-
-                // refresh data set
-                ds.Reset();
-                dataAdapter.Fill(ds);
-
-                // refresh data table
-                dt = ds.Tables[0];
-                return dt;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An error occurred: '{0}'", ex);
-                Environment.Exit(0);
-                return null;
-            }
-        }
-        */
         // START --- COMBO ITEM HELPER METHODS
         public DataTable GetData(string table, String column1, String column2)
         {
-
             try
             {
                 NpgsqlConnection connection = getConnection();
@@ -164,6 +135,7 @@ namespace OLAP_WindowsForms.App
                 return Int32.Parse(index);
             }
         }
+
         // Start ------------------------------ LOAD -----------------------------------------------------------------
         public int getKeyfromTable(String table, int keyValue, String keyColumn, String targetColum)
         {
@@ -205,8 +177,6 @@ namespace OLAP_WindowsForms.App
                 return "";
             }
         }
-
-
         // END ------------------------------- LOAD -----------------------------------------------------------------
 
         public NpgsqlConnection getConnection()
@@ -281,9 +251,7 @@ namespace OLAP_WindowsForms.App
                 cnt++;
             }
             command.ExecuteNonQuery();
-            //transaction.Commit();
             Console.WriteLine("Command sucessful");
-            //return command;
         }
 
         //insert into table with known id
@@ -348,41 +316,12 @@ namespace OLAP_WindowsForms.App
                 cnt++;
             }
             command.ExecuteNonQuery();
-            //transaction.Commit();
             Console.WriteLine("Command sucessful");
-            //return command;
         }
-        /*
-            catch (Exception e)
-            {
-                try
-                {
-                    transaction.Rollback();
-                    Console.WriteLine("Transaction rolled back");
-                }
-                catch (SqlException ex)
-                {
-                    if (transaction.Connection != null)
-                    {
-                        Console.WriteLine("An exception of type " + ex.GetType() +
-                        " was encountered while attempting to roll back the transaction.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("something unknown happened");
-                    }
-                }
-                Console.WriteLine("An exception of type " + e.GetType() +
-                " was encountered while inserting the data.");
-                Console.WriteLine("Nothing was written to database.");
-            }
-        }
-        */
+        
         //insert into table -> PK provided as first item in list
         public void insertWithoutPK(NpgsqlConnection connection, NpgsqlTransaction transaction, String table, LinkedList<Insert_item> list)
         {
-         // build command string
-
             NpgsqlCommand command = connection.CreateCommand();
             command.Connection = connection;
             command.Transaction = transaction;
@@ -440,35 +379,9 @@ namespace OLAP_WindowsForms.App
                 cnt++;
             }
             command.ExecuteNonQuery();
-            //transaction.Commit();
             Console.WriteLine("Command sucessful");
-            //return command;
-        }/*
-            catch (Exception e)
-            {
-                try
-                {
-                    transaction.Rollback();
-                    Console.WriteLine("Transaction rolled back");
-                }
-                catch (SqlException ex)
-                {
-                    if (transaction.Connection != null)
-                    {
-                        Console.WriteLine("An exception of type " + ex.GetType() +
-                        " was encountered while attempting to roll back the transaction.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("something unknown happened");
-                    }
-                }
-                Console.WriteLine("An exception of type " + e.GetType() +
-                " was encountered while inserting the data.");
-                Console.WriteLine("Nothing was written to database.");
-            }
         }
-        */
+
         // insert into ags_nass_dim_qual and ags_nass_dim_qual_slice from schema
         public void insertDimQual(NpgsqlConnection connection, NpgsqlTransaction transaction, ComboBox cdw, ComboBox cdw_gl, TextBox tdw, ListBox ldw, int ass_sid, int dim_sid, String defSC, CheckBox dl, CheckBox dn, CheckBox sc, CheckBox gl)
         {
@@ -611,7 +524,6 @@ namespace OLAP_WindowsForms.App
 
             }
         }
-
 
         public void delete(String table, String pk_column, String pk_sid)
         {
