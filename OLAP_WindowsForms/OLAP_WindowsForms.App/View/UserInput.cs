@@ -1446,12 +1446,17 @@ namespace OLAP_WindowsForms.App
         {
             
             Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
-            try { 
+            try {
+                /*
                 selectTable = new SelectTable();
                 selectTable.cube_sid = ComboBoxCube.SelectedValue.ToString();
                 selectTable.tableNameCB = "test";
                 selectTable.setLabe2();
                 selectTable.ShowDialog(this);
+                */
+                UserInput initUserInput = new UserInput(loaded_ags_sid, false, loaded_ass_sid);
+
+                initUserInput.ShowDialog();
             } catch (Exception exx)
             {
                 Console.WriteLine(exx.Message);

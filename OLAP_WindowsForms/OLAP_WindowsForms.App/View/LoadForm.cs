@@ -129,7 +129,8 @@ namespace OLAP_WindowsForms.App.View
                 int assSid = (int) cell.Value;
 
                 UserInput initInput = new UserInput(ags_sid, false, assSid);
-                initInput.load(ags_sid, assSid);
+                initInput.button1.Visible = true;
+                initInput.ShowDialog();
 
             }
         }
