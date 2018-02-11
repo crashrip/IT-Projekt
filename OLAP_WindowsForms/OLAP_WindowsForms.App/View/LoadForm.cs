@@ -107,21 +107,31 @@ namespace OLAP_WindowsForms.App.View
         //Initiate button
         private void button1_Click(object sender, EventArgs e)
         {
+            DataGridViewCell cell = null;
             if (column == 0)
             {
-                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                cell = dataGridView1.Rows[row].Cells[column];
                 Console.WriteLine("column 0: " + cell.Value.ToString());
             }
             if (column == 1)
             {
-                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column-1];
+                cell = dataGridView1.Rows[row].Cells[column-1];
                 Console.WriteLine("column 1: " + cell.Value.ToString());
                 // UserInput uInput = new UserInput();
             }
             if (column == 2)
             {
-                DataGridViewCell cell = dataGridView1.Rows[row].Cells[column-2];
+                cell = dataGridView1.Rows[row].Cells[column-2];
                 Console.WriteLine("column 2: " + cell.Value.ToString());
+            }
+            if(cell != null)
+            {
+                int assSid = (int) cell.Value;
+
+                UserInput initInput = new UserInput(ags_sid, false, assSid);
+                initInput.button1.Visible = true;
+                initInput.ShowDialog();
+
             }
         }
     }
