@@ -29,6 +29,40 @@ namespace OLAP_WindowsForms.App
         public Boolean dim_time = false;
         public Boolean newForm; // true = new Form | false = load old form
 
+        //bools for var Checkboxes
+        public bool bmsr_var = false;
+        public bool filter_var = false;
+
+        public bool time_DL_var = false;
+        public bool time_DN_var = false;
+        public bool time_SC_var = false;
+        public bool time_GL_var = false;
+
+        public bool insurant_DL_var = false;
+        public bool insurant_DN_var = false;
+        public bool insurant_SC_var = false;
+        public bool insurant_GL_var = false;
+                                    
+        public bool medService_DL_var = false;
+        public bool medService_DN_var = false;
+        public bool medService_SC_var = false;
+        public bool medService_GL_var = false;
+
+        public bool drug_DL_var = false;
+        public bool drug_DN_var = false;
+        public bool drug_SC_var = false;
+        public bool drug_GL_var = false;
+
+        public bool doctor_DL_var = false;
+        public bool doctor_DN_var = false;
+        public bool doctor_SC_var = false;
+        public bool doctor_GL_var = false;
+
+        public bool hospital_DL_var = false;
+        public bool hospital_DN_var = false;
+        public bool hospital_SC_var = false;
+        public bool hospital_GL_var = false;
+
         public SelectTable selectTable;
 
         public UserInput(int ags_sid, Boolean newForm, int ass_sid = 0)
@@ -704,7 +738,11 @@ namespace OLAP_WindowsForms.App
                             case 1: // DOCTOR
                                 if (!dlNull)
                                 {
-                                    if (dl_i < 0) doctor_DL.Checked = true;
+                                    if (dl_i < 0)
+                                    {
+                                        doctor_DL.Checked = true;
+                                        doctor_DL_var = true;
+                                    }
                                     if (dl_i > 0)
                                     {
                                         CDW_DOCTOR.SelectedIndex = CDW_DOCTOR.FindString(dl_s);
@@ -716,6 +754,7 @@ namespace OLAP_WindowsForms.App
                                             if (dim_pred_sid < 0)
                                             {
                                                 doctor_SC.Checked = true;
+                                                doctor_SC_var = true;
                                             }
                                             if (dim_pred_sid > 0)
                                             {
@@ -734,6 +773,7 @@ namespace OLAP_WindowsForms.App
                                         if (dim_pred_sid < 0)
                                         {
                                             doctor_SC.Checked = true;
+                                            doctor_SC_var = true;
                                         }
                                     }
                                 }
@@ -742,6 +782,7 @@ namespace OLAP_WindowsForms.App
                                     if (dn_s.Equals(""))
                                     {
                                         doctor_DN.Checked = true;
+                                        doctor_DN_var = true;
                                     }
                                     else
                                     {
@@ -751,7 +792,11 @@ namespace OLAP_WindowsForms.App
                                 }
                                 if (!glNull)
                                 {
-                                    if (gl_i < 0) doctor_GL.Checked = true;
+                                    if (gl_i < 0)
+                                    {
+                                        doctor_GL.Checked = true;
+                                        doctor_GL_var = true;
+                                    }
                                     if (gl_i > 0)
                                     {
                                         CDW_DOCTOR_GL.SelectedIndex = CDW_DOCTOR_GL.FindString(gl_s);
@@ -762,7 +807,11 @@ namespace OLAP_WindowsForms.App
                             case 2: //INSURANT
                                 if (!dlNull)
                                 {
-                                    if (dl_i < 0) insurant_DL.Checked = true;
+                                    if (dl_i < 0)
+                                    {
+                                        insurant_DL.Checked = true;
+                                        insurant_DL_var = true;
+                                    }
                                     if (dl_i > 0)
                                     {
                                         CDW_INSURANT.SelectedIndex = CDW_INSURANT.FindString(dl_s);
@@ -778,6 +827,7 @@ namespace OLAP_WindowsForms.App
                                             {
                                                 Console.WriteLine("variable insurant");
                                                 insurant_SC.Checked = true;
+                                                insurant_SC_var = true;
                                             }
 
                                             if (dim_pred_sid > 0)
@@ -801,6 +851,7 @@ namespace OLAP_WindowsForms.App
                                         {
                                             Console.WriteLine("variable insurant");
                                             insurant_SC.Checked = true;
+                                            insurant_SC_var = true;
                                         }
                                         
                                     }
@@ -810,6 +861,7 @@ namespace OLAP_WindowsForms.App
                                     if (dn_s.Equals(""))
                                     {
                                         insurant_DN.Checked = true;
+                                        insurant_DN_var = true;
                                     }
                                     else
                                     {
@@ -818,14 +870,22 @@ namespace OLAP_WindowsForms.App
                                 }
                                 if (!glNull)
                                 {
-                                    if (gl_i < 0) insurant_GL.Checked = true;
+                                    if (gl_i < 0)
+                                    {
+                                        insurant_GL.Checked = true;
+                                        insurant_GL_var = true;
+                                    }
                                     if (gl_i > 0) CDW_INSURANT_GL.SelectedIndex = CDW_INSURANT_GL.FindString(gl_s);
                                 }
                                 break;
                             case 3: // DRUG
                                 if (!dlNull)
                                 {
-                                    if (dl_i < 0) drug_DL.Checked = true;
+                                    if (dl_i < 0)
+                                    {
+                                        drug_DL.Checked = true;
+                                        drug_DL_var = true;
+                                    }
                                     if (dl_i > 0)
                                     {
                                         CDW_DRUG.SelectedIndex = CDW_DRUG.FindString(dl_s);
@@ -840,6 +900,7 @@ namespace OLAP_WindowsForms.App
                                             {
                                                 Console.WriteLine("variable drug");
                                                 drug_SC.Checked = true;
+                                                drug_SC_var = true;
                                             }
                                             
                                             if (dim_pred_sid > 0){
@@ -861,6 +922,7 @@ namespace OLAP_WindowsForms.App
                                         {
                                             Console.WriteLine("variable drug");
                                             drug_SC.Checked = true;
+                                            drug_SC_var = true;
                                         }
                                     }
                                 }
@@ -869,6 +931,7 @@ namespace OLAP_WindowsForms.App
                                     if (dn_s.Equals(""))
                                     {
                                         drug_DN.Checked = true;
+                                        drug_DN_var = true;
                                     }
                                     else
                                     {
@@ -877,14 +940,22 @@ namespace OLAP_WindowsForms.App
                                 }
                                 if (!glNull)
                                 {
-                                    if (gl_i < 0) drug_GL.Checked = true;
+                                    if (gl_i < 0)
+                                    {
+                                        drug_GL.Checked = true;
+                                        drug_GL_var = true;
+                                    }
                                     if (gl_i > 0) CDW_DRUG_GL.SelectedIndex = CDW_DRUG_GL.FindString(gl_s);
                                 }
                                 break;
                             case 4: // MEDSERVICE
                                 if (!dlNull)
                                 {
-                                    if (dl_i < 0) meds_DL.Checked = true;
+                                    if (dl_i < 0)
+                                    {
+                                        meds_DL.Checked = true;
+                                        medService_DL_var = true;
+                                    }
                                     if (dl_i > 0)
                                     {
                                         CDW_MEDSERVICE.SelectedIndex = CDW_MEDSERVICE.FindString(dl_s);
@@ -896,6 +967,7 @@ namespace OLAP_WindowsForms.App
                                             if (dim_pred_sid < 0)
                                             {
                                                 meds_SC.Checked = true;
+                                                medService_SC_var = true;
                                             }
 
                                             if (dim_pred_sid > 0)
@@ -914,6 +986,7 @@ namespace OLAP_WindowsForms.App
                                         if (dim_pred_sid < 0)
                                         {
                                             meds_SC.Checked = true;
+                                            medService_SC_var = true;
                                         }
                                     }
                                 }
@@ -922,6 +995,7 @@ namespace OLAP_WindowsForms.App
                                     if (dn_s.Equals(""))
                                     {
                                         meds_DN.Checked = true;
+                                        medService_DN_var = true;
                                     }
                                     else
                                     {
@@ -930,14 +1004,22 @@ namespace OLAP_WindowsForms.App
                                 }
                                 if (!glNull)
                                 {
-                                    if (gl_i < 0) meds_GL.Checked = true;
+                                    if (gl_i < 0)
+                                    {
+                                        meds_GL.Checked = true;
+                                        medService_GL_var = true;
+                                    }
                                     if (gl_i > 0) CDW_MEDSERVICE_GL.SelectedIndex = CDW_MEDSERVICE_GL.FindString(gl_s);
                                 }
                                 break;
                             case 5: // HOSPITAL
                                 if (!dlNull)
                                 {
-                                    if (dl_i < 0) hospital_DL.Checked = true;
+                                    if (dl_i < 0)
+                                    {
+                                        hospital_DL.Checked = true;
+                                        hospital_DL_var = true;
+                                    }
                                     if (dl_i > 0)
                                     {
                                         CDW_HOSPITAL.SelectedIndex = CDW_HOSPITAL.FindString(dl_s);
@@ -950,6 +1032,7 @@ namespace OLAP_WindowsForms.App
                                             if (dim_pred_sid < 0)
                                             {
                                                 hospital_SC.Checked = true;
+                                                hospital_SC_var = true;
                                             }
 
                                             if (dim_pred_sid > 0)
@@ -968,6 +1051,7 @@ namespace OLAP_WindowsForms.App
                                         if (dim_pred_sid < 0)
                                         {
                                             hospital_SC.Checked = true;
+                                            hospital_SC_var = true;
                                         }
                                     }
                                 }
@@ -976,6 +1060,7 @@ namespace OLAP_WindowsForms.App
                                     if (dn_s.Equals(""))
                                     {
                                         hospital_DN.Checked = true;
+                                        hospital_DN_var = true;
                                     }
                                     else
                                     {
@@ -984,14 +1069,22 @@ namespace OLAP_WindowsForms.App
                                 }
                                 if (!glNull)
                                 {
-                                    if (gl_i < 0) hospital_GL.Checked = true;
+                                    if (gl_i < 0)
+                                    {
+                                        hospital_GL.Checked = true;
+                                        hospital_GL_var = true;
+                                    }
                                     if (gl_i > 0) CDW_HOSPITAL_GL.SelectedIndex = CDW_HOSPITAL_GL.FindString(gl_s);
                                 }
                                 break;
                             case 6: //TIME
                                 if (!dlNull)
                                 {
-                                    if (dl_i < 0) time_DL.Checked = true;
+                                    if (dl_i < 0)
+                                    {
+                                        time_DL.Checked = true;
+                                        time_DL_var = true;
+                                    }
                                     if (dl_i > 0)
                                     {
                                         CDW_TIME.SelectedIndex = CDW_TIME.FindString(dl_s);
@@ -1004,6 +1097,7 @@ namespace OLAP_WindowsForms.App
                                             if (dim_pred_sid < 0)
                                             {
                                                 time_SC.Checked = true;
+                                                time_SC_var = true;
                                             }
 
                                             if (dim_pred_sid > 0)
@@ -1022,6 +1116,7 @@ namespace OLAP_WindowsForms.App
                                         if (dim_pred_sid < 0)
                                         {
                                             time_SC.Checked = true;
+                                            time_SC_var = true;
                                         }
                                     }
                                 }
@@ -1030,6 +1125,7 @@ namespace OLAP_WindowsForms.App
                                     if (dn_s.Equals(""))
                                     {
                                         time_DN.Checked = true;
+                                        time_DN_var = true;
                                     }
                                     else
                                     {
@@ -1038,7 +1134,11 @@ namespace OLAP_WindowsForms.App
                                 }
                                 if (!glNull)
                                 {
-                                    if (gl_i < 0) time_GL.Checked = true;
+                                    if (gl_i < 0)
+                                    {
+                                        time_GL.Checked = true;
+                                        time_GL_var = true;
+                                    }
                                     if (gl_i > 0) CDW_TIME_GL.SelectedIndex = CDW_TIME_GL.FindString(gl_s);
                                 }
                                 break;
@@ -1061,6 +1161,7 @@ namespace OLAP_WindowsForms.App
                         if (bmsr_int < 0)
                         {
                             bmsr_variable.Checked = true;
+                            bmsr_var = true;
                             LDW_BMSR.SelectedIndex = -1;
                         }
                         else
@@ -1105,6 +1206,7 @@ namespace OLAP_WindowsForms.App
                         if (filter_int < 0)
                         {
                             filter_variable.Checked = true;
+                            filter_var = true;
                         }
                         else
                         {
@@ -1352,6 +1454,9 @@ namespace OLAP_WindowsForms.App
                 CDW_TIME_GL.Enabled = true;
                 CDW_TIME_SelectedIndexChanged(CDW_TIME, new EventArgs());
             }
+
+            Console.WriteLine("time_DL_variable set to: " + time_DL.Checked);
+            time_DL_var = time_DL.Checked;
         }
         public void insurant_DL_CheckedChanged(object sender, EventArgs e)
         {
@@ -1366,6 +1471,9 @@ namespace OLAP_WindowsForms.App
                 CDW_INSURANT_GL.Enabled = true;
                 CDW_INSURANT_SelectedIndexChanged(CDW_INSURANT, new EventArgs());
             }
+
+            Console.WriteLine("insurant_DL_variable set to: " + insurant_DL.Checked);
+            insurant_DL_var = insurant_DL.Checked;
         }
         public void meds_DL_CheckedChanged(object sender, EventArgs e)
         {
@@ -1380,6 +1488,9 @@ namespace OLAP_WindowsForms.App
                 CDW_MEDSERVICE_GL.Enabled = true;
                 CDW_MEDSERVICE_SelectedIndexChanged(CDW_MEDSERVICE, new EventArgs());
             }
+
+            Console.WriteLine("meds_DL_variable set to: " + meds_DL.Checked);
+            medService_DL_var = meds_DL.Checked;
         }
         public void hospital_DL_CheckedChanged(object sender, EventArgs e)
         {
@@ -1394,6 +1505,9 @@ namespace OLAP_WindowsForms.App
                 CDW_HOSPITAL_GL.Enabled = true;
                 CDW_HOSPITAL_SelectedIndexChanged(CDW_HOSPITAL, new EventArgs());
             }
+
+            Console.WriteLine("hospital_DL_variable set to: " + hospital_DL.Checked);
+            hospital_DL_var = hospital_DL.Checked;
         }
         public void doctor_DL_CheckedChanged(object sender, EventArgs e)
         {
@@ -1408,6 +1522,9 @@ namespace OLAP_WindowsForms.App
                 CDW_DOCTOR_GL.Enabled = true;
                 CDW_DOCTOR_SelectedIndexChanged(CDW_DOCTOR, new EventArgs());
             }
+
+            Console.WriteLine("doctor_DL_variable set to: " + doctor_DL.Checked);
+            doctor_DL_var = doctor_DL.Checked;
         }
         public void drug_DL_CheckedChanged(object sender, EventArgs e)
         {
@@ -1422,19 +1539,15 @@ namespace OLAP_WindowsForms.App
                 CDW_DRUG_GL.Enabled = true;
                 CDW_DRUG_SelectedIndexChanged(CDW_DRUG, new EventArgs());
             }
+
+            Console.WriteLine("drug_DL_variable set to: " + drug_DL.Checked);
+            drug_DL_var = drug_DL.Checked;
         }
         // END---------------------- disable GL if DL is variable------------------------------
 
         public int getAssSid()
         {
             return this.loaded_ass_sid;
-        }
-
-        public void bmsr_variable_CheckedChanged(object sender, EventArgs e)
-        {
-            Console.WriteLine("variable 1 " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
-            //Console.WriteLine("variable 2 " + ((Int32.Parse(ComboBoxCube.SelectedIndex.ToString())) * -1));
-            
         }
 
         public void LDW_MEASURES_Click(object sender, EventArgs e)
@@ -1446,16 +1559,144 @@ namespace OLAP_WindowsForms.App
         {
             
             Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
-            try { 
+            try {
+                /*
                 selectTable = new SelectTable();
                 selectTable.cube_sid = ComboBoxCube.SelectedValue.ToString();
                 selectTable.tableNameCB = "test";
                 selectTable.setLabe2();
                 selectTable.ShowDialog(this);
+                */
+                UserInput initUserInput = new UserInput(loaded_ags_sid, false, loaded_ass_sid);
+
+                initUserInput.ShowDialog();
             } catch (Exception exx)
             {
                 Console.WriteLine(exx.Message);
             }
+        }
+
+        public void bmsr_variable_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("variable 1 " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
+            //Console.WriteLine("variable 2 " + ((Int32.Parse(ComboBoxCube.SelectedIndex.ToString())) * -1));
+            Console.WriteLine("bmsr_variable set to: " + bmsr_variable.Checked);
+            bmsr_var = bmsr_variable.Checked;
+
+        }
+
+        private void filter_variable_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("filter_variable set to: " + filter_variable.Checked);
+            filter_var = filter_variable.Checked;
+        }
+
+        private void time_DN_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("time_DN_variable set to: " + time_DN.Checked);
+            time_DN_var = time_DN.Checked;
+        }
+
+        private void time_SC_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("time_SC_variable set to: " + time_SC.Checked);
+            time_SC_var = time_SC.Checked;
+        }
+
+        private void time_GL_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("time_GL_variable set to: " + time_GL.Checked);
+            time_GL_var = time_GL.Checked;
+        }
+
+        private void insurant_DN_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("insurant_DN_variable set to: " + insurant_DN.Checked);
+            insurant_DN_var = insurant_DN.Checked;
+        }
+
+        private void insurant_SC_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("insurant_SC_variable set to: " + insurant_SC.Checked);
+            insurant_SC_var = insurant_SC.Checked;
+        }
+
+        private void insurant_GL_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("insurant_GL_variable set to: " + insurant_GL.Checked);
+            insurant_GL_var = insurant_GL.Checked;
+        }
+
+        private void meds_DN_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("meds_DN_variable set to: " + meds_DN.Checked);
+            medService_DN_var = meds_DN.Checked;
+        }
+
+        private void meds_SC_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("meds_SC_variable set to: " + meds_SC.Checked);
+            medService_SC_var = meds_SC.Checked;
+        }
+
+        private void meds_GL_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("meds_GL_variable set to: " + meds_GL.Checked);
+            medService_GL_var = meds_GL.Checked;
+        }
+
+        private void drug_DN_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("drug_DN_variable set to: " + drug_DN.Checked);
+            drug_DN_var = drug_DN.Checked;
+        }
+
+        private void drug_SC_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("drug_SC_variable set to: " + drug_SC.Checked);
+            drug_SC_var = drug_SC.Checked;
+        }
+
+        private void drug_GL_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("drug_GL_variable set to: " + drug_GL.Checked);
+            drug_GL_var = drug_GL.Checked;
+        }
+
+        private void doctor_DN_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("doctor_DN_variable set to: " + doctor_DN.Checked);
+            doctor_DN_var = doctor_DN.Checked;
+        }
+
+        private void doctor_SC_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("doctor_SC_variable set to: " + doctor_SC.Checked);
+            doctor_SC_var = doctor_SC.Checked;
+        }
+
+        private void doctor_GL_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("doctor_GL_variable set to: " + doctor_GL.Checked);
+            doctor_GL_var = doctor_GL.Checked;
+        }
+
+        private void hospital_DN_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("hospital_DN_variable set to: " + hospital_DN.Checked);
+            hospital_DN_var = hospital_DN.Checked;
+        }
+
+        private void hospital_SC_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("hospital_SC_variable set to: " + hospital_SC.Checked);
+            hospital_SC_var = hospital_SC.Checked;
+        }
+
+        private void hospital_GL_CheckedChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("hospital_GL_variable set to: " + hospital_GL.Checked);
+            hospital_GL_var = hospital_GL.Checked;
         }
     }
 }

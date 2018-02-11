@@ -21,8 +21,7 @@ namespace OLAP_WindowsForms.App
             }
             catch (Exception e)
             {
-                // wrong login data
-                Console.WriteLine("Wrong login data: " + e.Data);
+                Console.WriteLine("There has been an error: " + e.Message);
             }
         }
     }

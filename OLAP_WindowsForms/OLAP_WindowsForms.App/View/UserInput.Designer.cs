@@ -161,7 +161,7 @@ namespace OLAP_WindowsForms.App
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(50, 13);
             this.label5.TabIndex = 9;
-            this.label5.Text = "Mesures:";
+            this.label5.Text = "Measures:";
             // 
             // LDW_BMSR
             // 
@@ -551,6 +551,7 @@ namespace OLAP_WindowsForms.App
             this.time_DN.TabIndex = 62;
             this.time_DN.Text = "variable";
             this.time_DN.UseVisualStyleBackColor = true;
+            this.time_DN.CheckedChanged += new System.EventHandler(this.time_DN_CheckedChanged);
             // 
             // time_SC
             // 
@@ -561,6 +562,7 @@ namespace OLAP_WindowsForms.App
             this.time_SC.TabIndex = 63;
             this.time_SC.Text = "variable";
             this.time_SC.UseVisualStyleBackColor = true;
+            this.time_SC.CheckedChanged += new System.EventHandler(this.time_SC_CheckedChanged);
             // 
             // time_GL
             // 
@@ -571,6 +573,7 @@ namespace OLAP_WindowsForms.App
             this.time_GL.TabIndex = 64;
             this.time_GL.Text = "variable";
             this.time_GL.UseVisualStyleBackColor = true;
+            this.time_GL.CheckedChanged += new System.EventHandler(this.time_GL_CheckedChanged);
             // 
             // insurant_GL
             // 
@@ -581,6 +584,7 @@ namespace OLAP_WindowsForms.App
             this.insurant_GL.TabIndex = 68;
             this.insurant_GL.Text = "variable";
             this.insurant_GL.UseVisualStyleBackColor = true;
+            this.insurant_GL.CheckedChanged += new System.EventHandler(this.insurant_GL_CheckedChanged);
             // 
             // insurant_SC
             // 
@@ -591,6 +595,7 @@ namespace OLAP_WindowsForms.App
             this.insurant_SC.TabIndex = 67;
             this.insurant_SC.Text = "variable";
             this.insurant_SC.UseVisualStyleBackColor = true;
+            this.insurant_SC.CheckedChanged += new System.EventHandler(this.insurant_SC_CheckedChanged);
             // 
             // insurant_DN
             // 
@@ -601,6 +606,7 @@ namespace OLAP_WindowsForms.App
             this.insurant_DN.TabIndex = 66;
             this.insurant_DN.Text = "variable";
             this.insurant_DN.UseVisualStyleBackColor = true;
+            this.insurant_DN.CheckedChanged += new System.EventHandler(this.insurant_DN_CheckedChanged);
             // 
             // insurant_DL
             // 
@@ -622,6 +628,7 @@ namespace OLAP_WindowsForms.App
             this.drug_GL.TabIndex = 72;
             this.drug_GL.Text = "variable";
             this.drug_GL.UseVisualStyleBackColor = true;
+            this.drug_GL.CheckedChanged += new System.EventHandler(this.drug_GL_CheckedChanged);
             // 
             // drug_SC
             // 
@@ -632,6 +639,7 @@ namespace OLAP_WindowsForms.App
             this.drug_SC.TabIndex = 71;
             this.drug_SC.Text = "variable";
             this.drug_SC.UseVisualStyleBackColor = true;
+            this.drug_SC.CheckedChanged += new System.EventHandler(this.drug_SC_CheckedChanged);
             // 
             // drug_DN
             // 
@@ -642,6 +650,7 @@ namespace OLAP_WindowsForms.App
             this.drug_DN.TabIndex = 70;
             this.drug_DN.Text = "variable";
             this.drug_DN.UseVisualStyleBackColor = true;
+            this.drug_DN.CheckedChanged += new System.EventHandler(this.drug_DN_CheckedChanged);
             // 
             // drug_DL
             // 
@@ -663,6 +672,7 @@ namespace OLAP_WindowsForms.App
             this.doctor_GL.TabIndex = 76;
             this.doctor_GL.Text = "variable";
             this.doctor_GL.UseVisualStyleBackColor = true;
+            this.doctor_GL.CheckedChanged += new System.EventHandler(this.doctor_GL_CheckedChanged);
             // 
             // doctor_SC
             // 
@@ -673,6 +683,7 @@ namespace OLAP_WindowsForms.App
             this.doctor_SC.TabIndex = 75;
             this.doctor_SC.Text = "variable";
             this.doctor_SC.UseVisualStyleBackColor = true;
+            this.doctor_SC.CheckedChanged += new System.EventHandler(this.doctor_SC_CheckedChanged);
             // 
             // doctor_DN
             // 
@@ -683,6 +694,7 @@ namespace OLAP_WindowsForms.App
             this.doctor_DN.TabIndex = 74;
             this.doctor_DN.Text = "variable";
             this.doctor_DN.UseVisualStyleBackColor = true;
+            this.doctor_DN.CheckedChanged += new System.EventHandler(this.doctor_DN_CheckedChanged);
             // 
             // doctor_DL
             // 
@@ -722,6 +734,7 @@ namespace OLAP_WindowsForms.App
             this.filter_variable.TabIndex = 79;
             this.filter_variable.Text = "variable";
             this.filter_variable.UseVisualStyleBackColor = true;
+            this.filter_variable.CheckedChanged += new System.EventHandler(this.filter_variable_CheckedChanged);
             // 
             // button_save
             // 
@@ -762,6 +775,7 @@ namespace OLAP_WindowsForms.App
             this.hospital_GL.TabIndex = 108;
             this.hospital_GL.Text = "variable";
             this.hospital_GL.UseVisualStyleBackColor = true;
+            this.hospital_GL.CheckedChanged += new System.EventHandler(this.hospital_GL_CheckedChanged);
             // 
             // hospital_SC
             // 
@@ -772,6 +786,7 @@ namespace OLAP_WindowsForms.App
             this.hospital_SC.TabIndex = 107;
             this.hospital_SC.Text = "variable";
             this.hospital_SC.UseVisualStyleBackColor = true;
+            this.hospital_SC.CheckedChanged += new System.EventHandler(this.hospital_SC_CheckedChanged);
             // 
             // hospital_DN
             // 
@@ -782,6 +797,7 @@ namespace OLAP_WindowsForms.App
             this.hospital_DN.TabIndex = 106;
             this.hospital_DN.Text = "variable";
             this.hospital_DN.UseVisualStyleBackColor = true;
+            this.hospital_DN.CheckedChanged += new System.EventHandler(this.hospital_DN_CheckedChanged);
             // 
             // hospital_DL
             // 
@@ -803,6 +819,7 @@ namespace OLAP_WindowsForms.App
             this.meds_GL.TabIndex = 104;
             this.meds_GL.Text = "variable";
             this.meds_GL.UseVisualStyleBackColor = true;
+            this.meds_GL.CheckedChanged += new System.EventHandler(this.meds_GL_CheckedChanged);
             // 
             // meds_SC
             // 
@@ -813,6 +830,7 @@ namespace OLAP_WindowsForms.App
             this.meds_SC.TabIndex = 103;
             this.meds_SC.Text = "variable";
             this.meds_SC.UseVisualStyleBackColor = true;
+            this.meds_SC.CheckedChanged += new System.EventHandler(this.meds_SC_CheckedChanged);
             // 
             // meds_DN
             // 
@@ -823,6 +841,7 @@ namespace OLAP_WindowsForms.App
             this.meds_DN.TabIndex = 102;
             this.meds_DN.Text = "variable";
             this.meds_DN.UseVisualStyleBackColor = true;
+            this.meds_DN.CheckedChanged += new System.EventHandler(this.meds_DN_CheckedChanged);
             // 
             // meds_DL
             // 
@@ -1007,6 +1026,7 @@ namespace OLAP_WindowsForms.App
             this.button1.TabIndex = 109;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // UserInput
