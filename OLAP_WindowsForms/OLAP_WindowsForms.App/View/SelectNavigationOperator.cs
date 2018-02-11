@@ -1,12 +1,7 @@
 ﻿using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace OLAP_WindowsForms.App.View
@@ -20,8 +15,9 @@ namespace OLAP_WindowsForms.App.View
         private UserInput userInput;
         private ComboBox changed_ComboBox;
         private TextBox changed_TextBox;
-        private string agsNavstepSchema, selection;
+        private string agsNavstepSchema, selection, schema;
         private int dim_sid;
+        private bool isNewSchema;
 
         // saves the navigation operators and corresponding tables as strings
         private Dictionary<string, string> AGS_NAVSTEP_SCHEMA_dictionary = new Dictionary<string, string>();
@@ -56,6 +52,7 @@ namespace OLAP_WindowsForms.App.View
             ComboBox_Selection3.Visible = false;
             ComboBox_Selection4.Visible = false;
             ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = false;
+            TextBox_newSchema.Visible = false;
             label_DN.Visible = false;
             textBox_DN.Visible = false;
 
@@ -264,7 +261,8 @@ namespace OLAP_WindowsForms.App.View
                 agsNavstepSchema == "refocusMeasure" ||
                 agsNavstepSchema == "refocusAMsrFilter")
             {
-                // do nothing
+                ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
+                TextBox_newSchema.Visible = true;
             }
             else if (agsNavstepSchema == "drillAcrossToCube")
             {
@@ -321,6 +319,7 @@ namespace OLAP_WindowsForms.App.View
             {
                 // enable ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
                 ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
+                TextBox_newSchema.Visible = true;
             }
         }
 
@@ -351,17 +350,22 @@ namespace OLAP_WindowsForms.App.View
         private void ComboBox_Selection4_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
+            TextBox_newSchema.Visible = true;
         }
 
         // on selection of ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
         private void ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // get schema
-            string schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
-
-            // not initialized error
-            if (schema.Equals("System.Data.DataRowView")) return;
-            if (ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedValue.ToString().Equals("System.Data.DataRowView")) return;
+            // existing or new schema
+            if (TextBox_newSchema.Text.Equals("new Schema") || TextBox_newSchema.Text.Equals(""))
+            {
+                isNewSchema = false;
+                schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
+            }
+            else
+            {
+                isNewSchema = true;
+            }
 
             Console.WriteLine("[ComboBox_Selection4_SelectedIndexChanged] ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA: " + schema);
         }
@@ -382,6 +386,50 @@ namespace OLAP_WindowsForms.App.View
 
             // create a list of items
             LinkedList<Insert_item> list = new LinkedList<Insert_item>();
+
+            // get ass_sid_target
+            if (ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedValue.ToString().Equals("System.Data.DataRowView"))
+            {
+                Console.WriteLine("[buttonSubmit_Click] Error: AGS_ANALYSIS_SITUATION_SCHEMA not selected");
+                return;
+            }
+            int ass_sid_target = Int32.Parse(ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedValue.ToString());
+
+            // insert into AGS_ANALYSIS_SITUATION_SCHEMA
+            if (isNewSchema)
+            {
+                list.AddLast(new Insert_item("ASS_NAME", TextBox_newSchema.Text));
+                list.AddLast(new Insert_item("ASS_DESCRIPTION", ""));
+                list.AddLast(new Insert_item("AGS_SID", userInput.loaded_ags_sid));
+                list.AddLast(new Insert_item("ASS_POS_X", 0));
+                list.AddLast(new Insert_item("ASS_POS_Y", 0));
+
+                Console.WriteLine("[SUBMIT] calling function insinto(" + connection + ", " + transaction + ", AGS_ANALYSIS_SITUATION_SCHEMA, ASS_SID, " + list + ")");
+                Console.WriteLine("[SUBMIT] values: {0}, {1}, {2}, 0, 0", TextBox_newSchema.Text, "", userInput.loaded_ags_sid);
+                DBContext.Service().insinto(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", list);
+
+                // reset list
+                list = new LinkedList<Insert_item>();
+            }
+
+            // insert into AGS_NAVSTEP_SCHEMA
+            list.AddLast(new Insert_item("AGS_SID", userInput.loaded_ags_sid));
+            list.AddLast(new Insert_item("ASS_SID_SOURCE", userInput.loaded_ass_sid));
+            list.AddLast(new Insert_item("ASS_SID_TARGET", ass_sid_target));
+            list.AddLast(new Insert_item("NAVSS_OPNAME", agsNavstepSchema));
+            list.AddLast(new Insert_item("NAVSS_GRD_EXPR", null));
+            list.AddLast(new Insert_item("NAVSS_USED_IN_CMPNAV", 0));
+            list.AddLast(new Insert_item("NAVSS_POS_X", 0));
+            list.AddLast(new Insert_item("NAVSS_POS_Y", 0));
+            list.AddLast(new Insert_item("NAVSS_POS_GRD_X", 0));
+            list.AddLast(new Insert_item("NAVSS_POS_GRD_Y", 0));
+            
+            Console.WriteLine("[SUBMIT] calling function insinto(" + connection + ", " + transaction + ", AGS_NAVSTEP_SCHEMA, NAVSS_SID, " + list + ")");
+            Console.WriteLine("[SUBMIT] values: {0}, {1}, {2}, {3}, null, 0, 0, 0, 0, 0", userInput.loaded_ags_sid, userInput.loaded_ass_sid, ass_sid_target, agsNavstepSchema);
+            DBContext.Service().insinto(connection, transaction, "AGS_NAVSTEP_SCHEMA", "NAVSS_SID", list);
+
+            // reset list
+            list = new LinkedList<Insert_item>();
 
             // START insertion
             if (table == "AGS_NAVSS_DRILL_DOWN_TO_LEVEL" ||
@@ -437,7 +485,7 @@ namespace OLAP_WindowsForms.App.View
                 Console.WriteLine("[buttonSubmit_Click] " + selection);
                 userInput.ComboBoxCube.SelectedIndex = userInput.ComboBoxCube.FindString(selection);
                 userInput.comboBoxCube_SelectedIndexChanged(userInput.ComboBoxCube, new EventArgs());
-                userInput.SelectComboBoxCube(selection);
+                userInput.ComboBoxCube.SelectedValue = selection;
 
                 // insert into operator table
                 Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", " + table + ", NAVSS_SID, " + list + ")");
@@ -449,12 +497,6 @@ namespace OLAP_WindowsForms.App.View
                 Console.WriteLine("[buttonSubmit_Click] error");
                 this.Close();
             }
-
-            // TODO
-            // insert into AGS_NAVSTEP_SCHEMA
-            //list = new LinkedList<Insert_item>();
-            //Console.WriteLine("[SUBMIT] calling function insinto(" + connection + ", " + transaction + ", AGS_NAVSTEP_SCHEMA, NAVSS_SID, " + list + ")");
-            //DBContext.Service().insinto(connection, transaction, "AGS_NAVSTEP_SCHEMA", "NAVSS_SID", list);
 
             // transaction complete
             transaction.Commit();

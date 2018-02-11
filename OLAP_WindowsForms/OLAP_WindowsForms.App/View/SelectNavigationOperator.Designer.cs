@@ -38,6 +38,7 @@
             this.label_DN = new System.Windows.Forms.Label();
             this.ComboBox_Selection3 = new System.Windows.Forms.ComboBox();
             this.ComboBox_Selection4 = new System.Windows.Forms.ComboBox();
+            this.TextBox_newSchema = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // ComboBox_AgsNavstepSchema
@@ -95,10 +96,11 @@
             // 
             // ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
             // 
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.FormattingEnabled = true;
             this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Location = new System.Drawing.Point(41, 349);
             this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Name = "ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA";
-            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Size = new System.Drawing.Size(214, 24);
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Size = new System.Drawing.Size(108, 24);
             this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.TabIndex = 11;
             this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = false;
             this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedIndexChanged += new System.EventHandler(this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA_SelectedIndexChanged);
@@ -143,11 +145,21 @@
             this.ComboBox_Selection4.Visible = false;
             this.ComboBox_Selection4.SelectedIndexChanged += new System.EventHandler(this.ComboBox_Selection4_SelectedIndexChanged);
             // 
+            // TextBox_newSchema
+            // 
+            this.TextBox_newSchema.Location = new System.Drawing.Point(155, 349);
+            this.TextBox_newSchema.Name = "TextBox_newSchema";
+            this.TextBox_newSchema.Size = new System.Drawing.Size(100, 22);
+            this.TextBox_newSchema.TabIndex = 16;
+            this.TextBox_newSchema.Text = "new Schema";
+            this.TextBox_newSchema.Visible = false;
+            // 
             // SelectNavigationOperator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(304, 482);
+            this.Controls.Add(this.TextBox_newSchema);
             this.Controls.Add(this.ComboBox_Selection4);
             this.Controls.Add(this.ComboBox_Selection3);
             this.Controls.Add(this.label_DN);
@@ -177,5 +189,6 @@
         private System.Windows.Forms.Label label_DN;
         private System.Windows.Forms.ComboBox ComboBox_Selection3;
         private System.Windows.Forms.ComboBox ComboBox_Selection4;
+        private System.Windows.Forms.TextBox TextBox_newSchema;
     }
 }
