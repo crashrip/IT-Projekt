@@ -161,7 +161,7 @@ namespace OLAP_WindowsForms.App
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(50, 13);
             this.label5.TabIndex = 9;
-            this.label5.Text = "Mesures:";
+            this.label5.Text = "Measures:";
             // 
             // LDW_BMSR
             // 
