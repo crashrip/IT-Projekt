@@ -16,3 +16,5 @@ OLAP_WindowsForms/OLAP_WindowsForms.App/obj/Debug/OLAP_WindowsForms.App.pdb
 *.pdb
 *.Cache
 OLAP_WindowsForms/.vs/OLAP_WindowsForms/v15/.suo
+OLAP_WindowsForms/.vs/OLAP_WindowsForms/v15/sqlite3/storage.ide
+OLAP_WindowsForms/.vs/OLAP_WindowsForms/v15/.suo
