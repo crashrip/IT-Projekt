@@ -15,6 +15,8 @@ namespace OLAP_WindowsForms.App.View
         private UserInput userInput;
         private ComboBox changed_ComboBox;
         private TextBox changed_TextBox;
+        private ListBox changed_ListBox;
+
         private string agsNavstepSchema, selection, schema;
         private int dim_sid;
         private bool isNewSchema;
@@ -238,12 +240,12 @@ namespace OLAP_WindowsForms.App.View
 
                 // find combobox to copy
                 int lvl_sid = 0;
-                if (selection == "Time") lvl_sid = Int32.Parse(userInput.CDW_TIME.SelectedValue.ToString());
-                else if (selection == "Insurant") lvl_sid = Int32.Parse(userInput.CDW_INSURANT.SelectedValue.ToString());
-                else if (selection == "MedService") lvl_sid = Int32.Parse(userInput.CDW_MEDSERVICE.SelectedValue.ToString());
-                else if (selection == "Drug") lvl_sid = Int32.Parse(userInput.CDW_DRUG.SelectedValue.ToString());
-                else if (selection == "Doctor") lvl_sid = Int32.Parse(userInput.CDW_DOCTOR.SelectedValue.ToString());
-                else if (selection == "Hospital") lvl_sid = Int32.Parse(userInput.CDW_HOSPITAL.SelectedValue.ToString());
+                if (selection == "Time") { lvl_sid = Int32.Parse(userInput.CDW_TIME.SelectedValue.ToString()); changed_ListBox = userInput.LDW_TIME; }
+                else if (selection == "Insurant") { lvl_sid = Int32.Parse(userInput.CDW_INSURANT.SelectedValue.ToString()); changed_ListBox = userInput.LDW_INSURANT; }
+                else if (selection == "MedService") { lvl_sid = Int32.Parse(userInput.CDW_MEDSERVICE.SelectedValue.ToString()); changed_ListBox = userInput.LDW_MEDSERVICE; }
+                else if (selection == "Drug") { lvl_sid = Int32.Parse(userInput.CDW_DRUG.SelectedValue.ToString()); changed_ListBox = userInput.LDW_DRUG; }
+                else if (selection == "Doctor") { lvl_sid = Int32.Parse(userInput.CDW_DOCTOR.SelectedValue.ToString()); changed_ListBox = userInput.LDW_DOCTOR; }
+                else if (selection == "Hospital") { lvl_sid = Int32.Parse(userInput.CDW_HOSPITAL.SelectedValue.ToString()); changed_ListBox = userInput.LDW_HOSPITAL; }
                 else return;
 
                 DataTable dt = DBContext.Service().GetData(
@@ -257,10 +259,24 @@ namespace OLAP_WindowsForms.App.View
                 ComboBox_Selection2.DisplayMember = "DIM_PRED_NAME";
                 ComboBox_Selection2.ValueMember = "DIM_PRED_SID";
             }
-            else if (agsNavstepSchema == "refocusBMsrCond" ||
-                agsNavstepSchema == "refocusMeasure" ||
-                agsNavstepSchema == "refocusAMsrFilter")
+            else if (agsNavstepSchema == "refocusBMsrCond")
             {
+                changed_ListBox = userInput.LDW_BMSR;                
+
+                ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
+                TextBox_newSchema.Visible = true;
+            }
+            else if (agsNavstepSchema == "refocusMeasure")
+            {
+                changed_ListBox = userInput.LDW_MEASURES;
+
+                ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
+                TextBox_newSchema.Visible = true;
+            }
+            else if (agsNavstepSchema == "refocusAMsrFilter")
+            {
+                changed_ListBox = userInput.LDW_FILTER;
+
                 ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
                 TextBox_newSchema.Visible = true;
             }
@@ -356,17 +372,7 @@ namespace OLAP_WindowsForms.App.View
         // on selection of ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
         private void ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // existing or new schema
-            if (TextBox_newSchema.Text.Equals("new Schema") || TextBox_newSchema.Text.Equals(""))
-            {
-                isNewSchema = false;
-                schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
-            }
-            else
-            {
-                isNewSchema = true;
-            }
-
+            schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
             Console.WriteLine("[ComboBox_Selection4_SelectedIndexChanged] ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA: " + schema);
         }
 
@@ -394,6 +400,17 @@ namespace OLAP_WindowsForms.App.View
                 return;
             }
             int ass_sid_target = Int32.Parse(ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedValue.ToString());
+
+            // existing or new schema
+            if (TextBox_newSchema.Text.Equals("new Schema") || TextBox_newSchema.Text.Equals(""))
+            {
+                isNewSchema = false;
+                schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
+            }
+            else
+            {
+                isNewSchema = true;
+            }
 
             // insert into AGS_ANALYSIS_SITUATION_SCHEMA
             if (isNewSchema)
@@ -457,43 +474,74 @@ namespace OLAP_WindowsForms.App.View
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
                 changed_ComboBox.SelectedIndex = changed_ComboBox.FindString(ComboBox_Selection2.Text);
-
-                // TODO
+                changed_TextBox.Text = textBox_DN.Text;
             }
             else if (table == "AGS_NAVSS_REFOCUS_SLICE_COND")
             {
-                // TODO
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection.SelectedText: " + ComboBox_Selection.Text);
+
+                //insert NAVSS_SID, DIM_SID
+                list.AddLast(new Insert_item("DIM_SID", dim_sid));
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+
+                // change UserInput
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
+                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection2.SelectedValue.ToString()), true);
             }
             else if (table == "AGS_NAVSS_REFOCUS_BMSR_COND_PARS")
             {
-                // TODO
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection.SelectedText: " + ComboBox_Selection.SelectedValue.ToString());
+
+                //insert NAVSS_SID, BMSR_PRED_SID
+                list.AddLast(new Insert_item("BMSR_PRED_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())));
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+
+                // change UserInput
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
+                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection.SelectedValue.ToString()), true);
             }
             else if (table == "AGS_NAVSS_REFOCUS_MEASURE_PARS")
             {
-                // TODO
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection.SelectedText: " + ComboBox_Selection.SelectedValue.ToString());
+
+                //insert NAVSS_SID, DAMSR_SID
+                list.AddLast(new Insert_item("DAMSR_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())));
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+
+                // change UserInput
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
+                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection.SelectedValue.ToString()), true);
             }
             else if (table == "AGS_NAVSS_REFOCUS_AMSR_FILTER_PARS")
             {
-                // TODO
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection.SelectedText: " + ComboBox_Selection.SelectedValue.ToString());
+
+                //insert NAVSS_SID, AMSR_PRED_SID
+                list.AddLast(new Insert_item("AMSR_PRED_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())));
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+
+                // change UserInput
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
+                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection.SelectedValue.ToString()), true);
             }
             else if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE")
             {
                 string stmt = "SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + selection + "\'";
                 Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
-                list.AddLast(new Insert_item("CUBE_SID", cube_sid));
+                Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", " + table + ", NAVSS_SID, " + list + ")");
 
+                // insert NAVSS_SID, CUBE_SID
+                list.AddLast(new Insert_item("CUBE_SID", cube_sid));
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+
+                // change userInput
                 Console.WriteLine("[buttonSubmit_Click] " + selection);
                 userInput.ComboBoxCube.SelectedIndex = userInput.ComboBoxCube.FindString(selection);
                 userInput.comboBoxCube_SelectedIndexChanged(userInput.ComboBoxCube, new EventArgs());
                 userInput.ComboBoxCube.SelectedValue = selection;
-
-                // insert into operator table
-                Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", " + table + ", NAVSS_SID, " + list + ")");
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
             }
             else
             {
-                // TODO some error message window
                 Console.WriteLine("[buttonSubmit_Click] error");
                 this.Close();
             }
