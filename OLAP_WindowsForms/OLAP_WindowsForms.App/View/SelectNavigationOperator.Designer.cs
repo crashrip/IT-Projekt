@@ -33,6 +33,11 @@
             this.buttonSubmit = new System.Windows.Forms.Button();
             this.ComboBox_Selection = new System.Windows.Forms.ComboBox();
             this.ComboBox_Selection2 = new System.Windows.Forms.ComboBox();
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA = new System.Windows.Forms.ComboBox();
+            this.textBox_DN = new System.Windows.Forms.TextBox();
+            this.label_DN = new System.Windows.Forms.Label();
+            this.ComboBox_Selection3 = new System.Windows.Forms.ComboBox();
+            this.ComboBox_Selection4 = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // ComboBox_AgsNavstepSchema
@@ -47,7 +52,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new System.Drawing.Point(180, 277);
+            this.buttonCancel.Location = new System.Drawing.Point(180, 402);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 29);
             this.buttonCancel.TabIndex = 1;
@@ -57,7 +62,7 @@
             // 
             // buttonSubmit
             // 
-            this.buttonSubmit.Location = new System.Drawing.Point(41, 277);
+            this.buttonSubmit.Location = new System.Drawing.Point(41, 401);
             this.buttonSubmit.Name = "buttonSubmit";
             this.buttonSubmit.Size = new System.Drawing.Size(75, 30);
             this.buttonSubmit.TabIndex = 2;
@@ -86,12 +91,68 @@
             this.ComboBox_Selection2.Size = new System.Drawing.Size(214, 24);
             this.ComboBox_Selection2.TabIndex = 10;
             this.ComboBox_Selection2.Visible = false;
+            this.ComboBox_Selection2.SelectedIndexChanged += new System.EventHandler(this.ComboBox_Selection2_SelectedIndexChanged);
+            // 
+            // ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
+            // 
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.FormattingEnabled = true;
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Location = new System.Drawing.Point(41, 349);
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Name = "ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA";
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Size = new System.Drawing.Size(214, 24);
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.TabIndex = 11;
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = false;
+            this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedIndexChanged += new System.EventHandler(this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA_SelectedIndexChanged);
+            // 
+            // textBox_DN
+            // 
+            this.textBox_DN.Location = new System.Drawing.Point(76, 230);
+            this.textBox_DN.Name = "textBox_DN";
+            this.textBox_DN.Size = new System.Drawing.Size(179, 22);
+            this.textBox_DN.TabIndex = 12;
+            this.textBox_DN.Visible = false;
+            // 
+            // label_DN
+            // 
+            this.label_DN.AutoSize = true;
+            this.label_DN.Location = new System.Drawing.Point(38, 232);
+            this.label_DN.Name = "label_DN";
+            this.label_DN.Size = new System.Drawing.Size(32, 17);
+            this.label_DN.TabIndex = 13;
+            this.label_DN.Text = "DN:";
+            this.label_DN.Visible = false;
+            // 
+            // ComboBox_Selection3
+            // 
+            this.ComboBox_Selection3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Selection3.FormattingEnabled = true;
+            this.ComboBox_Selection3.Location = new System.Drawing.Point(41, 228);
+            this.ComboBox_Selection3.Name = "ComboBox_Selection3";
+            this.ComboBox_Selection3.Size = new System.Drawing.Size(214, 24);
+            this.ComboBox_Selection3.TabIndex = 14;
+            this.ComboBox_Selection3.Visible = false;
+            this.ComboBox_Selection3.SelectedIndexChanged += new System.EventHandler(this.ComboBox_Selection3_SelectedIndexChanged);
+            // 
+            // ComboBox_Selection4
+            // 
+            this.ComboBox_Selection4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.ComboBox_Selection4.FormattingEnabled = true;
+            this.ComboBox_Selection4.Location = new System.Drawing.Point(41, 290);
+            this.ComboBox_Selection4.Name = "ComboBox_Selection4";
+            this.ComboBox_Selection4.Size = new System.Drawing.Size(214, 24);
+            this.ComboBox_Selection4.TabIndex = 15;
+            this.ComboBox_Selection4.Visible = false;
+            this.ComboBox_Selection4.SelectedIndexChanged += new System.EventHandler(this.ComboBox_Selection4_SelectedIndexChanged);
             // 
             // SelectNavigationOperator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(304, 346);
+            this.ClientSize = new System.Drawing.Size(304, 482);
+            this.Controls.Add(this.ComboBox_Selection4);
+            this.Controls.Add(this.ComboBox_Selection3);
+            this.Controls.Add(this.label_DN);
+            this.Controls.Add(this.textBox_DN);
+            this.Controls.Add(this.ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA);
             this.Controls.Add(this.ComboBox_Selection2);
             this.Controls.Add(this.ComboBox_Selection);
             this.Controls.Add(this.buttonSubmit);
@@ -100,6 +161,7 @@
             this.Name = "SelectNavigationOperator";
             this.Text = "Select Navigation Operator";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -110,5 +172,10 @@
         private System.Windows.Forms.Button buttonSubmit;
         private System.Windows.Forms.ComboBox ComboBox_Selection;
         private System.Windows.Forms.ComboBox ComboBox_Selection2;
+        private System.Windows.Forms.ComboBox ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA;
+        private System.Windows.Forms.TextBox textBox_DN;
+        private System.Windows.Forms.Label label_DN;
+        private System.Windows.Forms.ComboBox ComboBox_Selection3;
+        private System.Windows.Forms.ComboBox ComboBox_Selection4;
     }
 }

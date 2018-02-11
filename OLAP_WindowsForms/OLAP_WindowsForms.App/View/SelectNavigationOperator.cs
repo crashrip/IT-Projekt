@@ -18,8 +18,11 @@ namespace OLAP_WindowsForms.App.View
     {
 
         private UserInput userInput;
+        private ComboBox changed_ComboBox;
+        private TextBox changed_TextBox;
         private string agsNavstepSchema, selection;
-        
+        private int dim_sid;
+
         // saves the navigation operators and corresponding tables as strings
         private Dictionary<string, string> AGS_NAVSTEP_SCHEMA_dictionary = new Dictionary<string, string>();
 
@@ -29,36 +32,44 @@ namespace OLAP_WindowsForms.App.View
         /// <param name="ui">Reference to previous window.</param>
         public SelectNavigationOperator(UserInput ui)
         {
+            // initialize
             userInput = ui;
             InitializeComponent();
-
             FillDictionary();
-            
-            foreach (KeyValuePair<string, string> entry in AGS_NAVSTEP_SCHEMA_dictionary)
-            {
-                ComboBox_AgsNavstepSchema.Items.Add(entry.Key);
-            }
+
+            // fill ComboBox_AgsNavstepSchema
+            foreach (KeyValuePair<string, string> entry in AGS_NAVSTEP_SCHEMA_dictionary) ComboBox_AgsNavstepSchema.Items.Add(entry.Key);
+
+            // fill ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
+            DataTable dt = DBContext.Service().GetData("SELECT ASS_SID, ASS_NAME FROM AGS_ANALYSIS_SITUATION_SCHEMA").Copy();
+            ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.DataSource = dt;
+            ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.ValueMember = "ASS_SID";
+            ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.DisplayMember = "ASS_NAME";
         }
 
-        // on selection of comboBoxNav
+        // on selection of ComboBox_AgsNavstepSchema
         private void ComboBox_AgsNavstepSchema_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // enable ComboBox_Selection
+            // enable or disable combo box
             ComboBox_Selection.Visible = true;
+            ComboBox_Selection2.Visible = false;
+            ComboBox_Selection3.Visible = false;
+            ComboBox_Selection4.Visible = false;
+            ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = false;
+            label_DN.Visible = false;
+            textBox_DN.Visible = false;
 
+            // get content of ComboBox_AgsNavstepSchema
             agsNavstepSchema = ComboBox_AgsNavstepSchema.Text;
-            Console.WriteLine("[SelectedIndexChanged] agsNavstepSchema: " + agsNavstepSchema);
+            Console.WriteLine("[ComboBox_AgsNavstepSchema_SelectedIndexChanged] agsNavstepSchema: " + agsNavstepSchema);
 
-            if (agsNavstepSchema == "drillDownToLevel")
+            // fill ComboBox_Selection
+            if (agsNavstepSchema == "drillDownToLevel" ||
+                agsNavstepSchema == "rollUpToLevel" ||
+                agsNavstepSchema == "moveToNode" ||
+                agsNavstepSchema == "refocusSliceCond")
             {
-                // TODO
-            }
-            else if (agsNavstepSchema == "rollUpToLevel")
-            {
-                // TODO
-            }
-            else if (agsNavstepSchema == "moveToNode")
-            {
+                // Dim = D
                 DataTable dt = DBContext.Service().GetData(
                    "SELECT d.DIM_SID, d.DIM_NAME " +
                    "FROM DW_CUBE_DIMENSION c,  DW_DIMENSION d " +
@@ -69,29 +80,207 @@ namespace OLAP_WindowsForms.App.View
                 ComboBox_Selection.ValueMember = "DIM_SID";
                 ComboBox_Selection.DisplayMember = "DIM_NAME";
             }
-            else if (agsNavstepSchema == "refocusSliceCond")
-            {
-                // TODO
-            }
             else if (agsNavstepSchema == "refocusBMsrCond")
             {
-                // TODO
+                // BC: B1, ..., Bb
+                DataTable dt = DBContext.Service().GetData(
+                   "SELECT BMSR_PRED_SID, BMSR_PRED_NAME " +
+                   "FROM DW_BMSR_PREDICATE " +
+                   "WHERE BMSR_PRED_SID >= 0 AND CUBE_SID = " + userInput.ComboBoxCube.SelectedValue.ToString()
+                ).Copy();
+
+                ComboBox_Selection.DataSource = dt;
+                ComboBox_Selection.ValueMember = "BMSR_PRED_SID";
+                ComboBox_Selection.DisplayMember = "BMSR_PRED_NAME";
             }
             else if (agsNavstepSchema == "refocusMeasure")
             {
-                // TODO
+                // Msr: M1, ..., Mm
+                DataTable dt = DBContext.Service().GetData(
+                    "SELECT c.DAMSR_SID, d.DAMSR_NAME " +
+                    "FROM DW_CUBE_DERIVED_AGGREGATE_MEASURE c INNER JOIN DW_DERIVED_AGGREGATE_MEASURE d " +
+                    "ON c.DAMSR_SID = d.DAMSR_SID " +
+                    "WHERE c.CUBE_SID = " + userInput.ComboBoxCube.SelectedValue.ToString()
+                ).Copy();
+
+                ComboBox_Selection.DataSource = dt;
+                ComboBox_Selection.ValueMember = "DAMSR_SID";
+                ComboBox_Selection.DisplayMember = "DAMSR_NAME";
             }
             else if (agsNavstepSchema == "refocusAMsrFilter")
             {
-                // TODO
+                DataTable dt = DBContext.Service().GetData(
+                   "SELECT AMSR_PRED_SID, AMSR_PRED_NAME " +
+                   "FROM DW_AMSR_PREDICATE " +
+                   "WHERE AMSR_PRED_SID > 0 AND CUBE_SID = " + userInput.ComboBoxCube.SelectedValue.ToString()
+                ).Copy();
+
+                ComboBox_Selection.DataSource = dt;
+                ComboBox_Selection.ValueMember = "AMSR_PRED_SID";
+                ComboBox_Selection.DisplayMember = "AMSR_PRED_NAME";
             }
             else if (agsNavstepSchema == "drillAcrossToCube")
             {
                 ComboItem.SetComboboxContent(ComboBox_Selection, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
             }
-            else if (agsNavstepSchema == "refocusScoreFilter")
+            else
             {
-                // TODO
+                Console.WriteLine("[ComboBox_AgsNavstepSchema_SelectedIndexChanged] THIS SHOULD NOT HAPPEN, THERE IS AN INTERNAL ERROR");
+            }
+        }
+
+        // 1) on selection of ComboBox_Selection
+        private void ComboBox_Selection_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // get selection
+            selection = ComboBox_Selection.Text;
+
+            // not initialized error
+            if (selection.Equals("System.Data.DataRowView")) return;
+            if (ComboBox_Selection.SelectedValue.ToString().Equals("System.Data.DataRowView")) return;
+
+            Console.WriteLine("[ComboBox_Selection_SelectedIndexChanged] ComboBox_Selection: " + selection);
+
+            // fill ComboBox_Selection2
+            if (agsNavstepSchema == "drillDownToLevel")
+            {
+                // enable ComboBox_Selection2
+                ComboBox_Selection2.Visible = true;
+
+                // get current dim_sid
+                dim_sid = Int32.Parse(ComboBox_Selection.SelectedValue.ToString());
+                Console.WriteLine("[ComboBox_Selection_SelectedIndexChanged] ComboBox_Selection dim_sid: " + dim_sid);
+
+                // find combobox to copy
+                if (selection == "Time") changed_ComboBox = userInput.CDW_TIME_GL;
+                else if (selection == "Insurant") changed_ComboBox = userInput.CDW_INSURANT_GL;
+                else if (selection == "MedService") changed_ComboBox = userInput.CDW_MEDSERVICE_GL;
+                else if (selection == "Drug") changed_ComboBox = userInput.CDW_DRUG_GL;
+                else if (selection == "Doctor") changed_ComboBox = userInput.CDW_DOCTOR_GL;
+                else if (selection == "Hospital") changed_ComboBox = userInput.CDW_HOSPITAL_GL;
+                else return;
+
+                DataTable dt = DBContext.Service().GetData(
+                    "SELECT * " +
+                    "FROM DW_LEVEL " +
+                    "WHERE LVL_SID < " + changed_ComboBox.SelectedValue + " AND DIM_SID = " + dim_sid + " AND LVL_SID > 0 " +
+                    "ORDER BY LVL_SID DESC"
+                ).Copy();
+
+                ComboBox_Selection2.DataSource = dt;
+                ComboBox_Selection2.DisplayMember = "LVL_NAME";
+                ComboBox_Selection2.ValueMember = "LVL_SID";
+            }
+            else if (agsNavstepSchema == "rollUpToLevel")
+            {
+                // enable ComboBox_Selection2
+                ComboBox_Selection2.Visible = true;
+
+                // get current dim_sid
+                // get current dim_sid
+                dim_sid = Int32.Parse(ComboBox_Selection.SelectedValue.ToString());
+                Console.WriteLine("[ComboBox_Selection_SelectedIndexChanged] ComboBox_Selection dim_sid: " + dim_sid);
+
+                // find combobox to copy
+                if (selection == "Time") changed_ComboBox = userInput.CDW_TIME_GL;
+                else if (selection == "Insurant") changed_ComboBox = userInput.CDW_INSURANT_GL;
+                else if (selection == "MedService") changed_ComboBox = userInput.CDW_MEDSERVICE_GL;
+                else if (selection == "Drug") changed_ComboBox = userInput.CDW_DRUG_GL;
+                else if (selection == "Doctor") changed_ComboBox = userInput.CDW_DOCTOR_GL;
+                else if (selection == "Hospital") changed_ComboBox = userInput.CDW_HOSPITAL_GL;
+                else return;
+
+                DataTable dt = DBContext.Service().GetData(
+                    "SELECT * " +
+                    "FROM DW_LEVEL " +
+                    "WHERE LVL_SID > " + changed_ComboBox.SelectedValue + " AND DIM_SID = " + dim_sid + " AND LVL_SID > 0 " +
+                    "ORDER BY LVL_SID DESC"
+                ).Copy();
+
+                ComboBox_Selection2.DataSource = dt;
+                ComboBox_Selection2.DisplayMember = "LVL_NAME";
+                ComboBox_Selection2.ValueMember = "LVL_SID";
+            }
+            else if (agsNavstepSchema == "moveToNode")
+            {
+                // enable ComboBox_Selection2
+                ComboBox_Selection2.Visible = true;
+
+                // get current dim_sid
+                dim_sid = Int32.Parse(ComboBox_Selection.SelectedValue.ToString());
+                Console.WriteLine("[ComboBox_Selection_SelectedIndexChanged] ComboBox_Selection dim_sid: " + dim_sid);
+
+                // find combobox to copy
+                if (selection == "Time") { changed_ComboBox = userInput.CDW_TIME; changed_TextBox = userInput.TDW_TIME; }
+                else if (selection == "Insurant") { changed_ComboBox = userInput.CDW_INSURANT; changed_TextBox = userInput.TDW_INSURANT; }
+                else if (selection == "MedService") { changed_ComboBox = userInput.CDW_MEDSERVICE; changed_TextBox = userInput.TDW_MEDSERVICE; }
+                else if (selection == "Drug") { changed_ComboBox = userInput.CDW_DRUG; changed_TextBox = userInput.TDW_DRUG; }
+                else if (selection == "Doctor") { changed_ComboBox = userInput.CDW_DOCTOR; changed_TextBox = userInput.TDW_DOCTOR; }
+                else if (selection == "Hospital") { changed_ComboBox = userInput.CDW_HOSPITAL; changed_TextBox = userInput.TDW_HOSPITAL; }
+                else return;
+
+                DataTable dt = DBContext.Service().GetData(
+                    "SELECT LVL_NAME, LVL_SID " +
+                    "FROM DW_LEVEL " +
+                    "WHERE DIM_SID = " + dim_sid + " AND LVL_SID > 0" +
+                    "ORDER BY LVL_SID DESC"
+                ).Copy();
+
+                ComboBox_Selection2.DataSource = dt;
+                ComboBox_Selection2.DisplayMember = "LVL_NAME";
+                ComboBox_Selection2.ValueMember = "LVL_SID";
+            }
+            else if (agsNavstepSchema == "refocusSliceCond")
+            {
+                // enable ComboBox_Selection2
+                ComboBox_Selection2.Visible = true;
+
+                // get current dim_sid
+                dim_sid = Int32.Parse(ComboBox_Selection.SelectedValue.ToString());
+                Console.WriteLine("[ComboBox_Selection_SelectedIndexChanged] ComboBox_Selection dim_sid: " + dim_sid);
+
+                // find combobox to copy
+                int lvl_sid = 0;
+                if (selection == "Time") lvl_sid = Int32.Parse(userInput.CDW_TIME.SelectedValue.ToString());
+                else if (selection == "Insurant") lvl_sid = Int32.Parse(userInput.CDW_INSURANT.SelectedValue.ToString());
+                else if (selection == "MedService") lvl_sid = Int32.Parse(userInput.CDW_MEDSERVICE.SelectedValue.ToString());
+                else if (selection == "Drug") lvl_sid = Int32.Parse(userInput.CDW_DRUG.SelectedValue.ToString());
+                else if (selection == "Doctor") lvl_sid = Int32.Parse(userInput.CDW_DOCTOR.SelectedValue.ToString());
+                else if (selection == "Hospital") lvl_sid = Int32.Parse(userInput.CDW_HOSPITAL.SelectedValue.ToString());
+                else return;
+
+                DataTable dt = DBContext.Service().GetData(
+                    "SELECT DIM_PRED_SID, DIM_PRED_NAME " +
+                    "FROM DW_DIM_PREDICATE " +
+                    "WHERE LVL_SID > 0 AND LVL_SID = " + lvl_sid +
+                    "ORDER BY LVL_SID DESC"
+                ).Copy();
+
+                ComboBox_Selection2.DataSource = dt;
+                ComboBox_Selection2.DisplayMember = "DIM_PRED_NAME";
+                ComboBox_Selection2.ValueMember = "DIM_PRED_SID";
+            }
+            else if (agsNavstepSchema == "refocusBMsrCond" ||
+                agsNavstepSchema == "refocusMeasure" ||
+                agsNavstepSchema == "refocusAMsrFilter")
+            {
+                // do nothing
+            }
+            else if (agsNavstepSchema == "drillAcrossToCube")
+            {
+                Console.WriteLine("[ComboBox_Selection_SelectedIndexChanged] " + ComboBox_Selection.SelectedValue.ToString());
+                ComboBox_Selection2.Visible = true;
+
+                // BC: B1, ..., Bb
+                DataTable dt = DBContext.Service().GetData(
+                   "SELECT BMSR_PRED_SID, BMSR_PRED_NAME " +
+                   "FROM DW_BMSR_PREDICATE " +
+                   "WHERE BMSR_PRED_SID >= 0 AND CUBE_SID = " + ComboBox_Selection.SelectedValue.ToString()
+                ).Copy();
+
+                ComboBox_Selection2.DataSource = dt;
+                ComboBox_Selection2.ValueMember = "BMSR_PRED_SID";
+                ComboBox_Selection2.DisplayMember = "BMSR_PRED_NAME";
             }
             else
             {
@@ -99,81 +288,128 @@ namespace OLAP_WindowsForms.App.View
             }
         }
 
-
-        private void ComboBox_Selection_SelectedIndexChanged(object sender, EventArgs e)
+        // 2) on selection of ComboBox_Selection2
+        private void ComboBox_Selection2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // get selection
-            selection = ComboBox_Selection.Text;
+            //error
+            if (ComboBox_Selection2.SelectedValue.ToString().Equals("System.Data.DataRowView")) return;
 
-            // not initialized
-            if (selection.Equals("System.Data.DataRowView")) return;
-            if (ComboBox_Selection.SelectedValue.ToString().Equals("System.Data.DataRowView")) return;
-
-            // enable ComboBox_Selection2
-            ComboBox_Selection2.Visible = true;
-
-            Console.WriteLine("[SelectedIndexChanged] ComboBox_Selection: " + selection);
-
-            // TODO add other navstepschemas
             if (agsNavstepSchema == "moveToNode")
             {
-                // get current dim_sid
-                
-                int dim_sid = Int32.Parse(ComboBox_Selection.SelectedValue.ToString());
-                Console.WriteLine("[SelectedIndexChanged] dim_sid: " + dim_sid);
-                
+                label_DN.Visible = true;
+                textBox_DN.Visible = true;
+            }
+
+            if (agsNavstepSchema == "drillAcrossToCube")
+            {
+                Console.WriteLine("[ComboBox_Selection2_SelectedIndexChanged] " + ComboBox_Selection2.SelectedValue.ToString());
+                ComboBox_Selection3.Visible = true;
+
+                // Msr: M1, ..., Mm
                 DataTable dt = DBContext.Service().GetData(
-                   "SELECT LVL_NAME, LVL_SID " +
-                   "FROM DW_LEVEL " +
-                   "WHERE DIM_SID = " + dim_sid + " AND LVL_SID > 0"
+                    "SELECT c.DAMSR_SID, d.DAMSR_NAME " +
+                    "FROM DW_CUBE_DERIVED_AGGREGATE_MEASURE c INNER JOIN DW_DERIVED_AGGREGATE_MEASURE d " +
+                    "ON c.DAMSR_SID = d.DAMSR_SID " +
+                    "WHERE c.CUBE_SID = " + ComboBox_Selection2.SelectedValue.ToString()
                 ).Copy();
-                
-                ComboBox_Selection2.DataSource = dt;
-                ComboBox_Selection2.ValueMember = "LVL_SID";
-                ComboBox_Selection2.DisplayMember = "LVL_NAME";
+
+                ComboBox_Selection3.DataSource = dt;
+                ComboBox_Selection3.ValueMember = "DAMSR_SID";
+                ComboBox_Selection3.DisplayMember = "DAMSR_NAME";
+            }
+            else
+            {
+                // enable ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
+                ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
             }
         }
 
+        // 3) on selection of ComboBox_Selection3
+        private void ComboBox_Selection3_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //error
+            if (ComboBox_Selection3.SelectedValue.ToString().Equals("System.Data.DataRowView")) return;
+
+            if (agsNavstepSchema == "drillAcrossToCube")
+            {
+                Console.WriteLine("[ComboBox_Selection3_SelectedIndexChanged] " + ComboBox_Selection3.SelectedValue.ToString());
+                ComboBox_Selection4.Visible = true;
+
+                DataTable dt = DBContext.Service().GetData(
+                   "SELECT AMSR_PRED_SID, AMSR_PRED_NAME " +
+                   "FROM DW_AMSR_PREDICATE " +
+                   "WHERE AMSR_PRED_SID > 0 AND CUBE_SID = " + ComboBox_Selection3.SelectedValue.ToString()
+                ).Copy();
+
+                ComboBox_Selection4.DataSource = dt;
+                ComboBox_Selection4.ValueMember = "AMSR_PRED_SID";
+                ComboBox_Selection4.DisplayMember = "AMSR_PRED_NAME";
+            }
+        }
+
+        // 4) on selection of ComboBox_Selection4
+        private void ComboBox_Selection4_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
+        }
+
+        // on selection of ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
+        private void ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // get schema
+            string schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
+
+            // not initialized error
+            if (schema.Equals("System.Data.DataRowView")) return;
+            if (ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedValue.ToString().Equals("System.Data.DataRowView")) return;
+
+            Console.WriteLine("[ComboBox_Selection4_SelectedIndexChanged] ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA: " + schema);
+        }
+
+        // fügt in alle notwendigen tabellen ein
         private void buttonSubmit_Click(object sender, EventArgs e)
         {
             // get table from dictionary
             string table = null;
-            if (AGS_NAVSTEP_SCHEMA_dictionary.ContainsKey(agsNavstepSchema))
-            {
-                table = AGS_NAVSTEP_SCHEMA_dictionary[agsNavstepSchema];
-            }
-            Console.WriteLine("[SUBMIT] Table: " + table);
+            if (AGS_NAVSTEP_SCHEMA_dictionary.ContainsKey(agsNavstepSchema)) table = AGS_NAVSTEP_SCHEMA_dictionary[agsNavstepSchema];
+            Console.WriteLine("[buttonSubmit_Click] Table: " + table);
 
             // open connection and begin transaction
-            Console.WriteLine("[SUBMIT] open connection and begin transaction");
+            Console.WriteLine("[buttonSubmit_Click] open connection and begin transaction");
             NpgsqlConnection connection = DBContext.Service().getConnection();
             connection.Open();
             NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
-
-            // create statement with currentSelection
-            Console.WriteLine("[SUBMIT] agsNavstepSchema: " + agsNavstepSchema);
-            string statement = "SELECT NAVSS_SID FROM AGS_NAVSTEP_SCHEMA WHERE NAVSS_OPNAME = \'" + agsNavstepSchema + "\'";
-
-            // get private key
-            Console.WriteLine("[SUBMIT] get coulumnPK");
-            int columnPK = Int32.Parse(DBContext.Service().getStringFromStmt(statement, 0, 0));
-            string columnPKName = "NAVSS_SID";
 
             // create a list of items
             LinkedList<Insert_item> list = new LinkedList<Insert_item>();
 
             // START insertion
-            if (table == "AGS_NAVSS_DRILL_DOWN_TO_LEVEL")
+            if (table == "AGS_NAVSS_DRILL_DOWN_TO_LEVEL" ||
+                table == "AGS_NAVSS_ROLL_UP_TO_LEVEL")
             {
-                // TODO
-            }
-            else if (table == "AGS_NAVSS_ROLL_UP_TO_LEVEL")
-            {
-                // TODO
+                // insert NAVSS_SID, DIM_SID, LVL_SID_GRANLVL
+                list.AddLast(new Insert_item("DIM_SID", dim_sid));
+                list.AddLast(new Insert_item("LVL_SID_GRANLVL", Int32.Parse(ComboBox_Selection2.SelectedValue.ToString())));
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+
+                // change UserInput
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
+                changed_ComboBox.SelectedIndex = changed_ComboBox.FindString(ComboBox_Selection2.Text);
             }
             else if (table == "AGS_NAVSS_MOVE_TO_NODE")
             {
-                
+                Console.WriteLine("[buttonSubmit_Click] textBox_DN.Text: " + textBox_DN.Text);
+
+                //insert NAVSS_SID, DIM_SID, LVL_SID_DICELVL, NAVSS_DICE_NODE
+                list.AddLast(new Insert_item("DIM_SID", dim_sid));
+                list.AddLast(new Insert_item("LVL_SID_DICELVL", Int32.Parse(ComboBox_Selection2.SelectedValue.ToString())));
+                list.AddLast(new Insert_item("NAVSS_DICE_NODE", textBox_DN.Text));
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+
+                // change UserInput
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
+                changed_ComboBox.SelectedIndex = changed_ComboBox.FindString(ComboBox_Selection2.Text);
+
                 // TODO
             }
             else if (table == "AGS_NAVSS_REFOCUS_SLICE_COND")
@@ -198,53 +434,37 @@ namespace OLAP_WindowsForms.App.View
                 Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
                 list.AddLast(new Insert_item("CUBE_SID", cube_sid));
 
-<<<<<<< HEAD
-                Console.WriteLine("[SUBMIT] " + selection);
+                Console.WriteLine("[buttonSubmit_Click] " + selection);
                 userInput.ComboBoxCube.SelectedIndex = userInput.ComboBoxCube.FindString(selection);
                 userInput.comboBoxCube_SelectedIndexChanged(userInput.ComboBoxCube, new EventArgs());
                 userInput.SelectComboBoxCube(selection);
-=======
 
->>>>>>> a6abfb64a901594f596ee4e56cce889629d27138
-            }
-            else if (table == "AGS_NAVSS_REFOCUS_SCORE_FILTER_PARS")
-            {
-                // TODO
+                // insert into operator table
+                Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", " + table + ", NAVSS_SID, " + list + ")");
+                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
             }
             else
             {
                 // TODO some error message window
-                Console.WriteLine("[SUBMIT] error");
+                Console.WriteLine("[buttonSubmit_Click] error");
                 this.Close();
             }
 
-            // check if private key exists already in table
-            bool keyExistsAlready = false;
-            DataRow[] dr = DBContext.Service().GetData("SELECT " + columnPKName + " FROM " + table).Copy().Select();
+            // TODO
+            // insert into AGS_NAVSTEP_SCHEMA
+            //list = new LinkedList<Insert_item>();
+            //Console.WriteLine("[SUBMIT] calling function insinto(" + connection + ", " + transaction + ", AGS_NAVSTEP_SCHEMA, NAVSS_SID, " + list + ")");
+            //DBContext.Service().insinto(connection, transaction, "AGS_NAVSTEP_SCHEMA", "NAVSS_SID", list);
 
-            for (int i = 0; i < dr.Length; i++)
-            {
-                if (dr[i].ItemArray[0].Equals(columnPK))
-                {
-                    keyExistsAlready = true;
-                }
-            }
-
-            if (keyExistsAlready)
-            {
-                Console.WriteLine("[SUBMIT] key exists already -> no insert was made");
-            }
-            else
-            {
-                Console.WriteLine("[SUBMIT] calling function insinto(" + connection + ", " + transaction + ", " + table + ", " + columnPK + ", " + columnPKName + ", " + list + ")");
-                DBContext.Service().insinto(connection, transaction, table, columnPK, columnPKName, list);
-            }
+            // transaction complete
+            transaction.Commit();
+            DBContext.Service().transactionComplete();
 
             // disable fields -> user cannot do changes
             userInput.disable_fields();
 
             // close window
-            Console.WriteLine("[SUBMIT] finished");
+            Console.WriteLine("[buttonSubmit_Click] finished");
             this.Close();
         }
 
@@ -257,7 +477,6 @@ namespace OLAP_WindowsForms.App.View
             }
         }
 
-        // operatoren
         private void FillDictionary()
         {
             AGS_NAVSTEP_SCHEMA_dictionary.Add("drillDownToLevel", "AGS_NAVSS_DRILL_DOWN_TO_LEVEL");
@@ -268,7 +487,6 @@ namespace OLAP_WindowsForms.App.View
             AGS_NAVSTEP_SCHEMA_dictionary.Add("refocusMeasure", "AGS_NAVSS_REFOCUS_MEASURE_PARS");
             AGS_NAVSTEP_SCHEMA_dictionary.Add("refocusAMsrFilter", "AGS_NAVSS_REFOCUS_AMSR_FILTER_PARS");
             AGS_NAVSTEP_SCHEMA_dictionary.Add("drillAcrossToCube", "AGS_NAVSS_DRILL_ACROSS_TO_CUBE");
-            AGS_NAVSTEP_SCHEMA_dictionary.Add("refocusScoreFilter", "AGS_NAVSS_REFOCUS_SCORE_FILTER_PARS");
         }
     }
 }

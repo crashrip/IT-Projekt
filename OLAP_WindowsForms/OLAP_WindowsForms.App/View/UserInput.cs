@@ -16,19 +16,19 @@ namespace OLAP_WindowsForms.App
 {
     public partial class UserInput : Form
     {
-        public int loaded_ags_sid;
-        public int loaded_ass_sid;
+        private int loaded_ags_sid;
+        private int loaded_ass_sid;
         public Boolean overrideSchema = false; // true = override existing schema | false = create new schema based on selection
         public String name = "userinput";
         public String description = "";
         // true = element enabled | false = element disabled
-        public Boolean dim_doctor = false;
-        public Boolean dim_insurance = false;
-        public Boolean dim_drug = false;
-        public Boolean dim_medservice = false;
-        public Boolean dim_hospital = false;
-        public Boolean dim_time = false;
-        public Boolean newForm; // true = new Form | false = load old form
+        private Boolean dim_doctor = false;
+        private Boolean dim_insurance = false;
+        private Boolean dim_drug = false;
+        private Boolean dim_medservice = false;
+        private Boolean dim_hospital = false;
+        private Boolean dim_time = false;
+        private Boolean newForm; // true = new Form | false = load old form
 
         public SelectTable selectTable;
 
@@ -46,6 +46,15 @@ namespace OLAP_WindowsForms.App
             }
         }
 
+        // START ----- SelectNavigatinOperator class -------------------------------------------
+        public void SelectComboBoxCube(string selection) // TODO not yet working
+        {
+            Console.WriteLine("[SelectComboBoxCube] " + selection);
+            ComboBoxCube.SelectedIndex = ComboBoxCube.FindString(selection);
+            comboBoxCube_SelectedIndexChanged(ComboBoxCube, new EventArgs());
+        }
+        // END ----- SelectNavigatinOperator class -------------------------------------------
+
         // start Form with Cube Dimension Selection
         public void comboBoxCube_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -62,7 +71,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // disables all dimension qualification elements
-        public void disable_dimensions()
+        private void disable_dimensions()
         {
             // reset DL
             CDW_DOCTOR.SelectedIndex = -1;
@@ -194,7 +203,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // enables allowed dimension qualification elements 
-        public void dimension_enable_disable()
+        private void dimension_enable_disable()
         {
             DataTable dt = DBContext.Service().GetData(
                "SELECT DIM_SID " +
@@ -291,7 +300,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // Fill Derived Base Measures considering selected Cube
-        public void bmsr_Instantiate()
+        private void bmsr_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
             LDW_BMSR.SelectionMode = SelectionMode.None;
@@ -309,7 +318,7 @@ namespace OLAP_WindowsForms.App
         }
 
         //Fill Measures considering selected Cube
-        public void measures_Instantiate()
+        private void measures_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
             LDW_MEASURES.SelectionMode = SelectionMode.None;
@@ -329,7 +338,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // Fill DW_BMSR_PREDICATE considering selected Cube
-        public void filter_Instantiate()
+        private void filter_Instantiate()
         {
             // Disable Selection Mode while instanciating DataSource
             LDW_FILTER.SelectionMode = SelectionMode.None;
@@ -348,7 +357,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // START -------- general DimensionQualification fill operations ---------------------
-        public void fillComboboxDimension(ComboBox cBox, int dim_sid) // DL
+        private void fillComboboxDimension(ComboBox cBox, int dim_sid) // DL
         {
             DataTable dt = DBContext.Service().GetData(
               "SELECT LVL_SID, LVL_NAME " +
@@ -363,7 +372,7 @@ namespace OLAP_WindowsForms.App
             cBox.ValueMember = "LVL_SID";
         }
 
-        public void fillComboboxDimensionGroupedBy(ComboBox cBox, int dim_sid, string lvl_pos)
+        private void fillComboboxDimensionGroupedBy(ComboBox cBox, int dim_sid, string lvl_pos)
         {
             DataTable dt = DBContext.Service().GetData(
               "SELECT LVL_SID, LVL_NAME " +
@@ -379,7 +388,7 @@ namespace OLAP_WindowsForms.App
             cBox.ValueMember = "LVL_SID";
         }
 
-        public void fillListBoxDimension(ListBox lBox, int dim_sid, string lvl_sid)
+        private void fillListBoxDimension(ListBox lBox, int dim_sid, string lvl_sid)
         {
             try
             {
@@ -388,26 +397,10 @@ namespace OLAP_WindowsForms.App
                 //  "SELECT DIM_PRED_NAME, DIM_PRED_SID " +
                 //  "FROM DW_DIM_PREDICATE " +
                 //  "WHERE LVL_SID = " + lvl_sid
-<<<<<<< HEAD
                 
                 "Select DIM_PRED_NAME, DIM_PRED_SID " +
                 "from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
                 "l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
-=======
-
-                //"Select DIM_PRED_NAME, DIM_PRED_SID " +
-                //"from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and l.lvl_sid > 0 and "+
-                //"l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
-
-                "Select DIM_PRED_NAME, DIM_PRED_SID " +
-                "from dw_dim_predicate p inner join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid + " and p.dim_pred_expr = 'TRUE' " +
-                "union " +
-                "Select DIM_PRED_NAME, DIM_PRED_SID " +
-                "from dw_dim_predicate p inner " +
-                "join dw_level l on p.lvl_sid = l.lvl_sid where l.dim_sid = " + dim_sid +
-                " and l.lvl_sid > 0 and l.lvl_position <= (select lvl_position from dw_level where lvl_sid = " + lvl_sid + ")");
-
->>>>>>> a6abfb64a901594f596ee4e56cce889629d27138
                 DataTable dt2 = dt.Copy();
 
                 lBox.DataSource = dt2;
@@ -420,7 +413,7 @@ namespace OLAP_WindowsForms.App
             } 
         }
 
-        public void fillGL(ComboBox readFromCB, int dim_sid, ComboBox changeThisCB)
+        private void fillGL(ComboBox readFromCB, int dim_sid, ComboBox changeThisCB)
         {
             DataTable dt = DBContext.Service().GetData(
                 "SELECT *" +
@@ -436,7 +429,7 @@ namespace OLAP_WindowsForms.App
         // END -------- general DimensionQualification fill operations ---------------------
 
         // START --------------FILL DW GL AND SC-----------------------------------------
-        public void CDW_TIME_SelectedIndexChanged(object sender, EventArgs e)
+        private void CDW_TIME_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Console.WriteLine("time: " + CDW_TIME.SelectedIndex);
             if (CDW_TIME.SelectedIndex != -1)
@@ -459,7 +452,7 @@ namespace OLAP_WindowsForms.App
                 CDW_TIME_GL.Enabled = false;
             }
         }
-        public void CDW_INSURANT_SelectedIndexChanged(object sender, EventArgs e)
+        private void CDW_INSURANT_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Console.WriteLine("insurant: " + CDW_INSURANT.SelectedIndex);
             if (CDW_INSURANT.SelectedIndex != -1)
@@ -482,7 +475,7 @@ namespace OLAP_WindowsForms.App
                 CDW_INSURANT_GL.Enabled = false;
             }
         }
-        public void CDW_MEDSERVICE_SelectedIndexChanged(object sender, EventArgs e)
+        private void CDW_MEDSERVICE_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Console.WriteLine("medservice: " + CDW_MEDSERVICE.SelectedIndex);
             if (CDW_MEDSERVICE.SelectedIndex != -1)
@@ -505,7 +498,7 @@ namespace OLAP_WindowsForms.App
                 CDW_MEDSERVICE_GL.Enabled = false;
             }
         }
-        public void CDW_DRUG_SelectedIndexChanged(object sender, EventArgs e)
+        private void CDW_DRUG_SelectedIndexChanged(object sender, EventArgs e)
         {
             //Console.WriteLine("drug: " + CDW_DRUG.SelectedIndex);
             if (CDW_DRUG.SelectedIndex != -1)
@@ -528,7 +521,7 @@ namespace OLAP_WindowsForms.App
                 CDW_DRUG_GL.Enabled = false;
             }
         }
-        public void CDW_DOCTOR_SelectedIndexChanged(object sender, EventArgs e)
+        private void CDW_DOCTOR_SelectedIndexChanged(object sender, EventArgs e)
         {
            // Console.WriteLine("doctor: " + CDW_DOCTOR.SelectedIndex);
             if (CDW_DOCTOR.SelectedIndex != -1)
@@ -551,7 +544,7 @@ namespace OLAP_WindowsForms.App
                 CDW_DOCTOR_GL.Enabled = false;
             }
         }
-        public void CDW_HOSPITAL_SelectedIndexChanged(object sender, EventArgs e)
+        private void CDW_HOSPITAL_SelectedIndexChanged(object sender, EventArgs e)
         {
            // Console.WriteLine("hospital: " + CDW_HOSPITAL.SelectedIndex);
             if (CDW_HOSPITAL.SelectedIndex != -1)
@@ -577,7 +570,7 @@ namespace OLAP_WindowsForms.App
         // END --------------FILL DW GL AND SC-----------------------------------------
 
         // check that input is numbers only
-        public void TDW_TIME_KeyPress(object sender, KeyPressEventArgs e)
+        private void TDW_TIME_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsDigit(e.KeyChar) && e.KeyChar != 8 && e.KeyChar != 46)
             {
@@ -585,7 +578,7 @@ namespace OLAP_WindowsForms.App
             }
         }
 
-        public void deselect(object sender, KeyPressEventArgs e)
+        private void deselect(object sender, KeyPressEventArgs e)
         {
             //Console.WriteLine(e.KeyChar);
             if (e.KeyChar == ' ')
@@ -605,7 +598,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // START ------------------- Buttons ------------------------------------------
-        public void button_cancel_Click(object sender, EventArgs e)
+        private void button_cancel_Click(object sender, EventArgs e)
         {
             // Display a MsgBox asking the user to cancel or abort.
             if (MessageBox.Show("Are you sure you want to close the window?", "New Schema",
@@ -615,13 +608,13 @@ namespace OLAP_WindowsForms.App
             }
         }
 
-        public void button_select_navigation_operator_Click(object sender, EventArgs e)
+        private void button_select_navigation_operator_Click(object sender, EventArgs e)
         {
             SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
             sno.ShowDialog(this);
         }
 
-        public void button_save_Click(object sender, EventArgs e)
+        private void button_save_Click(object sender, EventArgs e)
         {
             SaveSchema save = new SaveSchema(this) { TopMost = true };
             save.ShowDialog(this);
@@ -1358,7 +1351,7 @@ namespace OLAP_WindowsForms.App
         }
 
         // START-------------------- disable GL if DL is variable -----------------------------
-        public void time_DL_CheckedChanged(object sender, EventArgs e)
+        private void time_DL_CheckedChanged(object sender, EventArgs e)
         {
             if (time_DL.CheckState == CheckState.Checked)
             {
@@ -1372,7 +1365,7 @@ namespace OLAP_WindowsForms.App
                 CDW_TIME_SelectedIndexChanged(CDW_TIME, new EventArgs());
             }
         }
-        public void insurant_DL_CheckedChanged(object sender, EventArgs e)
+        private void insurant_DL_CheckedChanged(object sender, EventArgs e)
         {
             if (insurant_DL.CheckState == CheckState.Checked)
             {
@@ -1386,7 +1379,7 @@ namespace OLAP_WindowsForms.App
                 CDW_INSURANT_SelectedIndexChanged(CDW_INSURANT, new EventArgs());
             }
         }
-        public void meds_DL_CheckedChanged(object sender, EventArgs e)
+        private void meds_DL_CheckedChanged(object sender, EventArgs e)
         {
             if (meds_DL.CheckState == CheckState.Checked)
             {
@@ -1400,7 +1393,7 @@ namespace OLAP_WindowsForms.App
                 CDW_MEDSERVICE_SelectedIndexChanged(CDW_MEDSERVICE, new EventArgs());
             }
         }
-        public void hospital_DL_CheckedChanged(object sender, EventArgs e)
+        private void hospital_DL_CheckedChanged(object sender, EventArgs e)
         {
             if (hospital_DL.CheckState == CheckState.Checked)
             {
@@ -1414,7 +1407,7 @@ namespace OLAP_WindowsForms.App
                 CDW_HOSPITAL_SelectedIndexChanged(CDW_HOSPITAL, new EventArgs());
             }
         }
-        public void doctor_DL_CheckedChanged(object sender, EventArgs e)
+        private void doctor_DL_CheckedChanged(object sender, EventArgs e)
         {
             if (doctor_DL.CheckState == CheckState.Checked)
             {
@@ -1428,7 +1421,7 @@ namespace OLAP_WindowsForms.App
                 CDW_DOCTOR_SelectedIndexChanged(CDW_DOCTOR, new EventArgs());
             }
         }
-        public void drug_DL_CheckedChanged(object sender, EventArgs e)
+        private void drug_DL_CheckedChanged(object sender, EventArgs e)
         {
             if (drug_DL.CheckState == CheckState.Checked)
             {
@@ -1449,26 +1442,25 @@ namespace OLAP_WindowsForms.App
             return this.loaded_ass_sid;
         }
 
-        public void bmsr_variable_CheckedChanged(object sender, EventArgs e)
+        private void bmsr_variable_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("variable 1 " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
             //Console.WriteLine("variable 2 " + ((Int32.Parse(ComboBoxCube.SelectedIndex.ToString())) * -1));
             
         }
 
-        public void LDW_MEASURES_Click(object sender, EventArgs e)
+        private void LDW_MEASURES_Click(object sender, EventArgs e)
         {
             Console.WriteLine("measure: " +LDW_MEASURES.SelectedIndex);
         }
         //Used for testing initalisation
-        public void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e)
         {
             
             Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
             try { 
                 selectTable = new SelectTable();
-                selectTable.cube_sid = ComboBoxCube.SelectedValue.ToString();
-                selectTable.tableNameCB = "test";
+                selectTable.tableNameCB = ComboBoxCube.SelectedValue.ToString();
                 selectTable.setLabe2();
                 selectTable.ShowDialog(this);
             } catch (Exception exx)
