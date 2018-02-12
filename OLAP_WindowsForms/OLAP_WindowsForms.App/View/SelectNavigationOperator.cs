@@ -18,7 +18,7 @@ namespace OLAP_WindowsForms.App.View
         private ListBox changed_ListBox;
 
         private string agsNavstepSchema, selection, schema;
-        private int dim_sid;
+        private int dim_sid, schema_id;
         private bool isNewSchema;
 
         // saves the navigation operators and corresponding tables as strings
@@ -421,9 +421,11 @@ namespace OLAP_WindowsForms.App.View
                 list.AddLast(new Insert_item("ASS_POS_X", 0));
                 list.AddLast(new Insert_item("ASS_POS_Y", 0));
 
-                Console.WriteLine("[SUBMIT] calling function insinto(" + connection + ", " + transaction + ", AGS_ANALYSIS_SITUATION_SCHEMA, ASS_SID, " + list + ")");
-                Console.WriteLine("[SUBMIT] values: {0}, {1}, {2}, 0, 0", TextBox_newSchema.Text, "", userInput.loaded_ags_sid);
+                Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", AGS_ANALYSIS_SITUATION_SCHEMA, ASS_SID, " + list + ")");
+                Console.WriteLine("[buttonSubmit_Click] values: {0}, {1}, {2}, 0, 0", TextBox_newSchema.Text, "", userInput.loaded_ags_sid);
                 DBContext.Service().insinto(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", list);
+                
+                schema = TextBox_newSchema.Text;
 
                 // reset list
                 list = new LinkedList<Insert_item>();
@@ -441,8 +443,8 @@ namespace OLAP_WindowsForms.App.View
             list.AddLast(new Insert_item("NAVSS_POS_GRD_X", 0));
             list.AddLast(new Insert_item("NAVSS_POS_GRD_Y", 0));
             
-            Console.WriteLine("[SUBMIT] calling function insinto(" + connection + ", " + transaction + ", AGS_NAVSTEP_SCHEMA, NAVSS_SID, " + list + ")");
-            Console.WriteLine("[SUBMIT] values: {0}, {1}, {2}, {3}, null, 0, 0, 0, 0, 0", userInput.loaded_ags_sid, userInput.loaded_ass_sid, ass_sid_target, agsNavstepSchema);
+            Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", AGS_NAVSTEP_SCHEMA, NAVSS_SID, " + list + ")");
+            Console.WriteLine("[buttonSubmit_Click] values: {0}, {1}, {2}, {3}, null, 0, 0, 0, 0, 0", userInput.loaded_ags_sid, userInput.loaded_ass_sid, ass_sid_target, agsNavstepSchema);
             DBContext.Service().insinto(connection, transaction, "AGS_NAVSTEP_SCHEMA", "NAVSS_SID", list);
 
             // reset list
@@ -550,12 +552,19 @@ namespace OLAP_WindowsForms.App.View
             transaction.Commit();
             DBContext.Service().transactionComplete();
 
+            // comparator
+            Comparator comp = new Comparator();
+            comp.SetSchemaOriginal(userInput.loaded_ass_sid);
+            comp.SetSchemaComparable(schema);
+            comp.CompareSchemas();
+
             // disable fields -> user cannot do changes
             userInput.disable_fields();
 
             // close window
             Console.WriteLine("[buttonSubmit_Click] finished");
             this.Close();
+            comp.ShowDialog(userInput);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
