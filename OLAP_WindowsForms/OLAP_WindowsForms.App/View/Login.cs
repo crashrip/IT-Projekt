@@ -29,7 +29,7 @@ namespace OLAP_WindowsForms.App
             textBox_dbName.Text = "postgres";
         }
 
-        private void button_submit_Click(object sender, EventArgs e)
+        private void Submit(object sender, EventArgs e)
         {
             string hostname = textBox_hostname.Text;
             string port = textBox_port.Text;

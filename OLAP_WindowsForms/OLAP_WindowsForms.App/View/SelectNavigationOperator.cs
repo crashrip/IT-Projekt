@@ -18,8 +18,7 @@ namespace OLAP_WindowsForms.App.View
         private ListBox changed_ListBox;
 
         private string agsNavstepSchema, selection, schema;
-        private int dim_sid, schema_id;
-        private bool isNewSchema = false;
+        private int dim_sid;
 
         // saves the navigation operators and corresponding tables as strings
         private Dictionary<string, string> AGS_NAVSTEP_SCHEMA_dictionary = new Dictionary<string, string>();
@@ -374,7 +373,7 @@ namespace OLAP_WindowsForms.App.View
         }
 
         // fügt in alle notwendigen tabellen ein
-        private void buttonSubmit_Click(object sender, EventArgs e)
+        private void Submit_Click(object sender, EventArgs e)
         {
             // get table from dictionary
             string table = null;
@@ -401,12 +400,7 @@ namespace OLAP_WindowsForms.App.View
             // existing or new schema
             if (checkBox1.Checked)
             {
-                isNewSchema = false;
                 schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
-            }
-            else
-            {
-                isNewSchema = true;
             }
 
             // insert into AGS_NAVSTEP_SCHEMA
@@ -538,7 +532,7 @@ namespace OLAP_WindowsForms.App.View
             this.Close();
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void Cancel_Click(object sender, EventArgs e)
         {
             // Display a MsgBox asking the user to cancel or abort.
             if (MessageBox.Show("Are you sure you want to close the window?", "Select Navigation Operator", MessageBoxButtons.YesNo) == DialogResult.Yes)

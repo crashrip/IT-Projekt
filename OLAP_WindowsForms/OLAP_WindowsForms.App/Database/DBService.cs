@@ -210,7 +210,7 @@ namespace OLAP_WindowsForms.App
 
             foreach (Insert_item i in list)
             {
-                cmds.Append(", " + i.getColumnName());
+                cmds.Append(", " + i.GetColumnName());
                 cmds2.Append(", :c" + cnt);
                 cnt++;
             }
@@ -229,7 +229,7 @@ namespace OLAP_WindowsForms.App
             cnt = 1;
             foreach (Insert_item i in list)
             {
-                if (i.isNull())
+                if (i.IsNull())
                 {
                     Console.WriteLine("null value recognized");
                     command.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
@@ -237,15 +237,15 @@ namespace OLAP_WindowsForms.App
                 }
                 else
                 {
-                    if (i.intValue())
+                    if (i.IntValue())
                     {
-                        Console.WriteLine(":c" + cnt + " " + i.getIValue());
-                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
+                        Console.WriteLine(":c" + cnt + " " + i.GetIValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.GetIValue()));
                     }
                     else
                     {
-                        Console.WriteLine(":c" + cnt + " " + i.getSValue());
-                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
+                        Console.WriteLine(":c" + cnt + " " + i.GetSValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.GetSValue()));
                     }
                 }
                 cnt++;
@@ -272,7 +272,7 @@ namespace OLAP_WindowsForms.App
 
             foreach (Insert_item i in list)
             {
-                cmds.Append(i.getColumnName() + " ,");
+                cmds.Append(i.GetColumnName() + " ,");
                 cmds2.Append(":c" + cnt + " ,");
                 cnt++;
             }
@@ -291,7 +291,7 @@ namespace OLAP_WindowsForms.App
             cnt = 1;
             foreach (Insert_item i in list)
             {
-                if (i.isNull())
+                if (i.IsNull())
                 {
                     Console.WriteLine("null value recognized");
                     command.Parameters.Add(new NpgsqlParameter(":c" + cnt, DBNull.Value));
@@ -299,15 +299,15 @@ namespace OLAP_WindowsForms.App
                 }
                 else
                 {
-                    if (i.intValue())
+                    if (i.IntValue())
                     {
-                        Console.WriteLine("Int :c" + cnt + i.getIValue());
-                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getIValue()));
+                        Console.WriteLine("Int :c" + cnt + i.GetIValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.GetIValue()));
                     }
                     else
                     {
-                        Console.WriteLine("String :c" + cnt + i.getSValue());
-                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.getSValue()));
+                        Console.WriteLine("String :c" + cnt + i.GetSValue());
+                        command.Parameters.Add(new NpgsqlParameter(":c" + cnt, i.GetSValue()));
                     }
 
                 }
