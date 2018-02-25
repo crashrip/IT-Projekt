@@ -130,6 +130,8 @@ namespace OLAP_WindowsForms.App.View
 
                 UserInput initInput = new UserInput(ags_sid, false, assSid);
                 initInput.button1.Visible = true;
+                initInput.disable_fields();
+                initInput.DisableVars();
 
                 initInput.ShowDialog();
 
