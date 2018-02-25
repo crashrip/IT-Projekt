@@ -632,6 +632,10 @@ namespace OLAP_WindowsForms.App
 
         public void button_select_navigation_operator_Click(object sender, EventArgs e)
         {
+            // save schema
+            SaveSchema save = new SaveSchema(this) { TopMost = true };
+            save.ShowDialog(this);
+
             SelectNavigationOperator sno = new SelectNavigationOperator(this) { TopMost = true };
             sno.ShowDialog(this);
         }

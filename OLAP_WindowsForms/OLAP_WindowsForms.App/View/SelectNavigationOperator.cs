@@ -19,7 +19,7 @@ namespace OLAP_WindowsForms.App.View
 
         private string agsNavstepSchema, selection, schema;
         private int dim_sid, schema_id;
-        private bool isNewSchema;
+        private bool isNewSchema = false;
 
         // saves the navigation operators and corresponding tables as strings
         private Dictionary<string, string> AGS_NAVSTEP_SCHEMA_dictionary = new Dictionary<string, string>();
@@ -34,7 +34,7 @@ namespace OLAP_WindowsForms.App.View
             userInput = ui;
             InitializeComponent();
             FillDictionary();
-
+            
             // fill ComboBox_AgsNavstepSchema
             foreach (KeyValuePair<string, string> entry in AGS_NAVSTEP_SCHEMA_dictionary) ComboBox_AgsNavstepSchema.Items.Add(entry.Key);
 
@@ -57,7 +57,6 @@ namespace OLAP_WindowsForms.App.View
             ComboBox_Selection3.Visible = false;
             ComboBox_Selection4.Visible = false;
             ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = false;
-            TextBox_newSchema.Visible = false;
             label_DN.Visible = false;
             textBox_DN.Visible = false;
 
@@ -267,21 +266,18 @@ namespace OLAP_WindowsForms.App.View
                 changed_ListBox = userInput.LDW_BMSR;                
 
                 ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
-                TextBox_newSchema.Visible = true;
             }
             else if (agsNavstepSchema == "refocusMeasure")
             {
                 changed_ListBox = userInput.LDW_MEASURES;
 
                 ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
-                TextBox_newSchema.Visible = true;
             }
             else if (agsNavstepSchema == "refocusAMsrFilter")
             {
                 changed_ListBox = userInput.LDW_FILTER;
 
                 ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
-                TextBox_newSchema.Visible = true;
             }
             else if (agsNavstepSchema == "drillAcrossToCube")
             {
@@ -338,7 +334,6 @@ namespace OLAP_WindowsForms.App.View
             {
                 // enable ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
                 ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
-                TextBox_newSchema.Visible = true;
             }
         }
 
@@ -369,7 +364,6 @@ namespace OLAP_WindowsForms.App.View
         private void ComboBox_Selection4_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Visible = true;
-            TextBox_newSchema.Visible = true;
         }
 
         // on selection of ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
@@ -405,7 +399,7 @@ namespace OLAP_WindowsForms.App.View
             int ass_sid_target = Int32.Parse(ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedValue.ToString());
 
             // existing or new schema
-            if (TextBox_newSchema.Text.Equals("new Schema") || TextBox_newSchema.Text.Equals(""))
+            if (checkBox1.Checked)
             {
                 isNewSchema = false;
                 schema = ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.Text;
@@ -413,25 +407,6 @@ namespace OLAP_WindowsForms.App.View
             else
             {
                 isNewSchema = true;
-            }
-
-            // insert into AGS_ANALYSIS_SITUATION_SCHEMA
-            if (isNewSchema)
-            {
-                list.AddLast(new Insert_item("ASS_NAME", TextBox_newSchema.Text));
-                list.AddLast(new Insert_item("ASS_DESCRIPTION", ""));
-                list.AddLast(new Insert_item("AGS_SID", userInput.loaded_ags_sid));
-                list.AddLast(new Insert_item("ASS_POS_X", 0));
-                list.AddLast(new Insert_item("ASS_POS_Y", 0));
-
-                Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", AGS_ANALYSIS_SITUATION_SCHEMA, ASS_SID, " + list + ")");
-                Console.WriteLine("[buttonSubmit_Click] values: {0}, {1}, {2}, 0, 0", TextBox_newSchema.Text, "", userInput.loaded_ags_sid);
-                DBContext.Service().insinto(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", list);
-                
-                schema = TextBox_newSchema.Text;
-
-                // reset list
-                list = new LinkedList<Insert_item>();
             }
 
             // insert into AGS_NAVSTEP_SCHEMA
@@ -554,20 +529,13 @@ namespace OLAP_WindowsForms.App.View
             // transaction complete
             transaction.Commit();
             DBContext.Service().transactionComplete();
-
-            // comparator
-            Comparator comp = new Comparator();
-            comp.SetSchemaOriginal(userInput.loaded_ass_sid);
-            comp.SetSchemaComparable(schema);
-            comp.CompareSchemas();
-
+            
             // disable fields -> user cannot do changes
             userInput.disable_fields();
 
             // close window
             Console.WriteLine("[buttonSubmit_Click] finished");
             this.Close();
-            comp.ShowDialog(userInput);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
