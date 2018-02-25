@@ -39,7 +39,10 @@ namespace OLAP_WindowsForms.App.View
             foreach (KeyValuePair<string, string> entry in AGS_NAVSTEP_SCHEMA_dictionary) ComboBox_AgsNavstepSchema.Items.Add(entry.Key);
 
             // fill ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA
-            DataTable dt = DBContext.Service().GetData("SELECT ASS_SID, ASS_NAME FROM AGS_ANALYSIS_SITUATION_SCHEMA").Copy();
+            DataTable dt = DBContext.Service().GetData(
+                "SELECT ASS_SID, ASS_NAME " +
+                "FROM AGS_ANALYSIS_SITUATION_SCHEMA " +
+                "WHERE AGS_SID = " + userInput.loaded_ags_sid).Copy();
             ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.DataSource = dt;
             ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.ValueMember = "ASS_SID";
             ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.DisplayMember = "ASS_NAME";
