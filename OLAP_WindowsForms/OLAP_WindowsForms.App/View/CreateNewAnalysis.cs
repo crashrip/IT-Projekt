@@ -24,7 +24,7 @@ namespace OLAP_WindowsForms.App.View
             LinkedList<Insert_item> list = new LinkedList<Insert_item>();
 
             //prepare Connection
-            NpgsqlConnection connection = DBContext.Service().getConnection();
+            NpgsqlConnection connection = DBContext.Service().GetConnection();
             connection.Open();
             NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
             try { 
@@ -48,7 +48,7 @@ namespace OLAP_WindowsForms.App.View
             list.AddFirst(new Insert_item("AGS_SID", ags_sid));
             list.AddLast(new Insert_item("AGS_NAME", AGS_NAME.Text));
             list.AddLast(new Insert_item("AGS_DESCRIPTION", AGS_DESCRITPION.Text));
-            DBContext.Service().insertWithoutPK(connection,transaction,"AGS_ANALYSIS_GRAPH_SCHEMA", list);
+            DBContext.Service().InsertWithoutPK(connection,transaction,"AGS_ANALYSIS_GRAPH_SCHEMA", list);
 
             transaction.Commit();
             Console.WriteLine("Transaction sucessful");

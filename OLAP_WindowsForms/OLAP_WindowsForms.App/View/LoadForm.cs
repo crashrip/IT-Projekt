@@ -79,7 +79,7 @@ namespace OLAP_WindowsForms.App.View
                 {
                     DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
                     Console.WriteLine("column 1 - delete: " + cell.Value.ToString());
-                    DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_NAME", "'" + cell.Value.ToString() + "'");
+                    DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_NAME", "'" + cell.Value.ToString() + "'");
                 } 
             }
             if (column == 0)
@@ -89,7 +89,7 @@ namespace OLAP_WindowsForms.App.View
                 {
                     DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
                     Console.WriteLine("column 0 - delete: " + cell.Value.ToString());
-                    DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
+                    DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
                 }
             }
         }

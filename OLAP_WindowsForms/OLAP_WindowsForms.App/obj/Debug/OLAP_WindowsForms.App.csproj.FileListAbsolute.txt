@@ -72,7 +72,6 @@ C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\bin\Debug\Npgsql.xml
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.csprojResolveAssemblyReference.cache
-C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.DataView.resources
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.Login.resources
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.BaseMenu.resources
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.UserInput.resources

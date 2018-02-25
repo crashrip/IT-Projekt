@@ -383,7 +383,7 @@ namespace OLAP_WindowsForms.App.View
 
             // open connection and begin transaction
             Console.WriteLine("[buttonSubmit_Click] open connection and begin transaction");
-            NpgsqlConnection connection = DBContext.Service().getConnection();
+            NpgsqlConnection connection = DBContext.Service().GetConnection();
             connection.Open();
             NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
@@ -423,7 +423,7 @@ namespace OLAP_WindowsForms.App.View
             
             Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", AGS_NAVSTEP_SCHEMA, NAVSS_SID, " + list + ")");
             Console.WriteLine("[buttonSubmit_Click] values: {0}, {1}, {2}, {3}, null, 0, 0, 0, 0, 0", userInput.loaded_ags_sid, userInput.loaded_ass_sid, ass_sid_target, agsNavstepSchema);
-            DBContext.Service().insinto(connection, transaction, "AGS_NAVSTEP_SCHEMA", "NAVSS_SID", list);
+            DBContext.Service().InsertInto(connection, transaction, "AGS_NAVSTEP_SCHEMA", "NAVSS_SID", list);
 
             // reset list
             list = new LinkedList<Insert_item>();
@@ -435,7 +435,7 @@ namespace OLAP_WindowsForms.App.View
                 // insert NAVSS_SID, DIM_SID, LVL_SID_GRANLVL
                 list.AddLast(new Insert_item("DIM_SID", dim_sid));
                 list.AddLast(new Insert_item("LVL_SID_GRANLVL", Int32.Parse(ComboBox_Selection2.SelectedValue.ToString())));
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+                DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
@@ -449,7 +449,7 @@ namespace OLAP_WindowsForms.App.View
                 list.AddLast(new Insert_item("DIM_SID", dim_sid));
                 list.AddLast(new Insert_item("LVL_SID_DICELVL", Int32.Parse(ComboBox_Selection2.SelectedValue.ToString())));
                 list.AddLast(new Insert_item("NAVSS_DICE_NODE", textBox_DN.Text));
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+                DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
@@ -462,7 +462,7 @@ namespace OLAP_WindowsForms.App.View
 
                 //insert NAVSS_SID, DIM_SID
                 list.AddLast(new Insert_item("DIM_SID", dim_sid));
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+                DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
@@ -474,7 +474,7 @@ namespace OLAP_WindowsForms.App.View
 
                 //insert NAVSS_SID, BMSR_PRED_SID
                 list.AddLast(new Insert_item("BMSR_PRED_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())));
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+                DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
@@ -486,7 +486,7 @@ namespace OLAP_WindowsForms.App.View
 
                 //insert NAVSS_SID, DAMSR_SID
                 list.AddLast(new Insert_item("DAMSR_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())));
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+                DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
@@ -498,7 +498,7 @@ namespace OLAP_WindowsForms.App.View
 
                 //insert NAVSS_SID, AMSR_PRED_SID
                 list.AddLast(new Insert_item("AMSR_PRED_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())));
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+                DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
@@ -507,12 +507,12 @@ namespace OLAP_WindowsForms.App.View
             else if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE")
             {
                 string stmt = "SELECT CUBE_SID FROM DW_CUBE WHERE CUBE_NAME = \'" + selection + "\'";
-                Int32 cube_sid = Int32.Parse(DBContext.Service().getStringFromStmt(stmt, 0, 0));
+                Int32 cube_sid = Int32.Parse(DBContext.Service().GetStringFromStmt(stmt, 0, 0));
                 Console.WriteLine("[buttonSubmit_Click] calling function insinto(" + connection + ", " + transaction + ", " + table + ", NAVSS_SID, " + list + ")");
 
                 // insert NAVSS_SID, CUBE_SID
                 list.AddLast(new Insert_item("CUBE_SID", cube_sid));
-                DBContext.Service().insinto(connection, transaction, table, "NAVSS_SID", list);
+                DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change userInput
                 Console.WriteLine("[buttonSubmit_Click] " + selection);
@@ -528,7 +528,7 @@ namespace OLAP_WindowsForms.App.View
 
             // transaction complete
             transaction.Commit();
-            DBContext.Service().transactionComplete();
+            DBContext.Service().TransactionComplete();
             
             // disable fields -> user cannot do changes
             userInput.disable_fields();

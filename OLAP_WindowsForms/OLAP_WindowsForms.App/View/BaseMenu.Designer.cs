@@ -37,58 +37,62 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(14, 30);
+            this.button1.Location = new System.Drawing.Point(19, 37);
+            this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(127, 23);
+            this.button1.Size = new System.Drawing.Size(169, 28);
             this.button1.TabIndex = 0;
-            this.button1.Text = "create new schema";
+            this.button1.Text = "Create new schema";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.CreateNewSchema);
             // 
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(11, 96);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
+            this.dataGridView1.Location = new System.Drawing.Point(15, 118);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(506, 105);
+            this.dataGridView1.Size = new System.Drawing.Size(675, 129);
             this.dataGridView1.TabIndex = 1;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
-            this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewCellContentClick);
+            this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridViewCellMouseClick);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.label1.Location = new System.Drawing.Point(11, 66);
+            this.label1.Location = new System.Drawing.Point(15, 81);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(515, 17);
+            this.label1.Size = new System.Drawing.Size(651, 22);
             this.label1.TabIndex = 3;
             this.label1.Text = "Doppelklick auf den Namen um das gewünschte Analyse-Schema zu bearbeiten.";
             // 
             // delete_selected_schema
             // 
-            this.delete_selected_schema.Location = new System.Drawing.Point(147, 30);
+            this.delete_selected_schema.Location = new System.Drawing.Point(196, 37);
+            this.delete_selected_schema.Margin = new System.Windows.Forms.Padding(4);
             this.delete_selected_schema.Name = "delete_selected_schema";
-            this.delete_selected_schema.Size = new System.Drawing.Size(138, 23);
+            this.delete_selected_schema.Size = new System.Drawing.Size(184, 28);
             this.delete_selected_schema.TabIndex = 4;
-            this.delete_selected_schema.Text = "Delete selected Schema";
+            this.delete_selected_schema.Text = "Delete selected schema";
             this.delete_selected_schema.UseVisualStyleBackColor = true;
-            this.delete_selected_schema.Click += new System.EventHandler(this.delete_selected_schema_Click);
+            this.delete_selected_schema.Click += new System.EventHandler(this.DeleteSelectedSchema);
             // 
             // BaseMenu
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(545, 273);
+            this.ClientSize = new System.Drawing.Size(727, 336);
             this.Controls.Add(this.delete_selected_schema);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "BaseMenu";
-            this.Text = "Menu";
-            this.Click += new System.EventHandler(this.reload_graph_schema);
+            this.Text = "BaseMenu";
+            this.Click += new System.EventHandler(this.ReloadGraphSchema);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
