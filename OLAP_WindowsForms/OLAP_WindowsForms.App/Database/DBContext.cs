@@ -10,7 +10,7 @@ namespace OLAP_WindowsForms.App
     public static class DBContext
     {
         private static DBService _service;
-        public static DataView _dataView;
+        //public static DataView _dataView;
 
         public static  void Initialize()
         {
@@ -25,9 +25,9 @@ namespace OLAP_WindowsForms.App
             return _service ?? throw new Exception("DBContext not initialized"); 
         }
 
-        public static DataView DataView()
+        /*public static DataView DataView()
         {
             return _dataView ?? throw new Exception("DBContext not initialized");
-        }
+        }*/
     }
 }
