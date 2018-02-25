@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Operators.cs" />
     <Compile Include="View\ComboItem.cs" />
     <Compile Include="Database\DBContext.cs" />
     <Compile Include="Database\DBService.cs" />

@@ -1702,5 +1702,12 @@ namespace OLAP_WindowsForms.App
             Console.WriteLine("hospital_GL_variable set to: " + hospital_GL.Checked);
             hospital_GL_var = hospital_GL.Checked;
         }
+
+        public void DisableVars()
+        {
+            bmsr_variable.Enabled = false;
+            filter_variable.Enabled = false;
+        }
+
     }
 }
