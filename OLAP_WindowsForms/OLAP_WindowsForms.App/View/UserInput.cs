@@ -394,22 +394,6 @@ namespace OLAP_WindowsForms.App
             cBox.ValueMember = "LVL_SID";
         }
 
-        public void fillComboboxDimensionGroupedBy(ComboBox cBox, int dim_sid, string lvl_pos)
-        {
-            DataTable dt = DBContext.Service().GetData(
-              "SELECT LVL_SID, LVL_NAME " +
-              "FROM DW_LEVEL " +
-              "WHERE DIM_SID = " + dim_sid +
-              "AND LVL_POSITION < " + lvl_pos +
-              "ORDER BY LVL_SID DESC"
-               );
-            DataTable dt2 = dt.Copy();
-
-            cBox.DataSource = dt2;
-            cBox.DisplayMember = "LVL_NAME";
-            cBox.ValueMember = "LVL_SID";
-        }
-
         public void fillListBoxDimension(ListBox lBox, int dim_sid, string lvl_sid)
         {
             try

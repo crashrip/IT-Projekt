@@ -48,7 +48,7 @@ namespace OLAP_WindowsForms.App
             {
                 row = e.RowIndex;
                 column = e.ColumnIndex;
-                Console.WriteLine("row: " + row + " column " + column);
+                //Console.WriteLine("row: " + row + " column " + column);
                 if (e.ColumnIndex == 0)
                 {
                     DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
@@ -57,7 +57,7 @@ namespace OLAP_WindowsForms.App
                     DataRow[] dr = dt2.Select();
                     String index = dr[0].ItemArray[0].ToString();
                     int ags_sid = Int32.Parse(index);
-                    Console.WriteLine("bearbeiten " + cell.Value.ToString() + " AGS_SID: " + ags_sid);
+                    //Console.WriteLine("bearbeiten " + cell.Value.ToString() + " AGS_SID: " + ags_sid);
                     LoadForm load = new LoadForm(ags_sid);
                     load.ShowDialog();
                 }
@@ -101,7 +101,7 @@ namespace OLAP_WindowsForms.App
             {
                 row = e.RowIndex;
                 column = e.ColumnIndex;
-                Console.WriteLine("row: " + row + " column " + column);
+                //Console.WriteLine("row: " + row + " column " + column);
             }
 
         }

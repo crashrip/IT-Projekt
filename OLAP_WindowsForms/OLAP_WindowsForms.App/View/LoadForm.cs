@@ -42,11 +42,11 @@ namespace OLAP_WindowsForms.App.View
             {
                 row = e.RowIndex;
                 column = e.ColumnIndex;
-                Console.WriteLine("row: " + row + " column " + column);
+                //Console.WriteLine("row: " + row + " column " + column);
                 if (e.ColumnIndex == 0)
                 {
                     DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    Console.WriteLine("bearbeiten " + cell.Value);
+                    //Console.WriteLine("bearbeiten " + cell.Value);
                     int value = Int32.Parse(cell.Value.ToString());
                     UserInput userinput = new UserInput(ags_sid, false, value);
                     userinput.ShowDialog();
@@ -100,12 +100,12 @@ namespace OLAP_WindowsForms.App.View
             {
                 row = e.RowIndex;
                 column = e.ColumnIndex;
-                Console.WriteLine("row: " + row + " column " + column);
+                //Console.WriteLine("row: " + row + " column " + column);
             }
         }
 
         //Initiate button
-        private void button1_Click(object sender, EventArgs e)
+        private void initiateButton_Click(object sender, EventArgs e)
         {
             DataGridViewCell cell = null;
             if (column == 0)
