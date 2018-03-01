@@ -37,12 +37,11 @@ namespace OLAP_WindowsForms.App.View
             
             String index = dr[0].ItemArray[0].ToString();
                 int ags_sid = 1;
-                if (!(index.Equals("") || index == null))
+                if (!(index.Equals("") || index == null)) // if list is empty
                 {
-                    Console.WriteLine("enter madness");
                     ags_sid = Int32.Parse(index) + 1;
                 }
-                Console.WriteLine("new index: " + index+" index int: "+ags_sid);
+                //Console.WriteLine("new index: " + index+" index int: "+ags_sid);
 
             // AGS_ANALYSIS_GRAPH_SCHEMA
             list.AddFirst(new Insert_item("AGS_SID", ags_sid));
