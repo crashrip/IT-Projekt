@@ -298,6 +298,7 @@ namespace OLAP_WindowsForms.App.View
             else
             {
                 // TODO some error message
+                Console.WriteLine("Some error message");
             }
         }
 
