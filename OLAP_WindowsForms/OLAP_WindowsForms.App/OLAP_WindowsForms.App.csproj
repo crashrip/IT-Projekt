@@ -60,12 +60,6 @@
     <Compile Include="View\CreateNewAnalysis.Designer.cs">
       <DependentUpon>CreateNewAnalysis.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\DataView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\DataView.Designer.cs">
-      <DependentUpon>DataView.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\Insert_item.cs" />
     <Compile Include="View\LoadForm.cs">
       <SubType>Form</SubType>
@@ -113,9 +107,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="View\CreateNewAnalysis.resx">
       <DependentUpon>CreateNewAnalysis.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\DataView.resx">
-      <DependentUpon>DataView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\LoadForm.resx">
       <DependentUpon>LoadForm.cs</DependentUpon>

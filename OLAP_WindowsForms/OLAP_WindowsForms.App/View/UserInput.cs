@@ -394,22 +394,6 @@ namespace OLAP_WindowsForms.App
             cBox.ValueMember = "LVL_SID";
         }
 
-        public void fillComboboxDimensionGroupedBy(ComboBox cBox, int dim_sid, string lvl_pos)
-        {
-            DataTable dt = DBContext.Service().GetData(
-              "SELECT LVL_SID, LVL_NAME " +
-              "FROM DW_LEVEL " +
-              "WHERE DIM_SID = " + dim_sid +
-              "AND LVL_POSITION < " + lvl_pos +
-              "ORDER BY LVL_SID DESC"
-               );
-            DataTable dt2 = dt.Copy();
-
-            cBox.DataSource = dt2;
-            cBox.DisplayMember = "LVL_NAME";
-            cBox.ValueMember = "LVL_SID";
-        }
-
         public void fillListBoxDimension(ListBox lBox, int dim_sid, string lvl_sid)
         {
             try
@@ -659,8 +643,8 @@ namespace OLAP_WindowsForms.App
 
                 Console.WriteLine("AGS_SID: " + loaded_ags_sid + " ASS_SID: " + loaded_ass_sid);
                 // load cube_sid
-                int cube_sid = DBContext.Service().getKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
-                String cube_name = DBContext.Service().getSKeyfromTable("DW_CUBE", cube_sid, "CUBE_SID", "CUBE_NAME");
+                int cube_sid = DBContext.Service().GetKeyfromTable("AGS_NON_CMP_ASS", loaded_ass_sid, "ASS_SID_NASS", "CUBE_SID");
+                String cube_name = DBContext.Service().GetSKeyfromTable("DW_CUBE", cube_sid, "CUBE_SID", "CUBE_NAME");
                 // initialize combobox
                 ComboItem.SetComboboxContent(ComboBoxCube, "DW_CUBE", "CUBE_SID", "CUBE_NAME");
                 if (cube_sid >= 0)
@@ -713,7 +697,7 @@ namespace OLAP_WindowsForms.App
                         else
                         {
                             dl_i = Convert.ToInt32(dl);
-                            dl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", dl_i, "LVL_SID", "LVL_NAME");
+                            dl_s = DBContext.Service().GetSKeyfromTable("DW_LEVEL", dl_i, "LVL_SID", "LVL_NAME");
                         }
                         if (dn == DBNull.Value)
                         {
@@ -730,7 +714,7 @@ namespace OLAP_WindowsForms.App
                         else
                         {
                             gl_i = Convert.ToInt32(gl);
-                            gl_s = DBContext.Service().getSKeyfromTable("DW_LEVEL", gl_i, "LVL_SID", "LVL_NAME");
+                            gl_s = DBContext.Service().GetSKeyfromTable("DW_LEVEL", gl_i, "LVL_SID", "LVL_NAME");
                         }
                         Console.WriteLine("dim: " + dim_i);
                         if (dlNull) { Console.Write(" DL: Null "); } else { Console.Write(" DL: " + dl_i); }
@@ -763,7 +747,7 @@ namespace OLAP_WindowsForms.App
                                             if (dim_pred_sid > 0)
                                             {
                                                 
-                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                String key = DBContext.Service().GetSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
                                                 int index = LDW_DOCTOR.FindString(key);
                                                 LDW_DOCTOR.SetSelected(index, true);
                                                 //LDW_DOCTOR.Enabled = false;
@@ -837,7 +821,7 @@ namespace OLAP_WindowsForms.App
                                             if (dim_pred_sid > 0)
                                             {
                                                 Console.WriteLine("insurant: ");
-                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                String key = DBContext.Service().GetSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
                                                 int index = LDW_INSURANT.FindString(key);
                                                 Console.WriteLine("insurant_: " + key + " index: " + index);
                                                 LDW_INSURANT.SetSelected(index, true);
@@ -909,7 +893,7 @@ namespace OLAP_WindowsForms.App
                                             
                                             if (dim_pred_sid > 0){
                                                 Console.WriteLine("drug: ");
-                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                String key = DBContext.Service().GetSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
                                                 int index = LDW_DRUG.FindString(key);
                                                 Console.WriteLine("drug_: " + key + " index: " + index);
                                                 LDW_DRUG.SetSelected(index, true);
@@ -976,7 +960,7 @@ namespace OLAP_WindowsForms.App
 
                                             if (dim_pred_sid > 0)
                                             {
-                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                String key = DBContext.Service().GetSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
                                                 int index = LDW_MEDSERVICE.FindString(key);
                                                 LDW_MEDSERVICE.SetSelected(index, true);
                                                 //LDW_DOCTOR.Enabled = false;
@@ -1041,7 +1025,7 @@ namespace OLAP_WindowsForms.App
 
                                             if (dim_pred_sid > 0)
                                             {
-                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                String key = DBContext.Service().GetSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
                                                 int index = LDW_HOSPITAL.FindString(key);
                                                 LDW_HOSPITAL.SetSelected(index, true);
                                                 //LDW_DOCTOR.Enabled = false;
@@ -1106,7 +1090,7 @@ namespace OLAP_WindowsForms.App
 
                                             if (dim_pred_sid > 0)
                                             {
-                                                String key = DBContext.Service().getSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
+                                                String key = DBContext.Service().GetSKeyfromTable("DW_DIM_PREDICATE", dim_pred_sid, "DIM_PRED_SID", "DIM_PRED_NAME");
                                                 int index = LDW_TIME.FindString(key);
                                                 LDW_TIME.SetSelected(index, true);
                                                 //LDW_DOCTOR.Enabled = false;
@@ -1170,7 +1154,7 @@ namespace OLAP_WindowsForms.App
                         }
                         else
                         {
-                            String key = DBContext.Service().getSKeyfromTable("DW_BMSR_PREDICATE", bmsr_int, "BMSR_PRED_SID", "BMSR_PRED_NAME");
+                            String key = DBContext.Service().GetSKeyfromTable("DW_BMSR_PREDICATE", bmsr_int, "BMSR_PRED_SID", "BMSR_PRED_NAME");
                             Console.WriteLine("key: " + key);
                             int index = LDW_BMSR.FindString(key);
                             Console.WriteLine("key_int: " + index);
@@ -1189,7 +1173,7 @@ namespace OLAP_WindowsForms.App
                         int damsr_int = Convert.ToInt32(damsr_o);
                         Console.WriteLine("bmsr_int: " + damsr_int);
 
-                        String key = DBContext.Service().getSKeyfromTable("DW_DERIVED_AGGREGATE_MEASURE", damsr_int, "DAMSR_SID", "DAMSR_NAME");
+                        String key = DBContext.Service().GetSKeyfromTable("DW_DERIVED_AGGREGATE_MEASURE", damsr_int, "DAMSR_SID", "DAMSR_NAME");
                         Console.WriteLine("key: " + key);
                         int index = LDW_MEASURES.FindString(key);
                         Console.WriteLine("key_int: " + index);
@@ -1214,7 +1198,7 @@ namespace OLAP_WindowsForms.App
                         }
                         else
                         {
-                            String key = DBContext.Service().getSKeyfromTable("dw_amsr_predicate", filter_int, "AMSR_PRED_SID", "AMSR_PRED_NAME");
+                            String key = DBContext.Service().GetSKeyfromTable("dw_amsr_predicate", filter_int, "AMSR_PRED_SID", "AMSR_PRED_NAME");
                             Console.WriteLine("key: " + key);
                             int index = LDW_FILTER.FindString(key);
                             Console.WriteLine("key_int: " + index);
@@ -1232,7 +1216,7 @@ namespace OLAP_WindowsForms.App
         public void insert(int ass_sid = -1)
         {
             //prepare Connection
-            NpgsqlConnection connection = DBContext.Service().getConnection();
+            NpgsqlConnection connection = DBContext.Service().GetConnection();
             connection.Open();
             NpgsqlTransaction transaction = connection.BeginTransaction(IsolationLevel.ReadCommitted);
 
@@ -1273,7 +1257,7 @@ namespace OLAP_WindowsForms.App
                 list.AddLast(new Insert_item("AGS_SID", loaded_ags_sid)); //  Variable aus ags_analysis_graph_schema
                 list.AddLast(new Insert_item("ASS_POS_X", 0));
                 list.AddLast(new Insert_item("ASS_POS_Y", 0));
-                DBContext.Service().insertWithoutPK(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", list);
+                DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_ANALYSIS_SITUATION_SCHEMA", list);
 
                 
                 list.Clear();
@@ -1284,37 +1268,37 @@ namespace OLAP_WindowsForms.App
                     list.AddFirst(new Insert_item("ASS_SID_NASS", id));
                     list.AddLast(new Insert_item("ASS_USED_IN_CASS", 0)); // 1 used in comparative analysis , 0 used in non comparative analysis
                     list.AddLast(new Insert_item("CUBE_SID", Int32.Parse(ComboBoxCube.SelectedValue.ToString())));
-                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NON_CMP_ASS", list);
+                    DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NON_CMP_ASS", list);
                 } 
 
                 // DIM Qualification -> AGS_NASS_DIM_QUAL & AGS_NASS_DIM_QUAL_SLICE_COND
-                if (dim_doctor) { DBContext.Service().insertDimQual(connection, transaction, CDW_DOCTOR, CDW_DOCTOR_GL, TDW_DOCTOR, LDW_DOCTOR, id, 1, "Doctor", doctor_DL, doctor_DN, doctor_SC, doctor_GL); }
-                if (dim_insurance) { DBContext.Service().insertDimQual(connection, transaction, CDW_INSURANT, CDW_INSURANT_GL, TDW_INSURANT, LDW_INSURANT, id, 2, "Insurant", insurant_DL, insurant_DN, insurant_SC, insurant_GL); }
-                if (dim_drug) { DBContext.Service().insertDimQual(connection, transaction, CDW_DRUG, CDW_DRUG_GL, TDW_DRUG, LDW_DRUG, id, 3, "Drug", drug_DL, drug_DN, drug_SC, drug_GL); }
-                if (dim_medservice) { DBContext.Service().insertDimQual(connection, transaction, CDW_MEDSERVICE, CDW_MEDSERVICE_GL, TDW_MEDSERVICE, LDW_MEDSERVICE, id, 4, "MedService", meds_DL, meds_DN, meds_SC, meds_GL); }
-                if (dim_hospital) { DBContext.Service().insertDimQual(connection, transaction, CDW_HOSPITAL, CDW_HOSPITAL_GL, TDW_HOSPITAL, LDW_HOSPITAL, id, 5, "Hospital", hospital_DL, hospital_DN, hospital_SC, hospital_GL); }
-                if (dim_time) { DBContext.Service().insertDimQual(connection, transaction, CDW_TIME, CDW_TIME_GL, TDW_TIME, LDW_TIME, id, 6, "Time", time_DL, time_DN, time_SC, time_GL); }
+                if (dim_doctor) { DBContext.Service().InsertDimQual(connection, transaction, CDW_DOCTOR, CDW_DOCTOR_GL, TDW_DOCTOR, LDW_DOCTOR, id, 1, "Doctor", doctor_DL, doctor_DN, doctor_SC, doctor_GL); }
+                if (dim_insurance) { DBContext.Service().InsertDimQual(connection, transaction, CDW_INSURANT, CDW_INSURANT_GL, TDW_INSURANT, LDW_INSURANT, id, 2, "Insurant", insurant_DL, insurant_DN, insurant_SC, insurant_GL); }
+                if (dim_drug) { DBContext.Service().InsertDimQual(connection, transaction, CDW_DRUG, CDW_DRUG_GL, TDW_DRUG, LDW_DRUG, id, 3, "Drug", drug_DL, drug_DN, drug_SC, drug_GL); }
+                if (dim_medservice) { DBContext.Service().InsertDimQual(connection, transaction, CDW_MEDSERVICE, CDW_MEDSERVICE_GL, TDW_MEDSERVICE, LDW_MEDSERVICE, id, 4, "MedService", meds_DL, meds_DN, meds_SC, meds_GL); }
+                if (dim_hospital) { DBContext.Service().InsertDimQual(connection, transaction, CDW_HOSPITAL, CDW_HOSPITAL_GL, TDW_HOSPITAL, LDW_HOSPITAL, id, 5, "Hospital", hospital_DL, hospital_DN, hospital_SC, hospital_GL); }
+                if (dim_time) { DBContext.Service().InsertDimQual(connection, transaction, CDW_TIME, CDW_TIME_GL, TDW_TIME, LDW_TIME, id, 6, "Time", time_DL, time_DN, time_SC, time_GL); }
 
                 // BMSR ->
                 list.Clear();
                 Console.WriteLine("Listboxes: - BMSR: " + LDW_BMSR.SelectedIndex + " Measure: " + LDW_MEASURES.SelectedIndex + " Filter: " + LDW_FILTER.SelectedIndex);
                 if (bmsr_variable.Checked)
                 {
-                    list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID",DBContext.Service().getLatestID("NASS_BMSR_FLT_SID","AGS_NASS_BMSR_FILTER")+1));
+                    list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID",DBContext.Service().GetLatestID("NASS_BMSR_FLT_SID","AGS_NASS_BMSR_FILTER")+1));
                     list.AddLast(new Insert_item("ASS_SID_NASS", id));
-                    Console.WriteLine("variable: pk"+ (DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1)+" pred_sid " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
+                    Console.WriteLine("variable: pk"+ (DBContext.Service().GetLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1)+" pred_sid " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
                     list.AddLast(new Insert_item("BMSR_PRED_SID", (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1)));
-                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
+                    DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
                 } else if (LDW_BMSR.SelectedIndex != -1)
                 { 
-                    int nass_bmsr_flt_sid = DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1;
+                    int nass_bmsr_flt_sid = DBContext.Service().GetLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1;
                     foreach (DataRowView dr in LDW_BMSR.SelectedItems)
                     {
                         list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID",nass_bmsr_flt_sid));
                         list.AddLast(new Insert_item("ASS_SID_NASS", id));
                         list.AddLast(new Insert_item("BMSR_PRED_SID", Int32.Parse(dr.Row["bmsr_pred_sid"].ToString())));
                         Console.WriteLine("bmsr: " + dr.Row["bmsr_pred_sid"].ToString());
-                        DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
+                        DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
                         list.Clear();
                         nass_bmsr_flt_sid++;
                     }
@@ -1328,10 +1312,10 @@ namespace OLAP_WindowsForms.App
                     DataRow[] dr = dt2.Select();
                     int bmsr_pred_sid = Int32.Parse(dr[0].ItemArray[0].ToString());
 
-                    list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID", DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1));
+                    list.AddFirst(new Insert_item("NASS_BMSR_FLT_SID", DBContext.Service().GetLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1));
                     list.AddLast(new Insert_item("ASS_SID_NASS", id));
                     list.AddLast(new Insert_item("BMSR_PRED_SID", bmsr_pred_sid));
-                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
+                    DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NASS_BMSR_FILTER", list);
                 }
 
                 // Measures ->
@@ -1339,14 +1323,14 @@ namespace OLAP_WindowsForms.App
 
                 if (LDW_MEASURES.SelectedIndex != -1)
                 {
-                    int nass_amsr_sid = DBContext.Service().getLatestID("NASS_AMSR_SID", "AGS_NASS_AGGREGATE_MEASSURE") + 1;
+                    int nass_amsr_sid = DBContext.Service().GetLatestID("NASS_AMSR_SID", "AGS_NASS_AGGREGATE_MEASSURE") + 1;
                     foreach (DataRowView dr in LDW_MEASURES.SelectedItems)
                     {
                         list.AddFirst(new Insert_item("NASS_AMSR_SID", nass_amsr_sid));
                         list.AddLast(new Insert_item("ASS_SID_NASS", id));
                         list.AddLast(new Insert_item("DAMSR_SID", Int32.Parse(dr.Row["damsr_sid"].ToString())));
                         Console.WriteLine("bmsr: " + dr.Row["damsr_sid"].ToString());
-                        DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AGGREGATE_MEASSURE", list);
+                        DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NASS_AGGREGATE_MEASSURE", list);
                         list.Clear();
                         nass_amsr_sid++;
                     }
@@ -1364,22 +1348,22 @@ namespace OLAP_WindowsForms.App
                     DataRow[] dr = dt2.Select();
                     int amsr_pred_sid = Int32.Parse(dr[0].ItemArray[0].ToString());
 
-                    list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", DBContext.Service().getLatestID("NASS_AMSR_FLT_SID", "AGS_NASS_AMSR_FILTER") + 1));
+                    list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", DBContext.Service().GetLatestID("NASS_AMSR_FLT_SID", "AGS_NASS_AMSR_FILTER") + 1));
                     list.AddLast(new Insert_item("ASS_SID_NASS", id));
                     Console.WriteLine("variable: pk" +amsr_pred_sid);
                     list.AddLast(new Insert_item("AMSR_PRED_SID", amsr_pred_sid));
-                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
+                    DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
                 }
                 else if (LDW_FILTER.SelectedIndex != -1)
                 {
-                    int nass_amsr_flt_sid = DBContext.Service().getLatestID("NASS_AMSR_FLT_SID", "AGS_NASS_AMSR_FILTER") + 1;
+                    int nass_amsr_flt_sid = DBContext.Service().GetLatestID("NASS_AMSR_FLT_SID", "AGS_NASS_AMSR_FILTER") + 1;
                     foreach (DataRowView dr in LDW_FILTER.SelectedItems)
                     {
                         list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", nass_amsr_flt_sid));
                         list.AddLast(new Insert_item("ASS_SID_NASS", id));
                         list.AddLast(new Insert_item("AMSR_PRED_SID", Int32.Parse(dr.Row["amsr_pred_sid"].ToString())));
                         Console.WriteLine("amsr filter: " + dr.Row["amsr_pred_sid"].ToString());
-                        DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
+                        DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
                         list.Clear();
                         nass_amsr_flt_sid++;
 
@@ -1395,14 +1379,14 @@ namespace OLAP_WindowsForms.App
                     DataRow[] dr = dt2.Select();
                     int amsr_pred_sid = Int32.Parse(dr[0].ItemArray[0].ToString());
 
-                    list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", DBContext.Service().getLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1));
+                    list.AddFirst(new Insert_item("NASS_AMSR_FLT_SID", DBContext.Service().GetLatestID("NASS_BMSR_FLT_SID", "AGS_NASS_BMSR_FILTER") + 1));
                     list.AddLast(new Insert_item("ASS_SID_NASS", id));
                     list.AddLast(new Insert_item("AMSR_PRED_SID", amsr_pred_sid));
-                    DBContext.Service().insertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
+                    DBContext.Service().InsertWithoutPK(connection, transaction, "AGS_NASS_AMSR_FILTER", list);
                 }
 
                 transaction.Commit();
-                DBContext.Service().transactionComplete();
+                DBContext.Service().TransactionComplete();
                 Console.WriteLine("Transaction sucessful");
             }
             catch (Exception e)
@@ -1440,7 +1424,7 @@ namespace OLAP_WindowsForms.App
         // deletes schema from cube
         public void deleteSchema(int ass_sid)
         {
-            DBContext.Service().delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", ass_sid.ToString());
+            DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", ass_sid.ToString());
             Console.WriteLine("Schema deleted " + ass_sid);
         }
 

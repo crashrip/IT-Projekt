@@ -200,7 +200,6 @@ namespace OLAP_WindowsForms.App
             this.LDW_MEASURES.Name = "LDW_MEASURES";
             this.LDW_MEASURES.Size = new System.Drawing.Size(193, 95);
             this.LDW_MEASURES.TabIndex = 20;
-            this.LDW_MEASURES.Click += new System.EventHandler(this.LDW_MEASURES_Click);
             this.LDW_MEASURES.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
             // 
             // label3

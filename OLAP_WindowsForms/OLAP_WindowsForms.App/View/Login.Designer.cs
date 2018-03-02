@@ -147,7 +147,7 @@
             this.button_submit.TabIndex = 11;
             this.button_submit.Text = "Submit";
             this.button_submit.UseVisualStyleBackColor = true;
-            this.button_submit.Click += new System.EventHandler(this.button_submit_Click);
+            this.button_submit.Click += new System.EventHandler(this.Submit);
             // 
             // Login
             // 
