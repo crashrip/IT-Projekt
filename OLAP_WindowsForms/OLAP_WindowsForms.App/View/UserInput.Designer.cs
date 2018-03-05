@@ -133,6 +133,8 @@ namespace OLAP_WindowsForms.App
             this.drillAcrossToCubeButton = new System.Windows.Forms.Button();
             this.operatorsChooser = new System.Windows.Forms.ComboBox();
             this.operate = new System.Windows.Forms.Button();
+            this.SQLQuery = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -747,7 +749,7 @@ namespace OLAP_WindowsForms.App
             // 
             // button_save
             // 
-            this.button_save.Location = new System.Drawing.Point(170, 714);
+            this.button_save.Location = new System.Drawing.Point(193, 714);
             this.button_save.Name = "button_save";
             this.button_save.Size = new System.Drawing.Size(75, 23);
             this.button_save.TabIndex = 80;
@@ -1047,6 +1049,7 @@ namespace OLAP_WindowsForms.App
             this.drillDownToLevelButton.Text = "drillDownToLevelButton";
             this.drillDownToLevelButton.UseVisualStyleBackColor = true;
             this.drillDownToLevelButton.Visible = false;
+            this.drillDownToLevelButton.Click += new System.EventHandler(this.drillDownToLevelButton_Click);
             // 
             // rollUpToLevelButton
             // 
@@ -1057,6 +1060,7 @@ namespace OLAP_WindowsForms.App
             this.rollUpToLevelButton.Text = "rollUpToLevelButton";
             this.rollUpToLevelButton.UseVisualStyleBackColor = true;
             this.rollUpToLevelButton.Visible = false;
+            this.rollUpToLevelButton.Click += new System.EventHandler(this.rollUpToLevelButton_Click);
             // 
             // moveToNodeButton
             // 
@@ -1067,6 +1071,7 @@ namespace OLAP_WindowsForms.App
             this.moveToNodeButton.Text = "moveToNodeButton";
             this.moveToNodeButton.UseVisualStyleBackColor = true;
             this.moveToNodeButton.Visible = false;
+            this.moveToNodeButton.Click += new System.EventHandler(this.moveToNodeButton_Click);
             // 
             // refocusSliceCondButton
             // 
@@ -1077,6 +1082,7 @@ namespace OLAP_WindowsForms.App
             this.refocusSliceCondButton.Text = "refocusSliceCondButton";
             this.refocusSliceCondButton.UseVisualStyleBackColor = true;
             this.refocusSliceCondButton.Visible = false;
+            this.refocusSliceCondButton.Click += new System.EventHandler(this.refocusSliceCondButton_Click);
             // 
             // refocusBMsrCondButton
             // 
@@ -1087,6 +1093,7 @@ namespace OLAP_WindowsForms.App
             this.refocusBMsrCondButton.Text = "refocusBMsrCondButton";
             this.refocusBMsrCondButton.UseVisualStyleBackColor = true;
             this.refocusBMsrCondButton.Visible = false;
+            this.refocusBMsrCondButton.Click += new System.EventHandler(this.refocusBMsrCondButton_Click);
             // 
             // refocusMeasureButton
             // 
@@ -1097,6 +1104,7 @@ namespace OLAP_WindowsForms.App
             this.refocusMeasureButton.Text = "refocusMeasureButton";
             this.refocusMeasureButton.UseVisualStyleBackColor = true;
             this.refocusMeasureButton.Visible = false;
+            this.refocusMeasureButton.Click += new System.EventHandler(this.refocusMeasureButton_Click);
             // 
             // refocusAMsrFilterButton
             // 
@@ -1107,6 +1115,7 @@ namespace OLAP_WindowsForms.App
             this.refocusAMsrFilterButton.Text = "refocusAMsrFilterButton";
             this.refocusAMsrFilterButton.UseVisualStyleBackColor = true;
             this.refocusAMsrFilterButton.Visible = false;
+            this.refocusAMsrFilterButton.Click += new System.EventHandler(this.refocusAMsrFilterButton_Click);
             // 
             // drillAcrossToCubeButton
             // 
@@ -1117,12 +1126,13 @@ namespace OLAP_WindowsForms.App
             this.drillAcrossToCubeButton.Text = "drillAcrossToCubeButton";
             this.drillAcrossToCubeButton.UseVisualStyleBackColor = true;
             this.drillAcrossToCubeButton.Visible = false;
+            this.drillAcrossToCubeButton.Click += new System.EventHandler(this.drillAcrossToCubeButton_Click);
             // 
             // operatorsChooser
             // 
             this.operatorsChooser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.operatorsChooser.FormattingEnabled = true;
-            this.operatorsChooser.Location = new System.Drawing.Point(877, 557);
+            this.operatorsChooser.Location = new System.Drawing.Point(877, 598);
             this.operatorsChooser.Name = "operatorsChooser";
             this.operatorsChooser.Size = new System.Drawing.Size(138, 21);
             this.operatorsChooser.TabIndex = 118;
@@ -1130,7 +1140,7 @@ namespace OLAP_WindowsForms.App
             // 
             // operate
             // 
-            this.operate.Location = new System.Drawing.Point(877, 498);
+            this.operate.Location = new System.Drawing.Point(877, 516);
             this.operate.Name = "operate";
             this.operate.Size = new System.Drawing.Size(138, 23);
             this.operate.TabIndex = 119;
@@ -1139,11 +1149,34 @@ namespace OLAP_WindowsForms.App
             this.operate.Visible = false;
             this.operate.Click += new System.EventHandler(this.operate_Click);
             // 
+            // SQLQuery
+            // 
+            this.SQLQuery.Location = new System.Drawing.Point(52, 714);
+            this.SQLQuery.Name = "SQLQuery";
+            this.SQLQuery.Size = new System.Drawing.Size(114, 23);
+            this.SQLQuery.TabIndex = 120;
+            this.SQLQuery.Text = "SQL Query";
+            this.SQLQuery.UseVisualStyleBackColor = true;
+            this.SQLQuery.Click += new System.EventHandler(this.SQLQuery_Click);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(877, 559);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(92, 13);
+            this.label4.TabIndex = 121;
+            this.label4.Text = "Chosen Operation";
+            this.label4.Visible = false;
+            this.label4.Click += new System.EventHandler(this.label4_Click);
+            // 
             // UserInput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1054, 751);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.SQLQuery);
             this.Controls.Add(this.operate);
             this.Controls.Add(this.operatorsChooser);
             this.Controls.Add(this.drillAcrossToCubeButton);
@@ -1362,6 +1395,8 @@ namespace OLAP_WindowsForms.App
         private System.Windows.Forms.Button drillAcrossToCubeButton;
         private System.Windows.Forms.ComboBox operatorsChooser;
         private System.Windows.Forms.Button operate;
+        private System.Windows.Forms.Button SQLQuery;
+        private System.Windows.Forms.Label label4;
     }
 }
 

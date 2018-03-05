@@ -1704,38 +1704,36 @@ namespace OLAP_WindowsForms.App
         {
             operatorsChooser.Visible = true;
             operate.Visible = true;
+            label4.Visible = true;
+            drillDownToLevelButton.Visible = true;
+            rollUpToLevelButton.Visible = true;
+            moveToNodeButton.Visible = true;
+            refocusSliceCondButton.Visible = true;
+            refocusBMsrCondButton.Visible = true;
+            refocusMeasureButton.Visible = true;
+            refocusAMsrFilterButton.Visible = true;
+            drillAcrossToCubeButton.Visible = true;
 
-            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
-                   "SELECT ddtl.* " +
-                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
-                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
-                   "AND ndq.dim_sid = ddtl.dim_sid " +
-                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
-                ).Copy();
-
-            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
-            if (dtDrillDownToLevel != null)
-            {
-                Console.WriteLine("Worked");
-                
-                operatorsChooser.DataSource = dtDrillDownToLevel;
-                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
-            }
         }
 
         private void operate_Click(object sender, EventArgs e)
         {
             if(operatorsChooser.SelectedValue != null)
             {
-                int granLvl = (int) operatorsChooser.SelectedValue;
-                DataTable dtUserInput = DBContext.Service().GetData(
-                   "SELECT ndq.* " +
-                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
-                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
-                   "AND ndq.dim_sid = ddtl.dim_sid " +
-                   "AND ddtl.lvl_sid_granlvl = " + granLvl
-                ).Copy();
-
+                /*
+                Console.WriteLine("Selected Item: " + operatorsChooser.SelectedItem.ToString());
+                Console.WriteLine("Selected Text: " + operatorsChooser.SelectedText.ToString());
+                Console.WriteLine("Selected Value: " + operatorsChooser.SelectedValue.ToString());
+                Console.WriteLine("DisplayMember: " + operatorsChooser.DisplayMember.ToString());
+                Console.WriteLine("ValueMember: " + operatorsChooser.ValueMember.ToString());
+                Console.WriteLine("comboBox: " + operatorsChooser.ToString());
+                Console.WriteLine("displayRectangle: " + operatorsChooser.DisplayRectangle.ToString());
+                Console.WriteLine("Text: " + operatorsChooser.Text.ToString());
+                */
+                var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
+                Console.WriteLine("selectedRow: " + selectedRow.ToString());
+                Console.WriteLine(selectedRow["lvl_sid_granlvl"].ToString());
+                Console.WriteLine(selectedRow["dim_sid"].ToString());
             }  
         }
 
@@ -1770,6 +1768,239 @@ namespace OLAP_WindowsForms.App
             }*/
         }
 
+        private void SQLQuery_Click(object sender, EventArgs e)
+        {
 
+            try
+            {
+                StringBuilder q = new StringBuilder();
+
+                q.Append("SELECT DISTINCT * FROM ags_non_cmp_ass anca, ags_nass_dim_qual andq, dw_cube dc, dw_level dl, dw_dim_predicate ddp");
+
+                int bmsrID = 0;
+                int measuresID = 0;
+                int filterID = 0;
+
+                if (LDW_BMSR.SelectedValue != null)
+                {
+                    q.Append(", dw_bmsr_predicate dbp");
+                }
+
+                if(LDW_MEASURES.SelectedValue != null)
+                {
+                    q.Append(", dw_derived_aggregate_measure ddam");
+                }
+
+                if(LDW_FILTER.SelectedValue != null)
+                {
+                    q.Append(", dw_amsr_predicate dap");
+                }
+
+                q.Append(" WHERE andq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                    "AND  anca.ass_sid_nass = " + this.loaded_ass_sid + " " + "AND anca.cube_sid = dc.cube_sid " +
+                    "AND dl.dim_sid = andq.dim_sid " +
+                    "AND dl.lvl_sid = andq.lvl_sid_dicelvl " +
+                    "AND ddp.dim_pred_sid = andq.dim_sid ");
+
+                if (LDW_BMSR.SelectedValue != null)
+                {
+                    bmsrID = (int)LDW_BMSR.SelectedValue;
+                    q.Append("AND dbp.bmsr_pred_sid = " + bmsrID + " ");
+                }
+
+                if (LDW_MEASURES.SelectedValue != null)
+                {
+                    measuresID = (int)LDW_MEASURES.SelectedValue;
+                    q.Append("AND ddam.damsr_sid = " + measuresID + " ");
+                }
+
+                if (LDW_FILTER.SelectedValue != null)
+                {
+                    filterID = (int)LDW_FILTER.SelectedValue;
+                    q.Append("AND dap.amsr_pred_sid = " + filterID + " ");
+                } 
+
+                q.Append("ORDER BY andq.nass_dq_sid");
+                ShowSQL showSQL = new ShowSQL(q.ToString());
+                showSQL.ShowDialog();
+            }
+            catch (Exception x)
+            {
+                Console.WriteLine(x.Message);
+            }
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void drillDownToLevelButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
+
+        private void rollUpToLevelButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
+
+        private void moveToNodeButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
+
+        private void refocusSliceCondButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
+
+        private void refocusBMsrCondButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
+
+        private void refocusMeasureButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
+
+        private void refocusAMsrFilterButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
+
+        private void drillAcrossToCubeButton_Click(object sender, EventArgs e)
+        {
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+                //operatorsChooser.ValueMember = "dim_sid";
+            }
+        }
     }
 }

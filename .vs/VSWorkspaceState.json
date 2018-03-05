@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\OLAP_WindowsForms"
+    "\\OLAP_WindowsForms",
+    "\\OLAP_WindowsForms\\OLAP_WindowsForms.App",
+    "\\OLAP_WindowsForms\\OLAP_WindowsForms.App\\View"
   ],
-  "SelectedNode": "\\OLAP_WindowsForms\\OLAP_WindowsForms.sln",
+  "SelectedNode": "\\OLAP_WindowsForms\\OLAP_WindowsForms.App\\View\\UserInput.cs",
   "PreviewInSolutionExplorer": false
 }
