@@ -35,27 +35,6 @@ namespace OLAP_WindowsForms.App.View
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //Console.WriteLine("enter cell content click");
-            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
-            {
-                row = e.RowIndex;
-                column = e.ColumnIndex;
-                //Console.WriteLine("row: " + row + " column " + column);
-                if (e.ColumnIndex == 0)
-                {
-                    DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    //Console.WriteLine("bearbeiten " + cell.Value);
-                    int value = Int32.Parse(cell.Value.ToString());
-                    UserInput userinput = new UserInput(ags_sid, false, value);
-                    userinput.ShowDialog();
-                    this.Hide();
-                    this.Close();
-                }
-            }  
-        }
-
         private void LoadForm_Click(object sender, EventArgs e)
         {
             validateGraphSchema();
@@ -70,30 +49,6 @@ namespace OLAP_WindowsForms.App.View
             this.Close();
         }
 
-        private void delete_selected_schema_Click(object sender, EventArgs e)
-        {
-            if (column == 1)
-            {
-                if (MessageBox.Show("Are you sure that you want to delete the Analysis-Schema ?", "Delete Schema", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) ==
-    DialogResult.Yes)
-                {
-                    DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
-                    Console.WriteLine("column 1 - delete: " + cell.Value.ToString());
-                    DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_NAME", "'" + cell.Value.ToString() + "'");
-                } 
-            }
-            if (column == 0)
-            {
-                if (MessageBox.Show("Are you sure that you want to delete the Analysis-Schema?", "Delete Schema", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning) ==
-    DialogResult.Yes)
-                {
-                    DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
-                    Console.WriteLine("column 0 - delete: " + cell.Value.ToString());
-                    DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
-                }
-            }
-        }
-
         private void dataGridView1_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
@@ -101,6 +56,26 @@ namespace OLAP_WindowsForms.App.View
                 row = e.RowIndex;
                 column = e.ColumnIndex;
                 //Console.WriteLine("row: " + row + " column " + column);
+                if (e.ColumnIndex == 0 && e.Button.Equals(MouseButtons.Left)) // load shema with left click
+                {
+                    DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                    //Console.WriteLine("bearbeiten " + cell.Value);
+                    int value = Int32.Parse(cell.Value.ToString());
+                    UserInput userinput = new UserInput(ags_sid, false, value);
+                    userinput.ShowDialog();
+                    this.Hide();
+                    
+                }
+                if (column == 0 && e.Button.Equals(MouseButtons.Right)) // delete schema with right click
+                {
+                    if (MessageBox.Show("Do you really want to delete this analysis situation?", "Delete Schema",
+                       MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                        DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
+                        validateGraphSchema();
+                    }
+                }
             }
         }
 
