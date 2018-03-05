@@ -168,6 +168,7 @@ namespace OLAP_WindowsForms.App
         // disable all fields except variables MARIA
         public void disable_fields()
         {
+            ComboBoxCube.Enabled = false;
             LDW_MEASURES.Enabled = false;
             if (bmsr_variable.Checked) LDW_BMSR.Enabled = true;
             if (filter_variable.Checked) LDW_FILTER.Enabled = true;

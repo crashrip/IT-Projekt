@@ -31,7 +31,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
-            this.delete_selected_schema = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,42 +47,42 @@
             // 
             // dataGridView1
             // 
+            this.dataGridView1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(11, 96);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(506, 105);
             this.dataGridView1.TabIndex = 1;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridViewCellContentClick);
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DataGridViewCellMouseClick);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
-            this.label1.Location = new System.Drawing.Point(11, 66);
+            this.label1.Location = new System.Drawing.Point(8, 66);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(519, 17);
+            this.label1.Size = new System.Drawing.Size(522, 17);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Doppelklick auf den NAMEN um das gewünschte Analyse-Schema zu bearbeiten.";
+            this.label1.Text = "Linksklick auf den NAMEN des Analyse-Grafen-Schema um das Schema zu laden";
             // 
-            // delete_selected_schema
+            // label2
             // 
-            this.delete_selected_schema.Location = new System.Drawing.Point(147, 30);
-            this.delete_selected_schema.Name = "delete_selected_schema";
-            this.delete_selected_schema.Size = new System.Drawing.Size(138, 23);
-            this.delete_selected_schema.TabIndex = 4;
-            this.delete_selected_schema.Text = "Delete selected schema";
-            this.delete_selected_schema.UseVisualStyleBackColor = true;
-            this.delete_selected_schema.Click += new System.EventHandler(this.DeleteSelectedSchema);
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.label2.Location = new System.Drawing.Point(8, 214);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(538, 17);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Rechtsklick auf den NAMEN des Analyse-Graf-Schemas um das Schema zu löschen";
             // 
             // BaseMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(545, 273);
-            this.Controls.Add(this.delete_selected_schema);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.button1);
@@ -100,6 +100,6 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button delete_selected_schema;
+        private System.Windows.Forms.Label label2;
     }
 }

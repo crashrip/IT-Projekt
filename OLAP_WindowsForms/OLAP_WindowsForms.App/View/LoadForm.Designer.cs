@@ -31,8 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.create_new_schema = new System.Windows.Forms.Button();
-            this.delete_selected_schema = new System.Windows.Forms.Button();
             this.initiate = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,9 +42,9 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
             this.label1.Location = new System.Drawing.Point(12, 20);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(451, 17);
+            this.label1.Size = new System.Drawing.Size(393, 17);
             this.label1.TabIndex = 4;
-            this.label1.Text = "Klick auf die ASS_SID um das gewünschte Analyse-Schmea zu öffnen:";
+            this.label1.Text = "Linksklick auf die ASS_SID um das Analyse Schema zu laden";
             // 
             // dataGridView1
             // 
@@ -55,28 +55,17 @@
             this.dataGridView1.RowTemplate.Height = 24;
             this.dataGridView1.Size = new System.Drawing.Size(624, 327);
             this.dataGridView1.TabIndex = 5;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellContentClick);
             this.dataGridView1.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView1_CellMouseClick);
             // 
             // create_new_schema
             // 
-            this.create_new_schema.Location = new System.Drawing.Point(179, 385);
+            this.create_new_schema.Location = new System.Drawing.Point(493, 14);
             this.create_new_schema.Name = "create_new_schema";
             this.create_new_schema.Size = new System.Drawing.Size(145, 23);
             this.create_new_schema.TabIndex = 6;
             this.create_new_schema.Text = "create new schema";
             this.create_new_schema.UseVisualStyleBackColor = true;
             this.create_new_schema.Click += new System.EventHandler(this.create_new_schema_Click);
-            // 
-            // delete_selected_schema
-            // 
-            this.delete_selected_schema.Location = new System.Drawing.Point(339, 385);
-            this.delete_selected_schema.Name = "delete_selected_schema";
-            this.delete_selected_schema.Size = new System.Drawing.Size(145, 23);
-            this.delete_selected_schema.TabIndex = 7;
-            this.delete_selected_schema.Text = "delete selected schema";
-            this.delete_selected_schema.UseVisualStyleBackColor = true;
-            this.delete_selected_schema.Click += new System.EventHandler(this.delete_selected_schema_Click);
             // 
             // initiate
             // 
@@ -88,13 +77,23 @@
             this.initiate.UseVisualStyleBackColor = true;
             this.initiate.Click += new System.EventHandler(this.initiateButton_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.25F);
+            this.label2.Location = new System.Drawing.Point(12, 391);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(418, 17);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Rechtsklick auf die ASS_SID um das Analyse Schema zu löschen";
+            // 
             // LoadForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(650, 420);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.initiate);
-            this.Controls.Add(this.delete_selected_schema);
             this.Controls.Add(this.create_new_schema);
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.label1);
@@ -112,7 +111,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button create_new_schema;
-        private System.Windows.Forms.Button delete_selected_schema;
         private System.Windows.Forms.Button initiate;
+        private System.Windows.Forms.Label label2;
     }
 }
