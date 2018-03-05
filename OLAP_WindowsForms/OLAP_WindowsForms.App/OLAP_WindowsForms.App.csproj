@@ -97,6 +97,12 @@
     <Compile Include="View\SelectTable.Designer.cs">
       <DependentUpon>SelectTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ShowSQL.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ShowSQL.Designer.cs">
+      <DependentUpon>ShowSQL.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\UserInput.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +131,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\SelectTable.resx">
       <DependentUpon>SelectTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ShowSQL.resx">
+      <DependentUpon>ShowSQL.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\UserInput.resx">
       <DependentUpon>UserInput.cs</DependentUpon>
