@@ -1542,28 +1542,6 @@ namespace OLAP_WindowsForms.App
         {
             Console.WriteLine("measure: " +LDW_MEASURES.SelectedIndex);
         }
-        //Used for testing initalisation
-        public void button1_Click(object sender, EventArgs e)
-        {
-            
-            Console.WriteLine("The Test Commences!-> "+ ComboBoxCube.SelectedValue.ToString());
-            try {
-                /*
-                selectTable = new SelectTable();
-                selectTable.cube_sid = ComboBoxCube.SelectedValue.ToString();
-                selectTable.tableNameCB = "test";
-                selectTable.setLabe2();
-                selectTable.ShowDialog(this);
-                */
-                UserInput initUserInput = new UserInput(loaded_ags_sid, false, loaded_ass_sid);
-
-                initUserInput.ShowDialog();
-            } catch (Exception exx)
-            {
-                Console.WriteLine(exx.Message);
-            }
-        }
-
         public void bmsr_variable_CheckedChanged(object sender, EventArgs e)
         {
             Console.WriteLine("variable 1 " + (Int32.Parse((ComboBoxCube.SelectedValue.ToString())) * -1));
@@ -1691,7 +1669,107 @@ namespace OLAP_WindowsForms.App
         {
             bmsr_variable.Enabled = false;
             filter_variable.Enabled = false;
+            doctor_DL.Enabled = false;
+            doctor_DN.Enabled = false;
+            doctor_SC.Enabled = false;
+            doctor_GL.Enabled = false;
+            insurant_DL.Enabled = false;
+            insurant_DN.Enabled = false;
+            insurant_SC.Enabled = false;
+            insurant_GL.Enabled = false;
+            drug_DL.Enabled = false;
+            drug_DN.Enabled = false;
+            drug_SC.Enabled = false;
+            drug_GL.Enabled = false;
+            meds_DL.Enabled = false;
+            meds_DN.Enabled = false;
+            meds_SC.Enabled = false;
+            meds_GL.Enabled = false;
+            hospital_DL.Enabled = false;
+            hospital_DN.Enabled = false;
+            hospital_SC.Enabled = false;
+            hospital_GL.Enabled = false;
+            time_DL.Enabled = false;
+            time_DN.Enabled = false;
+            time_SC.Enabled = false;
+            time_GL.Enabled = false;
         }
+
+        public void DisableNewOperators()
+        {
+            button_select_navigation_operator.Enabled = false;
+        }
+
+        public void CheckOperators()
+        {
+            operatorsChooser.Visible = true;
+            operate.Visible = true;
+
+            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
+                   "SELECT ddtl.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtDrillDownToLevel != null)
+            {
+                Console.WriteLine("Worked");
+                
+                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DisplayMember = "lvl_sid_granlvl";
+            }
+        }
+
+        private void operate_Click(object sender, EventArgs e)
+        {
+            if(operatorsChooser.SelectedValue != null)
+            {
+                int granLvl = (int) operatorsChooser.SelectedValue;
+                DataTable dtUserInput = DBContext.Service().GetData(
+                   "SELECT ndq.* " +
+                   "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                   "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                   "AND ndq.dim_sid = ddtl.dim_sid " +
+                   "AND ddtl.lvl_sid_granlvl = " + granLvl
+                ).Copy();
+
+            }  
+        }
+
+        private void UserInput_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        //Used for testing initalisation
+        public void startOperating_Click(object sender, EventArgs e)
+        {
+            CheckOperators();
+            /*
+            Console.WriteLine("The Test Commences!-> " + ComboBoxCube.SelectedValue.ToString());
+            try
+            {
+               
+                
+                selectTable = new SelectTable();
+                selectTable.cube_sid = ComboBoxCube.SelectedValue.ToString();
+                selectTable.tableNameCB = "test";
+                selectTable.setLabe2();
+                selectTable.ShowDialog(this);
+                
+                UserInput initUserInput = new UserInput(loaded_ags_sid, false, loaded_ass_sid);
+
+                initUserInput.ShowDialog();
+            }
+            catch (Exception exx)
+            {
+                Console.WriteLine(exx.Message);
+            }*/
+        }
+
 
     }
 }

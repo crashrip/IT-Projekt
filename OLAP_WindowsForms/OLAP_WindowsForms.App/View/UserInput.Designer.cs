@@ -122,7 +122,17 @@ namespace OLAP_WindowsForms.App
             this.CDW_MEDSERVICE = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.startOperating = new System.Windows.Forms.Button();
+            this.drillDownToLevelButton = new System.Windows.Forms.Button();
+            this.rollUpToLevelButton = new System.Windows.Forms.Button();
+            this.moveToNodeButton = new System.Windows.Forms.Button();
+            this.refocusSliceCondButton = new System.Windows.Forms.Button();
+            this.refocusBMsrCondButton = new System.Windows.Forms.Button();
+            this.refocusMeasureButton = new System.Windows.Forms.Button();
+            this.refocusAMsrFilterButton = new System.Windows.Forms.Button();
+            this.drillAcrossToCubeButton = new System.Windows.Forms.Button();
+            this.operatorsChooser = new System.Windows.Forms.ComboBox();
+            this.operate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label1
@@ -1017,23 +1027,134 @@ namespace OLAP_WindowsForms.App
             this.label39.TabIndex = 83;
             this.label39.Text = "MedService";
             // 
-            // button1
+            // startOperating
             // 
-            this.button1.Location = new System.Drawing.Point(682, 714);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 109;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.startOperating.Location = new System.Drawing.Point(633, 714);
+            this.startOperating.Name = "startOperating";
+            this.startOperating.Size = new System.Drawing.Size(124, 23);
+            this.startOperating.TabIndex = 109;
+            this.startOperating.Text = "startOperating";
+            this.startOperating.UseVisualStyleBackColor = true;
+            this.startOperating.Visible = false;
+            this.startOperating.Click += new System.EventHandler(this.startOperating_Click);
+            // 
+            // drillDownToLevelButton
+            // 
+            this.drillDownToLevelButton.Location = new System.Drawing.Point(877, 80);
+            this.drillDownToLevelButton.Name = "drillDownToLevelButton";
+            this.drillDownToLevelButton.Size = new System.Drawing.Size(138, 23);
+            this.drillDownToLevelButton.TabIndex = 110;
+            this.drillDownToLevelButton.Text = "drillDownToLevelButton";
+            this.drillDownToLevelButton.UseVisualStyleBackColor = true;
+            this.drillDownToLevelButton.Visible = false;
+            // 
+            // rollUpToLevelButton
+            // 
+            this.rollUpToLevelButton.Location = new System.Drawing.Point(877, 131);
+            this.rollUpToLevelButton.Name = "rollUpToLevelButton";
+            this.rollUpToLevelButton.Size = new System.Drawing.Size(138, 23);
+            this.rollUpToLevelButton.TabIndex = 111;
+            this.rollUpToLevelButton.Text = "rollUpToLevelButton";
+            this.rollUpToLevelButton.UseVisualStyleBackColor = true;
+            this.rollUpToLevelButton.Visible = false;
+            // 
+            // moveToNodeButton
+            // 
+            this.moveToNodeButton.Location = new System.Drawing.Point(877, 178);
+            this.moveToNodeButton.Name = "moveToNodeButton";
+            this.moveToNodeButton.Size = new System.Drawing.Size(138, 23);
+            this.moveToNodeButton.TabIndex = 112;
+            this.moveToNodeButton.Text = "moveToNodeButton";
+            this.moveToNodeButton.UseVisualStyleBackColor = true;
+            this.moveToNodeButton.Visible = false;
+            // 
+            // refocusSliceCondButton
+            // 
+            this.refocusSliceCondButton.Location = new System.Drawing.Point(877, 227);
+            this.refocusSliceCondButton.Name = "refocusSliceCondButton";
+            this.refocusSliceCondButton.Size = new System.Drawing.Size(138, 23);
+            this.refocusSliceCondButton.TabIndex = 113;
+            this.refocusSliceCondButton.Text = "refocusSliceCondButton";
+            this.refocusSliceCondButton.UseVisualStyleBackColor = true;
+            this.refocusSliceCondButton.Visible = false;
+            // 
+            // refocusBMsrCondButton
+            // 
+            this.refocusBMsrCondButton.Location = new System.Drawing.Point(877, 283);
+            this.refocusBMsrCondButton.Name = "refocusBMsrCondButton";
+            this.refocusBMsrCondButton.Size = new System.Drawing.Size(138, 23);
+            this.refocusBMsrCondButton.TabIndex = 114;
+            this.refocusBMsrCondButton.Text = "refocusBMsrCondButton";
+            this.refocusBMsrCondButton.UseVisualStyleBackColor = true;
+            this.refocusBMsrCondButton.Visible = false;
+            // 
+            // refocusMeasureButton
+            // 
+            this.refocusMeasureButton.Location = new System.Drawing.Point(877, 335);
+            this.refocusMeasureButton.Name = "refocusMeasureButton";
+            this.refocusMeasureButton.Size = new System.Drawing.Size(138, 23);
+            this.refocusMeasureButton.TabIndex = 115;
+            this.refocusMeasureButton.Text = "refocusMeasureButton";
+            this.refocusMeasureButton.UseVisualStyleBackColor = true;
+            this.refocusMeasureButton.Visible = false;
+            // 
+            // refocusAMsrFilterButton
+            // 
+            this.refocusAMsrFilterButton.Location = new System.Drawing.Point(877, 389);
+            this.refocusAMsrFilterButton.Name = "refocusAMsrFilterButton";
+            this.refocusAMsrFilterButton.Size = new System.Drawing.Size(138, 23);
+            this.refocusAMsrFilterButton.TabIndex = 116;
+            this.refocusAMsrFilterButton.Text = "refocusAMsrFilterButton";
+            this.refocusAMsrFilterButton.UseVisualStyleBackColor = true;
+            this.refocusAMsrFilterButton.Visible = false;
+            // 
+            // drillAcrossToCubeButton
+            // 
+            this.drillAcrossToCubeButton.Location = new System.Drawing.Point(877, 445);
+            this.drillAcrossToCubeButton.Name = "drillAcrossToCubeButton";
+            this.drillAcrossToCubeButton.Size = new System.Drawing.Size(138, 23);
+            this.drillAcrossToCubeButton.TabIndex = 117;
+            this.drillAcrossToCubeButton.Text = "drillAcrossToCubeButton";
+            this.drillAcrossToCubeButton.UseVisualStyleBackColor = true;
+            this.drillAcrossToCubeButton.Visible = false;
+            // 
+            // operatorsChooser
+            // 
+            this.operatorsChooser.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.operatorsChooser.FormattingEnabled = true;
+            this.operatorsChooser.Location = new System.Drawing.Point(877, 557);
+            this.operatorsChooser.Name = "operatorsChooser";
+            this.operatorsChooser.Size = new System.Drawing.Size(138, 21);
+            this.operatorsChooser.TabIndex = 118;
+            this.operatorsChooser.Visible = false;
+            // 
+            // operate
+            // 
+            this.operate.Location = new System.Drawing.Point(877, 498);
+            this.operate.Name = "operate";
+            this.operate.Size = new System.Drawing.Size(138, 23);
+            this.operate.TabIndex = 119;
+            this.operate.Text = "operate";
+            this.operate.UseVisualStyleBackColor = true;
+            this.operate.Visible = false;
+            this.operate.Click += new System.EventHandler(this.operate_Click);
             // 
             // UserInput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(826, 751);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(1054, 751);
+            this.Controls.Add(this.operate);
+            this.Controls.Add(this.operatorsChooser);
+            this.Controls.Add(this.drillAcrossToCubeButton);
+            this.Controls.Add(this.refocusAMsrFilterButton);
+            this.Controls.Add(this.refocusMeasureButton);
+            this.Controls.Add(this.refocusBMsrCondButton);
+            this.Controls.Add(this.refocusSliceCondButton);
+            this.Controls.Add(this.moveToNodeButton);
+            this.Controls.Add(this.rollUpToLevelButton);
+            this.Controls.Add(this.drillDownToLevelButton);
+            this.Controls.Add(this.startOperating);
             this.Controls.Add(this.hospital_GL);
             this.Controls.Add(this.hospital_SC);
             this.Controls.Add(this.hospital_DN);
@@ -1129,6 +1250,7 @@ namespace OLAP_WindowsForms.App
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "UserInput";
             this.Text = "New Schema";
+            this.Load += new System.EventHandler(this.UserInput_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1227,9 +1349,19 @@ namespace OLAP_WindowsForms.App
         public System.Windows.Forms.ComboBox CDW_MEDSERVICE;
         public System.Windows.Forms.Label label38;
         public System.Windows.Forms.Label label39;
-        public System.Windows.Forms.Button button1;
+        public System.Windows.Forms.Button startOperating;
         public System.Windows.Forms.ComboBox ComboBoxCube;
         public System.Windows.Forms.ListBox LDW_BMSR;
+        private System.Windows.Forms.Button drillDownToLevelButton;
+        private System.Windows.Forms.Button rollUpToLevelButton;
+        private System.Windows.Forms.Button moveToNodeButton;
+        private System.Windows.Forms.Button refocusSliceCondButton;
+        private System.Windows.Forms.Button refocusBMsrCondButton;
+        private System.Windows.Forms.Button refocusMeasureButton;
+        private System.Windows.Forms.Button refocusAMsrFilterButton;
+        private System.Windows.Forms.Button drillAcrossToCubeButton;
+        private System.Windows.Forms.ComboBox operatorsChooser;
+        private System.Windows.Forms.Button operate;
     }
 }
 
