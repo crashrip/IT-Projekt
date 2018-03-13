@@ -1752,7 +1752,8 @@ namespace OLAP_WindowsForms.App
                     Console.WriteLine(this.loaded_ass_sid);
 
                     int[] granLvls = new int[4];
-                    int countUsed = 0;
+                    int[] diceLvls = new int[4];
+                    int countUsed = 1;
 
 
                     if (CDW_TIME_GL.SelectedValue != null)
@@ -1762,13 +1763,14 @@ namespace OLAP_WindowsForms.App
                         Console.WriteLine(CDW_TIME_GL.SelectedItem);
                         if (dimSid == 6)
                         {
-                            granLvls[countUsed] = granlvl;
+                            granLvls[0] = granlvl;
                         }
                         else
                         {
                             granLvls[countUsed] = (int)CDW_TIME_GL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
 
                     if (CDW_DOCTOR_GL.SelectedValue != null)
@@ -1776,65 +1778,70 @@ namespace OLAP_WindowsForms.App
                         Console.WriteLine("DOC there");
                         if (dimSid == 1)
                         {
-                            granLvls[countUsed] = granlvl;
+                            granLvls[0] = granlvl;
                         }
                         else
                         {
                             granLvls[countUsed] = (int)CDW_DOCTOR_GL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_DRUG_GL.SelectedValue != null)
                     {
                         Console.WriteLine("Drug there");
                         if (dimSid == 3)
                         {
-                            granLvls[countUsed] = granlvl;
+                            granLvls[0] = granlvl;
                         }
                         else
                         {
                             granLvls[countUsed] = (int)CDW_DRUG_GL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_HOSPITAL_GL.SelectedValue != null)
                     {
                         Console.WriteLine("Hospital there");
                         if (dimSid == 5)
                         {
-                            granLvls[countUsed] = granlvl;
+                            granLvls[0] = granlvl;
                         }
                         else
                         {
                             granLvls[countUsed] = (int)CDW_HOSPITAL_GL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_INSURANT_GL.SelectedValue != null)
                     {
                         Console.WriteLine("Insurant there");
                         if (dimSid == 2)
                         {
-                            granLvls[countUsed] = granlvl;
+                            granLvls[0] = granlvl;
                         }
                         else
                         {
                             granLvls[countUsed] = (int)CDW_INSURANT_GL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_MEDSERVICE_GL.SelectedValue != null)
                     {
                         Console.WriteLine("Medservice there");
                         if (dimSid == 4)
                         {
-                            granLvls[countUsed] = granlvl;
+                            granLvls[0] = granlvl;
                         }
                         else
                         {
                             granLvls[countUsed] = (int)CDW_MEDSERVICE_GL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
 
 
@@ -1896,7 +1903,7 @@ namespace OLAP_WindowsForms.App
                     Console.WriteLine(this.loaded_ass_sid);
 
                     int[] diceLvls = new int[4];
-                    int countUsed = 0;
+                    int countUsed = 1;
 
 
                     if (CDW_TIME.SelectedValue != null)
@@ -1906,13 +1913,14 @@ namespace OLAP_WindowsForms.App
                         Console.WriteLine(CDW_TIME.SelectedItem);
                         if (dimSid == 6)
                         {
-                            diceLvls[countUsed] = diceLvl;
+                            diceLvls[0] = diceLvl;
                         }
                         else
                         {
                             diceLvls[countUsed] = (int)CDW_TIME.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
 
                     if (CDW_DOCTOR.SelectedValue != null)
@@ -1920,65 +1928,70 @@ namespace OLAP_WindowsForms.App
                         Console.WriteLine("DOC there");
                         if (dimSid == 1)
                         {
-                            diceLvls[countUsed] = diceLvl;
+                            diceLvls[0] = diceLvl;
                         }
                         else
                         {
                             diceLvls[countUsed] = (int)CDW_DOCTOR.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_DRUG.SelectedValue != null)
                     {
                         Console.WriteLine("Drug there");
                         if (dimSid == 3)
                         {
-                            diceLvls[countUsed] = diceLvl;
+                            diceLvls[0] = diceLvl;
                         }
                         else
                         {
                             diceLvls[countUsed] = (int)CDW_DRUG.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_HOSPITAL.SelectedValue != null)
                     {
                         Console.WriteLine("Hospital there");
                         if (dimSid == 5)
                         {
-                            diceLvls[countUsed] = diceLvl;
+                            diceLvls[0] = diceLvl;
                         }
                         else
                         {
                             diceLvls[countUsed] = (int)CDW_HOSPITAL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_INSURANT.SelectedValue != null)
                     {
                         Console.WriteLine("Insurant there");
                         if (dimSid == 2)
                         {
-                            diceLvls[countUsed] = diceLvl;
+                            diceLvls[0] = diceLvl;
                         }
                         else
                         {
                             diceLvls[countUsed] = (int)CDW_INSURANT.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (CDW_MEDSERVICE.SelectedValue != null)
                     {
                         Console.WriteLine("Medservice there");
                         if (dimSid == 4)
                         {
-                            diceLvls[countUsed] = diceLvl;
+                            diceLvls[0] = diceLvl;
                         }
                         else
                         {
                             diceLvls[countUsed] = (int)CDW_MEDSERVICE.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
 
 
@@ -2032,7 +2045,7 @@ namespace OLAP_WindowsForms.App
                     Console.WriteLine(this.loaded_ass_sid);
 
                     int[] lvl_sid = new int[4];
-                    int countUsed = 0;
+                    int countUsed = 1;
 
                     DataTable dt0 = DBContext.Service().GetData(
                     "SELECT lvl_sid " +
@@ -2050,13 +2063,15 @@ namespace OLAP_WindowsForms.App
                         Console.WriteLine(LDW_TIME.SelectedItem);
                         if (dimSid == 6)
                         {
-                            lvl_sid[countUsed] = lvlSid;
+                            lvl_sid[0] = lvlSid;
+                            
                         }
                         else
                         {
                             lvl_sid[countUsed] = (int)LDW_TIME.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
 
                     if (LDW_DOCTOR.SelectedValue != null)
@@ -2064,65 +2079,70 @@ namespace OLAP_WindowsForms.App
                         Console.WriteLine("DOC there");
                         if (dimSid == 1)
                         {
-                            lvl_sid[countUsed] = lvlSid;
+                            lvl_sid[0] = lvlSid;
                         }
                         else
                         {
                             lvl_sid[countUsed] = (int)LDW_DOCTOR.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (LDW_DRUG.SelectedValue != null)
                     {
                         Console.WriteLine("Drug there");
                         if (dimSid == 3)
                         {
-                            lvl_sid[countUsed] = lvlSid;
+                            lvl_sid[0] = lvlSid;
                         }
                         else
                         {
                             lvl_sid[countUsed] = (int)LDW_DRUG.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (LDW_HOSPITAL.SelectedValue != null)
                     {
                         Console.WriteLine("Hospital there");
                         if (dimSid == 5)
                         {
-                            lvl_sid[countUsed] = lvlSid;
+                            lvl_sid[0] = lvlSid;
                         }
                         else
                         {
                             lvl_sid[countUsed] = (int)LDW_HOSPITAL.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (LDW_INSURANT.SelectedValue != null)
                     {
                         Console.WriteLine("Insurant there");
                         if (dimSid == 2)
                         {
-                            lvl_sid[countUsed] = lvlSid;
+                            lvl_sid[0] = lvlSid;
                         }
                         else
                         {
                             lvl_sid[countUsed] = (int)LDW_INSURANT.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
                     if (LDW_MEDSERVICE.SelectedValue != null)
                     {
                         Console.WriteLine("Medservice there");
                         if (dimSid == 4)
                         {
-                            lvl_sid[countUsed] = lvlSid;
+                            lvl_sid[0] = lvlSid;
                         }
                         else
                         {
                             lvl_sid[countUsed] = (int)LDW_MEDSERVICE.SelectedValue;
+                            countUsed++;
                         }
-                        countUsed++;
+                        
                     }
 
 
