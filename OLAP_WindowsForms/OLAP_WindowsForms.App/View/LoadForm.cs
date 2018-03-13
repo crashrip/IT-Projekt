@@ -55,25 +55,28 @@ namespace OLAP_WindowsForms.App.View
             {
                 row = e.RowIndex;
                 column = e.ColumnIndex;
-                //Console.WriteLine("row: " + row + " column " + column);
-                if (e.ColumnIndex == 0 && e.Button.Equals(MouseButtons.Left)) // load shema with left click
+                if (e.RowIndex < (dataGridView1.RowCount - 1)) // Error if ColumIndex 0 and no data is in cell
                 {
-                    DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    //Console.WriteLine("bearbeiten " + cell.Value);
-                    int value = Int32.Parse(cell.Value.ToString());
-                    UserInput userinput = new UserInput(ags_sid, false, value);
-                    userinput.ShowDialog();
-                    this.Hide();
-                    
-                }
-                if (column == 0 && e.Button.Equals(MouseButtons.Right)) // delete schema with right click
-                {
-                    if (MessageBox.Show("Do you really want to delete this analysis situation?", "Delete Schema",
-                       MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    //Console.WriteLine("row: " + row + " column " + column);
+                    if (e.ColumnIndex == 0 && e.Button.Equals(MouseButtons.Left)) // load shema with left click
                     {
-                        DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
-                        DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
-                        validateGraphSchema();
+                        DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        //Console.WriteLine("bearbeiten " + cell.Value);
+                        int value = Int32.Parse(cell.Value.ToString());
+                        UserInput userinput = new UserInput(ags_sid, false, value);
+                        userinput.ShowDialog();
+                        this.Hide();
+
+                    }
+                    if (column == 0 && e.Button.Equals(MouseButtons.Right)) // delete schema with right click
+                    {
+                        if (MessageBox.Show("Do you really want to delete this analysis situation?", "Delete Schema",
+                           MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                            DBContext.Service().Delete("AGS_ANALYSIS_SITUATION_SCHEMA", "ASS_SID", cell.Value.ToString());
+                            validateGraphSchema();
+                        }
                     }
                 }
             }

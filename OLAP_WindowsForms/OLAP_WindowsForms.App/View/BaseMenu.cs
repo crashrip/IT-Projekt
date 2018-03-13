@@ -65,29 +65,33 @@ namespace OLAP_WindowsForms.App
             ValidateGraphSchema();
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
+               // Console.WriteLine("RowCount:" + dataGridView1.RowCount+" Row: "+e.RowIndex);
                 row = e.RowIndex;
                 column = e.ColumnIndex;
-                //Console.WriteLine("row: " + row + " column " + column);
-                if (e.ColumnIndex == 0 && e.Button.Equals(MouseButtons.Left)) // load shema with left click
+                if (e.RowIndex < (dataGridView1.RowCount -1)) // Error if ColumIndex 0 and no data is in cell
                 {
-                    DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                    DataTable dt = DBContext.Service().GetData("Select AGS_SID FROM AGS_ANALYSIS_GRAPH_SCHEMA WHERE AGS_NAME = '" + cell.Value.ToString() + "'");
-                    DataTable dt2 = dt.Copy();
-                    DataRow[] dr = dt2.Select();
-                    String index = dr[0].ItemArray[0].ToString();
-                    int ags_sid = Int32.Parse(index);
-                    //Console.WriteLine("bearbeiten " + cell.Value.ToString() + " AGS_SID: " + ags_sid);
-                    LoadForm load = new LoadForm(ags_sid);
-                    load.ShowDialog();
-                }
-                if (column == 0 && e.Button.Equals(MouseButtons.Right)) // delete schema with right click
-                {
-                    if (MessageBox.Show("Do you really want to delete this analysis situation graph?", "Delete Schema",
-                       MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    //Console.WriteLine("row: " + row + " column " + column);
+                    if (e.ColumnIndex == 0 && e.Button.Equals(MouseButtons.Left)) // load shema with left click
                     {
-                        DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
-                        DBContext.Service().Delete("AGS_ANALYSIS_GRAPH_SCHEMA", "AGS_NAME", "'" + cell.Value.ToString() + "'");
-                        ValidateGraphSchema();
+                        DataGridViewCell cell = dataGridView1.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                        DataTable dt = DBContext.Service().GetData("Select AGS_SID FROM AGS_ANALYSIS_GRAPH_SCHEMA WHERE AGS_NAME = '" + cell.Value.ToString() + "'");
+                        DataTable dt2 = dt.Copy();
+                        DataRow[] dr = dt2.Select();
+                        String index = dr[0].ItemArray[0].ToString();
+                        int ags_sid = Int32.Parse(index);
+                        //Console.WriteLine("bearbeiten " + cell.Value.ToString() + " AGS_SID: " + ags_sid);
+                        LoadForm load = new LoadForm(ags_sid);
+                        load.ShowDialog();
+                    }
+                    if (column == 0 && e.Button.Equals(MouseButtons.Right)) // delete schema with right click
+                    {
+                        if (MessageBox.Show("Do you really want to delete this analysis situation graph?", "Delete Schema",
+                           MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            DataGridViewCell cell = dataGridView1.Rows[row].Cells[column];
+                            DBContext.Service().Delete("AGS_ANALYSIS_GRAPH_SCHEMA", "AGS_NAME", "'" + cell.Value.ToString() + "'");
+                            ValidateGraphSchema();
+                        }
                     }
                 }
             }

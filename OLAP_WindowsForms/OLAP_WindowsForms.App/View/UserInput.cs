@@ -169,7 +169,7 @@ namespace OLAP_WindowsForms.App
             time_GL.Enabled = false;
         }
 
-        // disable all fields except variables MARIA
+        // disable all fields except variables 
         public void disable_fields()
         {
             ComboBoxCube.Enabled = false;
@@ -1699,6 +1699,7 @@ namespace OLAP_WindowsForms.App
             time_SC.Enabled = false;
             time_GL.Enabled = false;
         }
+        
 
         public void DisableNewOperators()
         {
