@@ -384,6 +384,7 @@ namespace OLAP_WindowsForms.App
             this.LDW_INSURANT.Name = "LDW_INSURANT";
             this.LDW_INSURANT.Size = new System.Drawing.Size(128, 95);
             this.LDW_INSURANT.TabIndex = 43;
+            this.LDW_INSURANT.SelectedIndexChanged += new System.EventHandler(this.LDW_INSURANT_SelectedIndexChanged);
             this.LDW_INSURANT.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.deselect);
             // 
             // CDW_INSURANT_GL
