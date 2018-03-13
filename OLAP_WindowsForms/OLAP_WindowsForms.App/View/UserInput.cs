@@ -71,7 +71,7 @@ namespace OLAP_WindowsForms.App
         private bool amsrUsed = false;
         private bool drillAcross = false;
 
-        public SelectTable selectTable;
+       
 
         public UserInput(int ags_sid, Boolean newForm, int ass_sid = 0)
         {
@@ -2232,7 +2232,7 @@ namespace OLAP_WindowsForms.App
             {
                 Console.WriteLine(exx.Message);
             }*/
-            }
+        }
 
             private void SQLQuery_Click(object sender, EventArgs e)
         {
