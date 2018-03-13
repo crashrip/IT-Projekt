@@ -461,19 +461,30 @@ namespace OLAP_WindowsForms.App.View
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection2: " + ComboBox_Selection2.Text);
-                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection2.SelectedValue.ToString()), true);
+                Console.WriteLine("[buttonSubmit_Click] changed_ListBox.Items.Count: " + changed_ListBox.Items.Count);
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection.SelectedIndex: " + ComboBox_Selection2.SelectedIndex);
+                for (int i = 0; i < changed_ListBox.Items.Count; i++)
+                {
+                    changed_ListBox.SetSelected(i, false);
+                }
+                changed_ListBox.SetSelected(ComboBox_Selection2.SelectedIndex, true);
             }
             else if (table == "AGS_NAVSS_REFOCUS_BMSR_COND_PARS")
             {
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection.SelectedText: " + ComboBox_Selection.SelectedValue.ToString());
 
                 //insert NAVSS_SID, BMSR_PRED_SID
-                list.AddLast(new Insert_item("BMSR_PRED_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())));
+                list.AddLast(new Insert_item("BMSR_PRED_SID", Int32.Parse(ComboBox_Selection.SelectedValue.ToString())-1));
                 DBContext.Service().InsertInto(connection, transaction, table, "NAVSS_SID", list);
 
                 // change UserInput
-                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
-                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection.SelectedValue.ToString()), true);
+                Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection.SelectedIndex: " + ComboBox_Selection.SelectedIndex);
+                Console.WriteLine("[buttonSubmit_Click] changed_ListBox.Items.Count: " + changed_ListBox.Items.Count);
+                for (int i = 0; i < changed_ListBox.Items.Count; i++)
+                {
+                    changed_ListBox.SetSelected(i, false);
+                }
+                changed_ListBox.SetSelected(ComboBox_Selection.SelectedIndex, true);
             }
             else if (table == "AGS_NAVSS_REFOCUS_MEASURE_PARS")
             {
@@ -485,7 +496,12 @@ namespace OLAP_WindowsForms.App.View
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
-                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection.SelectedValue.ToString()), true);
+                Console.WriteLine("[buttonSubmit_Click] changed_ListBox.Items.Count: " + changed_ListBox.Items.Count);
+                for (int i = 0; i < changed_ListBox.Items.Count; i++)
+                {
+                    changed_ListBox.SetSelected(i, false);
+                }
+                changed_ListBox.SetSelected(ComboBox_Selection.SelectedIndex, true);
             }
             else if (table == "AGS_NAVSS_REFOCUS_AMSR_FILTER_PARS")
             {
@@ -497,7 +513,12 @@ namespace OLAP_WindowsForms.App.View
 
                 // change UserInput
                 Console.WriteLine("[buttonSubmit_Click] ComboBox_Selection: " + ComboBox_Selection.Text);
-                changed_ListBox.SetSelected(Int32.Parse(ComboBox_Selection.SelectedValue.ToString()), true);
+                Console.WriteLine("[buttonSubmit_Click] changed_ListBox.Items.Count: " + changed_ListBox.Items.Count);
+                for (int i = 0; i < changed_ListBox.Items.Count; i++)
+                {
+                    changed_ListBox.SetSelected(i, false);
+                }
+                changed_ListBox.SetSelected(ComboBox_Selection.SelectedIndex, true);
             }
             else if (table == "AGS_NAVSS_DRILL_ACROSS_TO_CUBE")
             {
