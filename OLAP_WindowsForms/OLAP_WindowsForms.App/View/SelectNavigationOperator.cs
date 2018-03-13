@@ -296,7 +296,6 @@ namespace OLAP_WindowsForms.App.View
             }
             else
             {
-                // TODO some error message
                 Console.WriteLine("Some error message");
             }
         }
@@ -545,6 +544,20 @@ namespace OLAP_WindowsForms.App.View
             // transaction complete
             transaction.Commit();
             DBContext.Service().TransactionComplete();
+
+            // TODO open new schema if checked
+            if (checkBox1.Checked)
+            {
+                // ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA get ags_sid, ass_sid
+                int ass_sid = Int32.Parse(ComboBox_AGS_ANALYSIS_SITUATION_SCHEMA.SelectedValue.ToString());
+                Console.WriteLine("[buttonSubmit_Click] ass_sid: " + ass_sid);
+
+                string stmt = "SELECT AGS_SID FROM AGS_ANALYSIS_SITUATION_SCHEMA WHERE ASS_SID = " + ass_sid;
+                int ags_sid = Int32.Parse(DBContext.Service().GetStringFromStmt(stmt, 0, 0));
+                Console.WriteLine("[buttonSubmit_Click] ags_sid: " + ags_sid);
+
+                userInput.load(ags_sid, ass_sid);
+            }
             
             // disable fields -> user cannot do changes
             userInput.disable_fields();
