@@ -123,7 +123,6 @@ C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\O
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.BaseMenu.resources
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SaveSchema.resources
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectNavigationOperator.resources
-C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectTable.resources
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.ShowSQL.resources
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.UserInput.resources
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.Properties.Resources.resources
