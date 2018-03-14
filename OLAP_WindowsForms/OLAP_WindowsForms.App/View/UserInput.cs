@@ -14,6 +14,7 @@ using Npgsql;
 
 namespace OLAP_WindowsForms.App
 {
+    // ------------------------------------- Start Schema -------------------------------------------------------------------------
     public partial class UserInput : Form
     {
         public int loaded_ags_sid;
@@ -1704,6 +1705,7 @@ namespace OLAP_WindowsForms.App
             time_GL.Enabled = false;
         }
         
+        // ---------------------------- End Schema - Start Schema Initiation ------------------------------------------
 
         public void DisableNewOperators()
         {
