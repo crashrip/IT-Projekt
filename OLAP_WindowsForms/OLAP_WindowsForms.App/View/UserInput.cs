@@ -14,6 +14,7 @@ using Npgsql;
 
 namespace OLAP_WindowsForms.App
 {
+    // ------------------------------------- Start Schema -------------------------------------------------------------------------
     public partial class UserInput : Form
     {
         public int loaded_ags_sid;
@@ -66,8 +67,12 @@ namespace OLAP_WindowsForms.App
         private bool granLvlUsed = false;
         private bool diceLvlUsed = false;
         private bool refocusSliceCondUsed = false;
+        private bool bmsrFilterUsed = false;
+        private bool measureUsed = false;
+        private bool amsrUsed = false;
+        private bool drillAcross = false;
 
-        public SelectTable selectTable;
+       
 
         public UserInput(int ags_sid, Boolean newForm, int ass_sid = 0)
         {
@@ -169,7 +174,7 @@ namespace OLAP_WindowsForms.App
             time_GL.Enabled = false;
         }
 
-        // disable all fields except variables MARIA
+        // disable all fields except variables 
         public void disable_fields()
         {
             ComboBoxCube.Enabled = false;
@@ -1699,6 +1704,8 @@ namespace OLAP_WindowsForms.App
             time_SC.Enabled = false;
             time_GL.Enabled = false;
         }
+        
+        // ---------------------------- End Schema - Start Schema Initiation ------------------------------------------
 
         public void DisableNewOperators()
         {
@@ -1723,442 +1730,478 @@ namespace OLAP_WindowsForms.App
 
         private void operate_Click(object sender, EventArgs e)
         {
-            if(operatorsChooser.SelectedValue != null)
+            try
             {
-                if (granLvlUsed)
+                var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
+
+                int assSid = (int)selectedRow["ass_sid_target"];
+                Console.WriteLine(assSid);
+
+                UserInput initInput = new UserInput(loaded_ags_sid, false, assSid);
+                initInput.startOperating.Visible = true;
+                initInput.disable_fields();
+                initInput.DisableVars();
+                initInput.DisableNewOperators();
+                initInput.ShowDialog();
+                
+                /*
+                if (operatorsChooser.SelectedValue != null)
+                {
+                    if (granLvlUsed)
+                    {
+
+
+                        ;
+                        /*
+                        Console.WriteLine("Selected Item: " + operatorsChooser.SelectedItem.ToString());
+                        Console.WriteLine("Selected Text: " + operatorsChooser.SelectedText.ToString());
+                        Console.WriteLine("Selected Value: " + operatorsChooser.SelectedValue.ToString());
+                        Console.WriteLine("DisplayMember: " + operatorsChooser.DisplayMember.ToString());
+                        Console.WriteLine("ValueMember: " + operatorsChooser.ValueMember.ToString());
+                        Console.WriteLine("comboBox: " + operatorsChooser.ToString());
+                        Console.WriteLine("displayRectangle: " + operatorsChooser.DisplayRectangle.ToString());
+                        Console.WriteLine("Text: " + operatorsChooser.Text.ToString());
+                        *
+                        var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
+
+                        int dimSid = (int)selectedRow["dim_sid"];
+                        int granlvl = (int)selectedRow["lvl_sid_granlvl"];
+
+                        int[] granLvls = new int[4];
+                        int[] diceLvls = new int[4];
+                        int countUsed = 1;
+
+
+                        if (CDW_TIME_GL.SelectedValue != null)
+                        {
+                            Console.WriteLine("time there");
+                            if (dimSid == 6)
+                            {
+                                granLvls[0] = granlvl;
+                            }
+                            else
+                            {
+                                granLvls[countUsed] = (int)CDW_TIME_GL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+
+                        if (CDW_DOCTOR_GL.SelectedValue != null)
+                        {
+                            Console.WriteLine("DOC there");
+                            if (dimSid == 1)
+                            {
+                                granLvls[0] = granlvl;
+                            }
+                            else
+                            {
+                                granLvls[countUsed] = (int)CDW_DOCTOR_GL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_DRUG_GL.SelectedValue != null)
+                        {
+                            Console.WriteLine("Drug there");
+                            if (dimSid == 3)
+                            {
+                                granLvls[0] = granlvl;
+                            }
+                            else
+                            {
+                                granLvls[countUsed] = (int)CDW_DRUG_GL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_HOSPITAL_GL.SelectedValue != null)
+                        {
+                            Console.WriteLine("Hospital there");
+                            if (dimSid == 5)
+                            {
+                                granLvls[0] = granlvl;
+                            }
+                            else
+                            {
+                                granLvls[countUsed] = (int)CDW_HOSPITAL_GL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_INSURANT_GL.SelectedValue != null)
+                        {
+                            Console.WriteLine("Insurant there");
+                            if (dimSid == 2)
+                            {
+                                granLvls[0] = granlvl;
+                            }
+                            else
+                            {
+                                granLvls[countUsed] = (int)CDW_INSURANT_GL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_MEDSERVICE_GL.SelectedValue != null)
+                        {
+                            Console.WriteLine("Medservice there");
+                            if (dimSid == 4)
+                            {
+                                granLvls[0] = granlvl;
+                            }
+                            else
+                            {
+                                granLvls[countUsed] = (int)CDW_MEDSERVICE_GL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+
+
+                        String query = "select distinct a0.ass_sid_nass " +
+                                        "FROM ags_nass_dim_qual a0, ags_nass_dim_qual a1, ags_nass_dim_qual a2, ags_nass_dim_qual a3, ags_nass_dim_qual a4, ags_non_cmp_ass an1, ags_non_cmp_ass an2 " +
+                                        "WHERE an1.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                                        "AND an2.ass_sid_nass = a0.ass_sid_nass " +
+                                        "AND an1.cube_sid = an2.cube_sid " +
+                                        "AND a1.lvl_sid_granlvl = " + granLvls[0] + " " +
+                                        "AND a2.lvl_sid_granlvl = " + granLvls[1] + " " +
+                                        "AND a3.lvl_sid_granlvl = " + granLvls[2] + " " +
+                                        "AND a4.lvl_sid_granlvl = " + granLvls[3] + " " +
+                                        "AND a0.ass_sid_nass = a1.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a2.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a3.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a4.ass_sid_nass " +
+                                        "ORDER BY a0.ass_sid_nass ";
+
+                        Console.WriteLine(query);
+
+                        DataTable dt = DBContext.Service().GetData(query);
+                        DataTable dt2 = dt.Copy();
+                        DataRow[] dr = dt2.Select();
+                        int goalSid = Int32.Parse(dr[0].ItemArray[0].ToString());
+                        Console.WriteLine(goalSid);
+
+                        UserInput initInput = new UserInput(this.loaded_ags_sid, false, goalSid);
+                        initInput.startOperating.Visible = true;
+                        initInput.disable_fields();
+                        initInput.DisableVars();
+                        initInput.DisableNewOperators();
+
+                        initInput.ShowDialog();
+                        this.Close();
+                        /*
+                         * "SELECT ddtl.* " +
+                           "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
+                           "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                           "AND ndq.dim_sid = ddtl.dim_sid " +
+                           "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
+                         *
+                    }
+                    else if (diceLvlUsed)
+                    {
+                        var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
+                        Console.WriteLine("selectedRow: " + selectedRow.ToString());
+
+                        int dimSid = (int)selectedRow["dim_sid"];
+                        int diceLvl = (int)selectedRow["lvl_sid_dicelvl"];
+                        Console.WriteLine(dimSid);
+                        Console.WriteLine(this.loaded_ags_sid);
+                        Console.WriteLine(this.loaded_ass_sid);
+
+                        int[] diceLvls = new int[4];
+                        int countUsed = 1;
+
+
+                        if (CDW_TIME.SelectedValue != null)
+                        {
+                            Console.WriteLine("time there");
+                            Console.WriteLine(CDW_TIME.SelectedValue);
+                            Console.WriteLine(CDW_TIME.SelectedItem);
+                            if (dimSid == 6)
+                            {
+                                diceLvls[0] = diceLvl;
+                            }
+                            else
+                            {
+                                diceLvls[countUsed] = (int)CDW_TIME.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+
+                        if (CDW_DOCTOR.SelectedValue != null)
+                        {
+                            Console.WriteLine("DOC there");
+                            if (dimSid == 1)
+                            {
+                                diceLvls[0] = diceLvl;
+                            }
+                            else
+                            {
+                                diceLvls[countUsed] = (int)CDW_DOCTOR.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_DRUG.SelectedValue != null)
+                        {
+                            Console.WriteLine("Drug there");
+                            if (dimSid == 3)
+                            {
+                                diceLvls[0] = diceLvl;
+                            }
+                            else
+                            {
+                                diceLvls[countUsed] = (int)CDW_DRUG.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_HOSPITAL.SelectedValue != null)
+                        {
+                            Console.WriteLine("Hospital there");
+                            if (dimSid == 5)
+                            {
+                                diceLvls[0] = diceLvl;
+                            }
+                            else
+                            {
+                                diceLvls[countUsed] = (int)CDW_HOSPITAL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_INSURANT.SelectedValue != null)
+                        {
+                            Console.WriteLine("Insurant there");
+                            if (dimSid == 2)
+                            {
+                                diceLvls[0] = diceLvl;
+                            }
+                            else
+                            {
+                                diceLvls[countUsed] = (int)CDW_INSURANT.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (CDW_MEDSERVICE.SelectedValue != null)
+                        {
+                            Console.WriteLine("Medservice there");
+                            if (dimSid == 4)
+                            {
+                                diceLvls[0] = diceLvl;
+                            }
+                            else
+                            {
+                                diceLvls[countUsed] = (int)CDW_MEDSERVICE.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+
+
+                        String query = "select distinct a0.ass_sid_nass " +
+                                        "FROM ags_nass_dim_qual a0, ags_nass_dim_qual a1, ags_nass_dim_qual a2, ags_nass_dim_qual a3, ags_nass_dim_qual a4, ags_non_cmp_ass an1, ags_non_cmp_ass an2 " +
+                                        "WHERE an1.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                                        "AND an2.ass_sid_nass = a0.ass_sid_nass " +
+                                        "AND an1.cube_sid = an2.cube_sid " +
+                                        "AND a1.lvl_sid_dicelvl = " + diceLvls[0] + " " +
+                                        "AND a2.lvl_sid_dicelvl = " + diceLvls[1] + " " +
+                                        "AND a3.lvl_sid_dicelvl = " + diceLvls[2] + " " +
+                                        "AND a4.lvl_sid_dicelvl = " + diceLvls[3] + " " +
+                                        "AND a0.ass_sid_nass = a1.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a2.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a3.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a4.ass_sid_nass" +
+                                        "ORDER BY a0.ass_sid_nass ";
+
+                        Console.WriteLine(query);
+
+                        DataTable dt = DBContext.Service().GetData(query);
+                        DataTable dt2 = dt.Copy();
+                        DataRow[] dr = dt2.Select();
+                        int goalSid = Int32.Parse(dr[0].ItemArray[0].ToString());
+                        Console.WriteLine(goalSid);
+
+                        UserInput initInput = new UserInput(this.loaded_ags_sid, false, goalSid);
+                        initInput.startOperating.Visible = true;
+                        initInput.disable_fields();
+                        initInput.DisableVars();
+                        initInput.DisableNewOperators();
+
+                        initInput.ShowDialog();
+                        this.Close();
+                    }
+                    else if (refocusSliceCondUsed)
+                    {
+                        var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
+                        Console.WriteLine("selectedRow: " + selectedRow.ToString());
+
+                        int dimSid = (int)selectedRow["dim_sid"];
+                        Console.WriteLine(dimSid);
+                        Console.WriteLine(this.loaded_ags_sid);
+                        Console.WriteLine(this.loaded_ass_sid);
+
+                        int[] lvl_sid = new int[4];
+                        int countUsed = 1;
+
+                        DataTable dt0 = DBContext.Service().GetData(
+                        "SELECT lvl_sid " +
+                        "FROM DW_DIM_PREDICATE " +
+                        "WHERE dim_pred_sid = " + dimSid
+                         ).Copy();
+                        DataRow[] dr0 = dt0.Select();
+                        int lvlSid = Int32.Parse(dr0[0].ItemArray[0].ToString());
+                        Console.WriteLine(lvlSid);
+
+
+                        if (LDW_TIME.SelectedValue != null)
+                        {
+                            Console.WriteLine("time there");
+                            Console.WriteLine(LDW_TIME.SelectedValue);
+                            Console.WriteLine(LDW_TIME.SelectedItem);
+                            if (dimSid == 6)
+                            {
+                                lvl_sid[0] = lvlSid;
+
+                            }
+                            else
+                            {
+                                lvl_sid[countUsed] = (int)LDW_TIME.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+
+                        if (LDW_DOCTOR.SelectedValue != null)
+                        {
+                            Console.WriteLine("DOC there");
+                            if (dimSid == 1)
+                            {
+                                lvl_sid[0] = lvlSid;
+                            }
+                            else
+                            {
+                                lvl_sid[countUsed] = (int)LDW_DOCTOR.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (LDW_DRUG.SelectedValue != null)
+                        {
+                            Console.WriteLine("Drug there");
+                            if (dimSid == 3)
+                            {
+                                lvl_sid[0] = lvlSid;
+                            }
+                            else
+                            {
+                                lvl_sid[countUsed] = (int)LDW_DRUG.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (LDW_HOSPITAL.SelectedValue != null)
+                        {
+                            Console.WriteLine("Hospital there");
+                            if (dimSid == 5)
+                            {
+                                lvl_sid[0] = lvlSid;
+                            }
+                            else
+                            {
+                                lvl_sid[countUsed] = (int)LDW_HOSPITAL.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (LDW_INSURANT.SelectedValue != null)
+                        {
+                            Console.WriteLine("Insurant there");
+                            if (dimSid == 2)
+                            {
+                                lvl_sid[0] = lvlSid;
+                            }
+                            else
+                            {
+                                lvl_sid[countUsed] = (int)LDW_INSURANT.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+                        if (LDW_MEDSERVICE.SelectedValue != null)
+                        {
+                            Console.WriteLine("Medservice there");
+                            if (dimSid == 4)
+                            {
+                                lvl_sid[0] = lvlSid;
+                            }
+                            else
+                            {
+                                lvl_sid[countUsed] = (int)LDW_MEDSERVICE.SelectedValue;
+                                countUsed++;
+                            }
+
+                        }
+
+
+                        String query = "select distinct a0.ass_sid_nass " +
+                                        "FROM ags_nass_dim_qual a0, ags_nass_dim_qual a1, ags_nass_dim_qual a2, ags_nass_dim_qual a3, ags_nass_dim_qual a4, ags_non_cmp_ass an1, ags_non_cmp_ass an2 " +
+                                        "WHERE an1.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                                        "AND an2.ass_sid_nass = a0.ass_sid_nass " +
+                                        "AND an1.cube_sid = an2.cube_sid " +
+                                        "AND a1.lvl_sid_dicelvl = " + lvl_sid[0] + " " +
+                                        "AND a2.lvl_sid_dicelvl = " + lvl_sid[1] + " " +
+                                        "AND a3.lvl_sid_dicelvl = " + lvl_sid[2] + " " +
+                                        "AND a4.lvl_sid_dicelvl = " + lvl_sid[3] + " " +
+                                        "AND a0.ass_sid_nass = a1.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a2.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a3.ass_sid_nass " +
+                                        "AND a0.ass_sid_nass = a4.ass_sid_nass " +
+                                        "ORDER BY a0.ass_sid_nass ";
+
+                        Console.WriteLine(query);
+
+                        DataTable dt = DBContext.Service().GetData(query);
+                        DataTable dt2 = dt.Copy();
+                        DataRow[] dr = dt2.Select();
+
+                        int goalSid = Int32.Parse(dr[0].ItemArray[0].ToString());
+                        Console.WriteLine(goalSid);
+
+                        UserInput initInput = new UserInput(this.loaded_ags_sid, false, goalSid);
+                        initInput.startOperating.Visible = true;
+                        initInput.disable_fields();
+                        initInput.DisableVars();
+                        initInput.DisableNewOperators();
+
+                        initInput.ShowDialog();
+                        this.Close();
+                    }
+                }
+                else if(bmsrFilterUsed)
                 {
 
-
-                    ;
-                    /*
-                    Console.WriteLine("Selected Item: " + operatorsChooser.SelectedItem.ToString());
-                    Console.WriteLine("Selected Text: " + operatorsChooser.SelectedText.ToString());
-                    Console.WriteLine("Selected Value: " + operatorsChooser.SelectedValue.ToString());
-                    Console.WriteLine("DisplayMember: " + operatorsChooser.DisplayMember.ToString());
-                    Console.WriteLine("ValueMember: " + operatorsChooser.ValueMember.ToString());
-                    Console.WriteLine("comboBox: " + operatorsChooser.ToString());
-                    Console.WriteLine("displayRectangle: " + operatorsChooser.DisplayRectangle.ToString());
-                    Console.WriteLine("Text: " + operatorsChooser.Text.ToString());
-                    */
-                    var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
-                    Console.WriteLine("selectedRow: " + selectedRow.ToString());
-                    Console.WriteLine(selectedRow["lvl_sid_granlvl"].ToString());
-                    Console.WriteLine(selectedRow["dim_sid"].ToString());
-
-                    int dimSid = (int)selectedRow["dim_sid"];
-                    int granlvl = (int)selectedRow["lvl_sid_granlvl"];
-                    Console.WriteLine(dimSid);
-                    Console.WriteLine(this.loaded_ags_sid);
-                    Console.WriteLine(this.loaded_ass_sid);
-
-                    int[] granLvls = new int[4];
-                    int countUsed = 0;
-
-
-                    if (CDW_TIME_GL.SelectedValue != null)
-                    {
-                        Console.WriteLine("time there");
-                        Console.WriteLine(CDW_TIME_GL.SelectedValue);
-                        Console.WriteLine(CDW_TIME_GL.SelectedItem);
-                        if (dimSid == 6)
-                        {
-                            granLvls[countUsed] = granlvl;
-                        }
-                        else
-                        {
-                            granLvls[countUsed] = (int)CDW_TIME_GL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-
-                    if (CDW_DOCTOR_GL.SelectedValue != null)
-                    {
-                        Console.WriteLine("DOC there");
-                        if (dimSid == 1)
-                        {
-                            granLvls[countUsed] = granlvl;
-                        }
-                        else
-                        {
-                            granLvls[countUsed] = (int)CDW_DOCTOR_GL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_DRUG_GL.SelectedValue != null)
-                    {
-                        Console.WriteLine("Drug there");
-                        if (dimSid == 3)
-                        {
-                            granLvls[countUsed] = granlvl;
-                        }
-                        else
-                        {
-                            granLvls[countUsed] = (int)CDW_DRUG_GL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_HOSPITAL_GL.SelectedValue != null)
-                    {
-                        Console.WriteLine("Hospital there");
-                        if (dimSid == 5)
-                        {
-                            granLvls[countUsed] = granlvl;
-                        }
-                        else
-                        {
-                            granLvls[countUsed] = (int)CDW_HOSPITAL_GL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_INSURANT_GL.SelectedValue != null)
-                    {
-                        Console.WriteLine("Insurant there");
-                        if (dimSid == 2)
-                        {
-                            granLvls[countUsed] = granlvl;
-                        }
-                        else
-                        {
-                            granLvls[countUsed] = (int)CDW_INSURANT_GL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_MEDSERVICE_GL.SelectedValue != null)
-                    {
-                        Console.WriteLine("Medservice there");
-                        if (dimSid == 4)
-                        {
-                            granLvls[countUsed] = granlvl;
-                        }
-                        else
-                        {
-                            granLvls[countUsed] = (int)CDW_MEDSERVICE_GL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-
-
-                    String query = "select distinct a0.ass_sid_nass " +
-                                    "FROM ags_nass_dim_qual a0, ags_nass_dim_qual a1, ags_nass_dim_qual a2, ags_nass_dim_qual a3, ags_nass_dim_qual a4, ags_non_cmp_ass an1, ags_non_cmp_ass an2 " +
-                                    "WHERE an1.ass_sid_nass = " + this.loaded_ass_sid + " " +
-                                    "AND an2.ass_sid_nass = a0.ass_sid_nass " +
-                                    "AND an1.cube_sid = an2.cube_sid " +
-                                    "AND a1.lvl_sid_granlvl = " + granLvls[0] + " " +
-                                    "AND a2.lvl_sid_granlvl = " + granLvls[1] + " " +
-                                    "AND a3.lvl_sid_granlvl = " + granLvls[2] + " " +
-                                    "AND a4.lvl_sid_granlvl = " + granLvls[3] + " " +
-                                    "AND a0.ass_sid_nass = a1.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a2.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a3.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a4.ass_sid_nass " +
-                                    "ORDER BY a0.ass_sid_nass ";
-
-                    Console.WriteLine(query);
-
-                    DataTable dt = DBContext.Service().GetData(query);
-                    DataTable dt2 = dt.Copy();
-                    DataRow[] dr = dt2.Select();
-                    int goalSid = Int32.Parse(dr[0].ItemArray[0].ToString());
-                    Console.WriteLine(goalSid);
-
-                    UserInput initInput = new UserInput(this.loaded_ags_sid, false, goalSid);
-                    initInput.startOperating.Visible = true;
-                    initInput.disable_fields();
-                    initInput.DisableVars();
-                    initInput.DisableNewOperators();
-
-                    initInput.ShowDialog();
-                    this.Close();
-                    /*
-                     * "SELECT ddtl.* " +
-                       "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
-                       "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
-                       "AND ndq.dim_sid = ddtl.dim_sid " +
-                       "AND ddtl.lvl_sid_granlvl < ndq.lvl_sid_granlvl"
-                     */
                 }
-                else if(diceLvlUsed)
+                else if (measureUsed)
                 {
-                    var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
-                    Console.WriteLine("selectedRow: " + selectedRow.ToString());
-                    Console.WriteLine(selectedRow["lvl_sid_dicelvl"].ToString());
-                    Console.WriteLine(selectedRow["dim_sid"].ToString());
 
-                    Console.WriteLine("================================================");
-                    Console.WriteLine(CDW_TIME.SelectedValue);
-                    Console.WriteLine(CDW_TIME.SelectedItem);
-                    Console.WriteLine("================================================");
-
-                    int dimSid = (int)selectedRow["dim_sid"];
-                    int diceLvl = (int)selectedRow["lvl_sid_dicelvl"];
-                    Console.WriteLine(dimSid);
-                    Console.WriteLine(this.loaded_ags_sid);
-                    Console.WriteLine(this.loaded_ass_sid);
-
-                    int[] diceLvls = new int[4];
-                    int countUsed = 0;
-
-
-                    if (CDW_TIME.SelectedValue != null)
-                    {
-                        Console.WriteLine("time there");
-                        Console.WriteLine(CDW_TIME.SelectedValue);
-                        Console.WriteLine(CDW_TIME.SelectedItem);
-                        if (dimSid == 6)
-                        {
-                            diceLvls[countUsed] = diceLvl;
-                        }
-                        else
-                        {
-                            diceLvls[countUsed] = (int)CDW_TIME.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-
-                    if (CDW_DOCTOR.SelectedValue != null)
-                    {
-                        Console.WriteLine("DOC there");
-                        if (dimSid == 1)
-                        {
-                            diceLvls[countUsed] = diceLvl;
-                        }
-                        else
-                        {
-                            diceLvls[countUsed] = (int)CDW_DOCTOR.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_DRUG.SelectedValue != null)
-                    {
-                        Console.WriteLine("Drug there");
-                        if (dimSid == 3)
-                        {
-                            diceLvls[countUsed] = diceLvl;
-                        }
-                        else
-                        {
-                            diceLvls[countUsed] = (int)CDW_DRUG.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_HOSPITAL.SelectedValue != null)
-                    {
-                        Console.WriteLine("Hospital there");
-                        if (dimSid == 5)
-                        {
-                            diceLvls[countUsed] = diceLvl;
-                        }
-                        else
-                        {
-                            diceLvls[countUsed] = (int)CDW_HOSPITAL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_INSURANT.SelectedValue != null)
-                    {
-                        Console.WriteLine("Insurant there");
-                        if (dimSid == 2)
-                        {
-                            diceLvls[countUsed] = diceLvl;
-                        }
-                        else
-                        {
-                            diceLvls[countUsed] = (int)CDW_INSURANT.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (CDW_MEDSERVICE.SelectedValue != null)
-                    {
-                        Console.WriteLine("Medservice there");
-                        if (dimSid == 4)
-                        {
-                            diceLvls[countUsed] = diceLvl;
-                        }
-                        else
-                        {
-                            diceLvls[countUsed] = (int)CDW_MEDSERVICE.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-
-
-                    String query = "select distinct a0.ass_sid_nass " +
-                                    "FROM ags_nass_dim_qual a0, ags_nass_dim_qual a1, ags_nass_dim_qual a2, ags_nass_dim_qual a3, ags_nass_dim_qual a4, ags_non_cmp_ass an1, ags_non_cmp_ass an2 " +
-                                    "WHERE an1.ass_sid_nass = " + this.loaded_ass_sid + " " +
-                                    "AND an2.ass_sid_nass = a0.ass_sid_nass " +
-                                    "AND an1.cube_sid = an2.cube_sid " +
-                                    "AND a1.lvl_sid_dicelvl = " + diceLvls[0] + " " +
-                                    "AND a2.lvl_sid_dicelvl = " + diceLvls[1] + " " +
-                                    "AND a3.lvl_sid_dicelvl = " + diceLvls[2] + " " +
-                                    "AND a4.lvl_sid_dicelvl = " + diceLvls[3] + " " +
-                                    "AND a0.ass_sid_nass = a1.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a2.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a3.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a4.ass_sid_nass" +
-                                    "ORDER BY a0.ass_sid_nass ";
-
-                    Console.WriteLine(query);
-
-                    DataTable dt = DBContext.Service().GetData(query);
-                    DataTable dt2 = dt.Copy();
-                    DataRow[] dr = dt2.Select();
-                    int goalSid = Int32.Parse(dr[0].ItemArray[0].ToString());
-                    Console.WriteLine(goalSid);
-
-                    UserInput initInput = new UserInput(this.loaded_ags_sid, false, goalSid);
-                    initInput.startOperating.Visible = true;
-                    initInput.disable_fields();
-                    initInput.DisableVars();
-                    initInput.DisableNewOperators();
-
-                    initInput.ShowDialog();
-                    this.Close();
                 }
-                else if(refocusSliceCondUsed)
+                else if(amsrUsed)
                 {
-                    var selectedRow = (operatorsChooser.SelectedItem as DataRowView);
-                    Console.WriteLine("selectedRow: " + selectedRow.ToString());
-                    Console.WriteLine(selectedRow["lvl_sid_dicelvl"].ToString());
-                    Console.WriteLine(selectedRow["dim_sid"].ToString());
 
-                    Console.WriteLine("================================================");
-                    Console.WriteLine(CDW_TIME.SelectedValue);
-                    Console.WriteLine(CDW_TIME.SelectedItem);
-                    Console.WriteLine("================================================");
-
-                    int dimSid = (int)selectedRow["dim_sid"];
-                    Console.WriteLine(dimSid);
-                    Console.WriteLine(this.loaded_ags_sid);
-                    Console.WriteLine(this.loaded_ass_sid);
-
-                    int[] lvl_sid = new int[4];
-                    int countUsed = 0;
-
-                    DataTable dt0 = DBContext.Service().GetData(
-                    "SELECT lvl_sid " +
-                    "FROM DW_DIM_PREDICATE " +
-                    "WHERE dim_pred_sid = " + dimSid
-                     ).Copy();
-                    DataRow[] dr0 = dt0.Select();
-                    int lvlSid = Int32.Parse(dr0[0].ItemArray[0].ToString());
-                   
-
-                    if (LDW_TIME.SelectedValue != null)
-                    {
-                        Console.WriteLine("time there");
-                        Console.WriteLine(LDW_TIME.SelectedValue);
-                        Console.WriteLine(LDW_TIME.SelectedItem);
-                        if (dimSid == 6)
-                        {
-                            lvl_sid[countUsed] = lvlSid;
-                        }
-                        else
-                        {
-                            lvl_sid[countUsed] = (int)LDW_TIME.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-
-                    if (LDW_DOCTOR.SelectedValue != null)
-                    {
-                        Console.WriteLine("DOC there");
-                        if (dimSid == 1)
-                        {
-                            lvl_sid[countUsed] = lvlSid;
-                        }
-                        else
-                        {
-                            lvl_sid[countUsed] = (int)LDW_DOCTOR.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (LDW_DRUG.SelectedValue != null)
-                    {
-                        Console.WriteLine("Drug there");
-                        if (dimSid == 3)
-                        {
-                            lvl_sid[countUsed] = lvlSid;
-                        }
-                        else
-                        {
-                            lvl_sid[countUsed] = (int)LDW_DRUG.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (LDW_HOSPITAL.SelectedValue != null)
-                    {
-                        Console.WriteLine("Hospital there");
-                        if (dimSid == 5)
-                        {
-                            lvl_sid[countUsed] = lvlSid;
-                        }
-                        else
-                        {
-                            lvl_sid[countUsed] = (int)LDW_HOSPITAL.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (LDW_INSURANT.SelectedValue != null)
-                    {
-                        Console.WriteLine("Insurant there");
-                        if (dimSid == 2)
-                        {
-                            lvl_sid[countUsed] = lvlSid;
-                        }
-                        else
-                        {
-                            lvl_sid[countUsed] = (int)LDW_INSURANT.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-                    if (LDW_MEDSERVICE.SelectedValue != null)
-                    {
-                        Console.WriteLine("Medservice there");
-                        if (dimSid == 4)
-                        {
-                            lvl_sid[countUsed] = lvlSid;
-                        }
-                        else
-                        {
-                            lvl_sid[countUsed] = (int)LDW_MEDSERVICE.SelectedValue;
-                        }
-                        countUsed++;
-                    }
-
-
-                    String query = "select distinct a0.ass_sid_nass " +
-                                    "FROM ags_nass_dim_qual a0, ags_nass_dim_qual a1, ags_nass_dim_qual a2, ags_nass_dim_qual a3, ags_nass_dim_qual a4, ags_non_cmp_ass an1, ags_non_cmp_ass an2 " +
-                                    "WHERE an1.ass_sid_nass = " + this.loaded_ass_sid + " " +
-                                    "AND an2.ass_sid_nass = a0.ass_sid_nass " +
-                                    "AND an1.cube_sid = an2.cube_sid " +
-                                    "AND a1.lvl_sid_dicelvl = " + lvl_sid[0] + " " +
-                                    "AND a2.lvl_sid_dicelvl = " + lvl_sid[1] + " " +
-                                    "AND a3.lvl_sid_dicelvl = " + lvl_sid[2] + " " +
-                                    "AND a4.lvl_sid_dicelvl = " + lvl_sid[3] + " " +
-                                    "AND a0.ass_sid_nass = a1.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a2.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a3.ass_sid_nass " +
-                                    "AND a0.ass_sid_nass = a4.ass_sid_nass" +
-                                    "ORDER BY a0.ass_sid_nass ";
-
-                    Console.WriteLine(query);
-
-                    DataTable dt = DBContext.Service().GetData(query);
-                    DataTable dt2 = dt.Copy();
-                    DataRow[] dr = dt2.Select();
-                    int goalSid = Int32.Parse(dr[0].ItemArray[0].ToString());
-                    Console.WriteLine(goalSid);
-
-                    UserInput initInput = new UserInput(this.loaded_ags_sid, false, goalSid);
-                    initInput.startOperating.Visible = true;
-                    initInput.disable_fields();
-                    initInput.DisableVars();
-                    initInput.DisableNewOperators();
-
-                    initInput.ShowDialog();
-                    this.Close();
                 }
+                else if(drillAcross)
+                {
 
+                }
+   */
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
             }  
         }
 
@@ -2191,7 +2234,7 @@ namespace OLAP_WindowsForms.App
             {
                 Console.WriteLine(exx.Message);
             }*/
-            }
+        }
 
             private void SQLQuery_Click(object sender, EventArgs e)
         {
@@ -2262,9 +2305,29 @@ namespace OLAP_WindowsForms.App
 
         private void drillDownToLevelButton_Click(object sender, EventArgs e)
         {
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'drillDownToLevel' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
             granLvlUsed = true;
             diceLvlUsed = false;
             refocusSliceCondUsed = false;
+            bmsrFilterUsed = false;
+            measureUsed = false;
+            amsrUsed = false;
+            drillAcross = false;
 
             DataTable dtDrillDownToLevel = DBContext.Service().GetData(
                    "SELECT ddtl.* " +
@@ -2283,13 +2346,34 @@ namespace OLAP_WindowsForms.App
                 operatorsChooser.DisplayMember = "lvl_sid_granlvl";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
 
         private void rollUpToLevelButton_Click(object sender, EventArgs e)
         {
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'rollUpToLevel' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
             granLvlUsed = true;
             diceLvlUsed = false;
             refocusSliceCondUsed = false;
+            bmsrFilterUsed = false;
+            measureUsed = false;
+            amsrUsed = false;
+            drillAcross = false;
 
             DataTable rollUpToLevel = DBContext.Service().GetData(
                    "SELECT rutl.* " +
@@ -2308,13 +2392,34 @@ namespace OLAP_WindowsForms.App
                 operatorsChooser.DisplayMember = "lvl_sid_granlvl";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
 
         private void moveToNodeButton_Click(object sender, EventArgs e)
         {
-            granLvlUsed = false;
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'moveToNode' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
             diceLvlUsed = true;
+            granLvlUsed = false;
             refocusSliceCondUsed = false;
+            bmsrFilterUsed = false;
+            measureUsed = false;
+            amsrUsed = false;
+            drillAcross = false;
 
             DataTable dtmoveToNode = DBContext.Service().GetData(
                    "SELECT mtn.* " +
@@ -2333,13 +2438,34 @@ namespace OLAP_WindowsForms.App
                 operatorsChooser.DisplayMember = "lvl_sid_dicelvl";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
-
+        //===========================
         private void refocusSliceCondButton_Click(object sender, EventArgs e)
         {
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'refocusSliceCond' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
+            refocusSliceCondUsed = true;
             granLvlUsed = false;
             diceLvlUsed = false;
-            refocusSliceCondUsed = true;
+            bmsrFilterUsed = false;
+            measureUsed = false;
+            amsrUsed = false;
+            drillAcross = false;
 
             DataTable dtrefocusSliceCond = DBContext.Service().GetData(
                    "SELECT rsc.* " +
@@ -2357,12 +2483,37 @@ namespace OLAP_WindowsForms.App
                 operatorsChooser.DisplayMember = "dim_sid";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
-
+        //=========================
         private void refocusBMsrCondButton_Click(object sender, EventArgs e)
         {
-            DataTable dtDrillDownToLevel = DBContext.Service().GetData(
-                   "SELECT ddtl.* " +
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'refocusBMsrCond' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
+            granLvlUsed = false;
+            diceLvlUsed = false;
+            refocusSliceCondUsed = false;
+            bmsrFilterUsed = true;
+            measureUsed = false;
+            amsrUsed = false;
+            drillAcross = false;
+
+            DataTable dtrefocusBMsrCond = DBContext.Service().GetData(
+                   "SELECT rbc.* " +
                    "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
                    "WHERE ndq.ass_sid_nass = " + this.loaded_ass_sid + " " +
                    "AND ndq.dim_sid = ddtl.dim_sid " +
@@ -2370,18 +2521,43 @@ namespace OLAP_WindowsForms.App
                 ).Copy();
 
             Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
-            if (dtDrillDownToLevel != null)
+            if (dtrefocusBMsrCond != null)
             {
                 Console.WriteLine("Worked");
 
-                operatorsChooser.DataSource = dtDrillDownToLevel;
+                operatorsChooser.DataSource = dtrefocusBMsrCond;
                 operatorsChooser.DisplayMember = "lvl_sid_granlvl";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
 
         private void refocusMeasureButton_Click(object sender, EventArgs e)
         {
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'refocusMeasure' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
+            granLvlUsed = false;
+            diceLvlUsed = false;
+            refocusSliceCondUsed = false;
+            bmsrFilterUsed = false;
+            measureUsed = true;
+            amsrUsed = false;
+            drillAcross = false;
+
             DataTable dtDrillDownToLevel = DBContext.Service().GetData(
                    "SELECT ddtl.* " +
                    "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
@@ -2399,10 +2575,35 @@ namespace OLAP_WindowsForms.App
                 operatorsChooser.DisplayMember = "lvl_sid_granlvl";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
 
         private void refocusAMsrFilterButton_Click(object sender, EventArgs e)
         {
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'refocusAMsrFilter' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
+            granLvlUsed = false;
+            diceLvlUsed = false;
+            refocusSliceCondUsed = false;
+            bmsrFilterUsed = false;
+            measureUsed = false;
+            amsrUsed = true;
+            drillAcross = false;
+
             DataTable dtDrillDownToLevel = DBContext.Service().GetData(
                    "SELECT ddtl.* " +
                    "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
@@ -2420,10 +2621,35 @@ namespace OLAP_WindowsForms.App
                 operatorsChooser.DisplayMember = "lvl_sid_granlvl";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
 
         private void drillAcrossToCubeButton_Click(object sender, EventArgs e)
         {
+            DataTable dtAns = DBContext.Service().GetData(
+                   "SELECT ans.* " +
+                   "FROM ags_navstep_schema ans " +
+                   "WHERE ans.ass_sid_source = " + this.loaded_ass_sid + " " +
+                   "AND ans.navss_opname = 'drillAcrossToCube' "
+                ).Copy();
+
+            Console.WriteLine("loaded_ass_sid: " + this.loaded_ass_sid);
+            if (dtAns != null)
+            {
+                Console.WriteLine("Worked");
+
+                operatorsChooser.DataSource = dtAns;
+                operatorsChooser.DisplayMember = "ass_sid_target";
+            }
+            /*
+            granLvlUsed = false;
+            diceLvlUsed = false;
+            refocusSliceCondUsed = false;
+            bmsrFilterUsed = false;
+            measureUsed = false;
+            amsrUsed = false;
+            drillAcross = true;
+
             DataTable dtDrillDownToLevel = DBContext.Service().GetData(
                    "SELECT ddtl.* " +
                    "FROM ags_navss_drill_down_to_level ddtl, ags_nass_dim_qual ndq " +
@@ -2441,6 +2667,7 @@ namespace OLAP_WindowsForms.App
                 operatorsChooser.DisplayMember = "lvl_sid_granlvl";
                 //operatorsChooser.ValueMember = "dim_sid";
             }
+            */
         }
 
         private void LDW_INSURANT_SelectedIndexChanged(object sender, EventArgs e)

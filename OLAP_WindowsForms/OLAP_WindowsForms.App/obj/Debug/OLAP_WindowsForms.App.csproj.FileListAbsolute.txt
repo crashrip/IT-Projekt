@@ -106,7 +106,6 @@ D:\Users\Philip\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.
 D:\Users\Philip\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.exe
 D:\Users\Philip\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.pdb
 D:\Users\Philip\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.csproj.CoreCompileInputs.cache
-D:\Users\Philip\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectTable.resources
 C:\Users\Alexander\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectTable.resources
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.SelectTable.resources
 C:\Users\Maria\Documents\STUDIUM\SEM_05\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.csproj.CoreCompileInputs.cache
@@ -133,3 +132,4 @@ C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\O
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.csproj.CoreCompileInputs.cache
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.exe
 C:\Users\Maria\Documents\STUDIUM\2017W\IT-Projekt\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.pdb
+C:\Users\Alexander\Documents\GitHub\IT-Projekt\OLAP_WindowsForms\OLAP_WindowsForms.App\obj\Debug\OLAP_WindowsForms.App.View.ShowSQL.resources
