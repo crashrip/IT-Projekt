@@ -533,7 +533,8 @@ namespace OLAP_WindowsForms.App.View
                 Console.WriteLine("[buttonSubmit_Click] " + selection);
                 userInput.ComboBoxCube.SelectedIndex = userInput.ComboBoxCube.FindString(selection);
                 userInput.comboBoxCube_SelectedIndexChanged(userInput.ComboBoxCube, new EventArgs());
-                userInput.ComboBoxCube.SelectedValue = selection;
+                userInput.ComboBoxCube.SelectedText = selection;
+                Console.WriteLine("[buttonSubmit_Click] drill across to cube successful");
             }
             else
             {
