@@ -2236,9 +2236,493 @@ namespace OLAP_WindowsForms.App
             }*/
         }
 
-            private void SQLQuery_Click(object sender, EventArgs e)
+        private void SQLQuery_Click(object sender, EventArgs e)
         {
+            try
+            {
+                StringBuilder q = new StringBuilder();
+                DataTable dt;
+                DataRow[] dr;
+                //MEASRUE
+                bool sumofcost = false;
+                bool sumofquantity = false;
+                bool numofinsurants = false;
+                bool costsperunit = false;
+                bool costsperinsurant = false;
+                string measureSelectedValue;
+                if(LDW_MEASURES.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT damsr_name " +
+                        "FROM dw_derived_aggregate_measure " +
+                        "WHERE damsr_sid = " + LDW_MEASURES.SelectedValue.ToString());
+                    dr = dt.Select();
+                    measureSelectedValue = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(measureSelectedValue);
+                    if (measureSelectedValue.Equals("SumOfCosts"))
+                    {
+                        sumofcost = true;
+                    } else if(measureSelectedValue.Equals("SumOfQuantity"))
+                    {
+                        sumofquantity = true;
+                    } else if(measureSelectedValue.Equals("NumOfInsurants"))
+                    {
+                        numofinsurants = true;
+                    } else if(measureSelectedValue.Equals("CostsPerUnit"))
+                    {
+                        costsperunit = true;
+                    } else if(measureSelectedValue.Equals("CostsPerInsurant"))
+                    {
+                        costsperinsurant = true;
+                    }
+                }
 
+                //SELECT
+
+                q.Append("SELECT ");
+                if(sumofcost)
+                {
+                    q.Append("SUM(c.costs) as SumOfCosts, ");
+                } else if(sumofquantity)
+                {
+                    q.Append("SUM(c.quantity) as SumOfQuantity, ");
+                } else if(numofinsurants)
+                {
+                    q.Append("COUNT(c.insurant) as NumOfInsurants, ");
+                } else if(costsperunit)
+                {
+                    q.Append("SUM(c.costs)/SUM(c.quantity) as CostsPerUnit,  ");
+                } else if(costsperinsurant)
+                {
+                    q.Append("SUM(c.costs)/COUNT(DISTINCT c.insurant) as CostsPerInsurant, ");
+                }
+                int count = 4;
+                String varGl;
+                if (CDW_TIME_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_TIME_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topTime"))
+                    {
+                        q.Append("t.*");
+                    }
+                    else
+                    {
+                        q.Append("t." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_INSURANT_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_INSURANT_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topInsurant"))
+                    {
+                        q.Append("i.*");
+                    }
+                    else
+                    {
+                        q.Append("i." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_MEDSERVICE_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_MEDSERVICE_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topMedService"))
+                    {
+                        q.Append("m.*");
+                    }
+                    else
+                    {
+                        q.Append("m." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_DRUG_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_DRUG_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topDrug"))
+                    {
+                        q.Append("d.*");
+                    }
+                    else
+                    {
+                        q.Append("d." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_DOCTOR_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_DOCTOR_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topDoctor"))
+                    {
+                        q.Append("doc.*");
+                    }
+                    else
+                    {
+                        q.Append("doc." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_HOSPITAL_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_HOSPITAL_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topHospital"))
+                    {
+                        q.Append("h.*");
+                    }
+                    else
+                    {
+                        q.Append("h." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+
+                //FROM
+                dt = DBContext.Service().GetData("SELECT cube_name " +
+                        "FROM dw_cube " +
+                        "WHERE cube_sid = " + ComboBoxCube.SelectedValue.ToString());
+                dr = dt.Select();
+                q.Append("FROM " + dr[0].ItemArray[0].ToString() + " c ");
+                if (CDW_TIME_GL.SelectedValue != null)
+                {
+                    q.Append("NATURAL JOIN time t ");
+                }
+                if (CDW_INSURANT_GL.SelectedValue != null)
+                {
+                    q.Append("NATURAL JOIN insurant i ");
+                }
+                if (CDW_MEDSERVICE_GL.SelectedValue != null)
+                {
+                    q.Append("NATURAL JOIN medservice m ");
+                }
+                if (CDW_DRUG_GL.SelectedValue != null)
+                {
+                    q.Append("NATURAL JOIN drug d ");
+                }
+                if (CDW_DOCTOR_GL.SelectedValue != null)
+                {
+                    q.Append("NATURAL JOIN doctor doc ");
+                }
+                if (CDW_HOSPITAL_GL.SelectedValue != null)
+                {
+                    q.Append("NATURAL JOIN hospital h ");
+                }
+
+                //WHERE
+
+                //GROUP BY
+                q.Append("GROUP BY ");
+                count = 4;
+                varGl = "";
+                if (CDW_TIME_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_TIME_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topTime"))
+                    {
+                        q.Append("t.day, t.month, t.quater, t.year");
+                    }
+                    else
+                    {
+                        q.Append("t." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_INSURANT_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_INSURANT_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topInsurant"))
+                    {
+                        q.Append("i.insurant, i.insage, i.insdistrict, i.inhpersqkminisdistr, i.insprovince");
+                    }
+                    else
+                    {
+                        q.Append("i." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_MEDSERVICE_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_MEDSERVICE_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topMedService"))
+                    {
+                        q.Append("m.medserv, m.medservfee");
+                    }
+                    else
+                    {
+                        q.Append("m." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_DRUG_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_DRUG_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topDrug"))
+                    {
+                        q.Append("d.drug, d.drugprice, d.act5, d.act4, d.act3, d.act2, d.act1");
+                    }
+                    else
+                    {
+                        q.Append("d." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_DOCTOR_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_DOCTOR_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topDoctor"))
+                    {
+                        q.Append("doc.doctor, doc.docage, doc.docdistrict, doc.inhpersqkmindocdistr, doc.docprovince");
+                    }
+                    else
+                    {
+                        q.Append("doc." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+                if (CDW_HOSPITAL_GL.SelectedValue != null)
+                {
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_HOSPITAL_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (varGl.Equals("topHospital"))
+                    {
+                        q.Append("h.*");
+                    }
+                    else
+                    {
+                        q.Append("h." + varGl);
+                    }
+                    if (count > 1)
+                    {
+                        q.Append(", ");
+                    }
+                    else
+                    {
+                        q.Append(" ");
+                    }
+                    count--;
+                }
+
+                //HAVING
+
+
+                ShowSQL showSQL = new ShowSQL(q.ToString());
+                showSQL.ShowDialog();
+                /*
+                int bmsrID = 0;
+                int measuresID = 0;
+                int filterID = 0;
+
+                if (LDW_BMSR.SelectedValue != null)
+                {
+                    q.Append(", dw_bmsr_predicate dbp");
+                }
+
+                if (LDW_MEASURES.SelectedValue != null)
+                {
+                    q.Append(", dw_derived_aggregate_measure ddam");
+                }
+
+                if (LDW_FILTER.SelectedValue != null)
+                {
+                    q.Append(", dw_amsr_predicate dap");
+                }
+
+                q.Append(" WHERE andq.ass_sid_nass = " + this.loaded_ass_sid + " " +
+                    "AND  anca.ass_sid_nass = " + this.loaded_ass_sid + " " + "AND anca.cube_sid = dc.cube_sid " +
+                    "AND dl.dim_sid = andq.dim_sid " +
+                    "AND dl.lvl_sid = andq.lvl_sid_dicelvl " +
+                    "AND ddp.dim_pred_sid = andq.dim_sid ");
+
+                if (LDW_BMSR.SelectedValue != null)
+                {
+                    bmsrID = (int)LDW_BMSR.SelectedValue;
+                    q.Append("AND dbp.bmsr_pred_sid = " + bmsrID + " ");
+                }
+
+                if (LDW_MEASURES.SelectedValue != null)
+                {
+                    measuresID = (int)LDW_MEASURES.SelectedValue;
+                    q.Append("AND ddam.damsr_sid = " + measuresID + " ");
+                }
+
+                if (LDW_FILTER.SelectedValue != null)
+                {
+                    filterID = (int)LDW_FILTER.SelectedValue;
+                    q.Append("AND dap.amsr_pred_sid = " + filterID + " ");
+                }
+
+                q.Append("ORDER BY andq.nass_dq_sid");
+                ShowSQL showSQL = new ShowSQL(q.ToString());
+                showSQL.ShowDialog();
+            }
+            catch (Exception x)
+            {
+                Console.WriteLine(x.Message);
+            }
+            /*
+             * if(sumofcost)
+                {
+
+                } else if(sumofquantity)
+                {
+
+                } else if(numofinsurants)
+                {
+
+                } else if(costsperunit)
+                {
+
+                } else if(costsperinsurant)
+                {
+
+                }
+             * 
             try
             {
                 StringBuilder q = new StringBuilder();
@@ -2290,12 +2774,13 @@ namespace OLAP_WindowsForms.App
 
                 q.Append("ORDER BY andq.nass_dq_sid");
                 ShowSQL showSQL = new ShowSQL(q.ToString());
-                showSQL.ShowDialog();
+                showSQL.ShowDialog();*/
             }
             catch (Exception x)
             {
                 Console.WriteLine(x.Message);
             }
+            
         }
 
         private void label4_Click(object sender, EventArgs e)
@@ -2671,6 +3156,11 @@ namespace OLAP_WindowsForms.App
         }
 
         private void LDW_INSURANT_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CDW_DRUG_GL_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }
