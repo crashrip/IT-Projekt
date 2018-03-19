@@ -2305,21 +2305,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topTime"))
-                    {
-                        q.Append("t.*");
-                    }
-                    else
+                    if (!varGl.Equals("topTime"))
                     {
                         q.Append("t." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2331,21 +2328,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topInsurant"))
-                    {
-                        q.Append("i.*");
-                    }
-                    else
+                    if (!varGl.Equals("topInsurant"))
                     {
                         q.Append("i." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2357,21 +2351,19 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topMedService"))
+                    if (!varGl.Equals("topMedService"))
                     {
-                        q.Append("m.*");
-                    }
-                    else
-                    {
+
                         q.Append("m." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2383,21 +2375,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topDrug"))
-                    {
-                        q.Append("d.*");
-                    }
-                    else
+                    if (!varGl.Equals("topDrug"))
                     {
                         q.Append("d." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2409,21 +2398,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topDoctor"))
-                    {
-                        q.Append("doc.*");
-                    }
-                    else
+                    if (!varGl.Equals("topDoctor"))
                     {
                         q.Append("doc." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2435,21 +2421,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topHospital"))
-                    {
-                        q.Append("h.*");
-                    }
-                    else
+                    if (!varGl.Equals("topHospital"))
                     {
                         q.Append("h." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2462,27 +2445,81 @@ namespace OLAP_WindowsForms.App
                 q.Append("FROM " + dr[0].ItemArray[0].ToString() + " c ");
                 if (CDW_TIME_GL.SelectedValue != null)
                 {
-                    q.Append("NATURAL JOIN time t ");
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_TIME_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (!varGl.Equals("topTime"))
+                    {
+                        q.Append("NATURAL JOIN time t ");
+                    }
                 }
                 if (CDW_INSURANT_GL.SelectedValue != null)
                 {
-                    q.Append("NATURAL JOIN insurant i ");
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_INSURANT_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (!varGl.Equals("topInsurant"))
+                    {
+                        q.Append("NATURAL JOIN insurant i ");
+                    }
                 }
                 if (CDW_MEDSERVICE_GL.SelectedValue != null)
                 {
-                    q.Append("NATURAL JOIN medservice m ");
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_MEDSERVICE_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (!varGl.Equals("topMedService"))
+                    {
+                        q.Append("NATURAL JOIN medservice m ");
+                    }
                 }
                 if (CDW_DRUG_GL.SelectedValue != null)
                 {
-                    q.Append("NATURAL JOIN drug d ");
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_DRUG_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (!varGl.Equals("topDrug"))
+                    {
+                        q.Append("NATURAL JOIN drug d ");
+                    }
                 }
                 if (CDW_DOCTOR_GL.SelectedValue != null)
                 {
-                    q.Append("NATURAL JOIN doctor doc ");
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_DOCTOR_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (!varGl.Equals("topDoctor"))
+                    {
+                        q.Append("NATURAL JOIN doctor doc ");
+                    }
                 }
                 if (CDW_HOSPITAL_GL.SelectedValue != null)
                 {
-                    q.Append("NATURAL JOIN hospital h ");
+                    dt = DBContext.Service().GetData("SELECT lvl_name " +
+                        "FROM dw_level " +
+                        "WHERE lvl_sid = " + CDW_HOSPITAL_GL.SelectedValue.ToString());
+                    dr = dt.Select();
+                    varGl = dr[0].ItemArray[0].ToString();
+                    Console.WriteLine(varGl);
+                    if (!varGl.Equals("topHospital"))
+                    {
+                        q.Append("NATURAL JOIN hospital h ");
+                    }
                 }
 
                 //WHERE
@@ -2499,21 +2536,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topTime"))
-                    {
-                        q.Append("t.day, t.month, t.quater, t.year");
-                    }
-                    else
+                    if (!varGl.Equals("topTime"))
                     {
                         q.Append("t." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2525,21 +2559,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topInsurant"))
-                    {
-                        q.Append("i.insurant, i.insage, i.insdistrict, i.inhpersqkminisdistr, i.insprovince");
-                    }
-                    else
+                    if (!varGl.Equals("topInsurant"))
                     {
                         q.Append("i." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2551,21 +2582,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topMedService"))
-                    {
-                        q.Append("m.medserv, m.medservfee");
-                    }
-                    else
+                    if (!varGl.Equals("topMedService"))
                     {
                         q.Append("m." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2577,21 +2605,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topDrug"))
-                    {
-                        q.Append("d.drug, d.drugprice, d.act5, d.act4, d.act3, d.act2, d.act1");
-                    }
-                    else
+                    if (!varGl.Equals("topDrug"))
                     {
                         q.Append("d." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2603,21 +2628,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topDoctor"))
-                    {
-                        q.Append("doc.doctor, doc.docage, doc.docdistrict, doc.inhpersqkmindocdistr, doc.docprovince");
-                    }
-                    else
+                    if (!varGl.Equals("topDoctor"))
                     {
                         q.Append("doc." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
@@ -2629,21 +2651,18 @@ namespace OLAP_WindowsForms.App
                     dr = dt.Select();
                     varGl = dr[0].ItemArray[0].ToString();
                     Console.WriteLine(varGl);
-                    if (varGl.Equals("topHospital"))
-                    {
-                        q.Append("h.*");
-                    }
-                    else
+                    if (!varGl.Equals("topHospital"))
                     {
                         q.Append("h." + varGl);
-                    }
-                    if (count > 1)
-                    {
-                        q.Append(", ");
-                    }
-                    else
-                    {
-                        q.Append(" ");
+
+                        if (count > 1)
+                        {
+                            q.Append(", ");
+                        }
+                        else
+                        {
+                            q.Append(" ");
+                        }
                     }
                     count--;
                 }
